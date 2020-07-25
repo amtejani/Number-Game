@@ -57,7 +57,7 @@ fun Container.createBoard(board: Board) =
                 for (j in 0 until board.height) {
                     solidRect(size, size, color = Colors.WHITE) {
                         position(i * (size + padding), j * (size + padding))
-                        board[i, j].init(this)
+                        board[i, j].init(this, board)
                     }
                 }
             }
