@@ -2,6 +2,7 @@ import com.soywiz.kds.Array2
 import com.soywiz.kds.Extra
 import com.soywiz.korio.async.Signal
 import com.soywiz.korma.geom.PointInt
+import com.soywiz.korma.geom.ds.get
 import kotlin.random.Random
 
 enum class MineState { UNMARKED, EMPTY, MARKED, MINE }
@@ -14,7 +15,7 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
     /**
      * Class to maintain cell state
      */
-    inner class Cell(x: Int, y: Int, val mine: Boolean) : Extra by Extra.Mixin() {
+    inner class Cell(x: Int, y: Int) : Extra by Extra.Mixin() {
         val pos = PointInt(x, y)
         var state = MineState.UNMARKED
 
@@ -28,7 +29,7 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
 
         fun check() {
             if (state == MineState.UNMARKED) {
-                state = if (mine) {
+                state = if (mineMap[pos]) {
                     MineState.MINE
                 } else {
                     MineState.EMPTY.also {
@@ -42,11 +43,12 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
     private val gameOverSignal = Signal<Unit>()
     private val emptyFlaggedSignal = Signal<Unit>()
 
-    private val cells = Array2(width, height) { Cell(it % width, it / width, Random.nextDouble() < mineCount) }
+    private val mineMap = Array2(width, height) { Random.nextDouble() < mineCount }
+    private val cells = Array2(width, height) { Cell(it % width, it / width) }
     val board
         get() = cells.map { it.state }
 
-    private val emptyCount = cells.count { !it.mine }
+    private val emptyCount = mineMap.count { !it }
     private var emptyFlaggedCount = 0
 
     /**
@@ -61,16 +63,16 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
     init {
         // generate the counts for each row/column
         cells.forEach {
-            if (!it.mine) {
+            if (!mineMap[it.pos]) {
                 val posX = it.pos.x
                 val posY = it.pos.y
-                if (posX == 0 || cells[posX - 1, posY].mine) {
+                if (posX == 0 || mineMap[posX - 1, posY]) {
                     emptyCountRow[posY].add(1)
                 } else {
                     val arr = emptyCountRow[posY]
                     arr[arr.size - 1] = arr.last().inc()
                 }
-                if (posY == 0 || cells[posX, posY - 1].mine) {
+                if (posY == 0 || mineMap[posX, posY - 1]) {
                     emptyCountCol[posX].add(1)
                 } else {
                     val arr = emptyCountCol[posX]
@@ -80,8 +82,8 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
         }
 
         emptyFlaggedSignal {
-            println("Remaining count ${emptyCount - emptyFlaggedCount}")
             emptyFlaggedCount++
+            println("Remaining count ${emptyCount - emptyFlaggedCount}")
             if (emptyFlaggedCount == emptyCount) {
                 gameOverSignal(Unit)
             }

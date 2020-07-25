@@ -5,23 +5,27 @@ import com.soywiz.korim.color.Colors
 import com.soywiz.korio.async.AsyncSignal
 
 suspend fun main() = Korge(width = 512, height = 512, bgcolor = Colors["#2b2b2b"]) {
-    var board = Board()
-    var boardContainer = createBoard(board)
-
+    var board: Board? = null
+    var boardContainer: Container? = null
     var gameOverText: Text? = null
+
     val newGame = AsyncSignal<Unit>()
     newGame {
         removeChild(boardContainer)
         removeChild(gameOverText)
-        board = Board()
-        boardContainer = createBoard(board)
-    }
-    board.gameOver {
-        println("Game Over")
-        gameOverText = text("Game Over") {
-            position(60.0, 60.0)
+        board = Board().also {
+            boardContainer = createBoard(it)
+            it.gameOver {
+                println("Game Over")
+                gameOverText = text("Game Over") {
+                    position(60.0, 60.0)
+                }
+            }
         }
     }
+
+    newGame(Unit)
+
     val newGameButton = text("New Game") {
         parent?.let {
             alignTopToTopOf(it, 20.0)
@@ -37,8 +41,10 @@ suspend fun main() = Korge(width = 512, height = 512, bgcolor = Colors["#2b2b2b"
         alignLeftToRightOf(newGameButton, 20.0)
         bgcolor = Colors.GREEN
         onClick {
-            Solver.solve(board) {
-                board[it.x, it.y].update()
+            board?.let { board ->
+                Solver.solve(board) {
+                    board[it.x, it.y].update()
+                }
             }
         }
     }
