@@ -15,9 +15,9 @@ suspend fun main() = Korge(width = 512, height = 512, bgcolor = Colors["#2b2b2b"
         removeChild(gameOverText)
         board = Board().also {
             boardContainer = createBoard(it)
-            it.gameOver {
-                println("Game Over")
-                gameOverText = text("Game Over") {
+            it.gameOver { mistakes ->
+                println("Game Over, mistakes: $mistakes")
+                gameOverText = text("Game Over, Mistakes made: $mistakes") {
                     position(60.0, 60.0)
                 }
             }
@@ -71,6 +71,9 @@ fun Container.createBoard(board: Board) =
                 for (j in board.emptyCountCol[i].indices) {
                     text(board.emptyCountCol[i][j].toString()) {
                         position(i * (size + padding), (j + board.height) * (size + padding))
+                        board.onColCountDone(i, j) {
+                            color = Colors.DARKGRAY
+                        }
                     }
                 }
             }
@@ -78,6 +81,9 @@ fun Container.createBoard(board: Board) =
                 for (i in board.emptyCountRow[j].indices) {
                     text(board.emptyCountRow[j][i].toString()) {
                         position((i + board.width) * (size + padding), j * (size + padding))
+                        board.onRowCountDone(j, i) {
+                            color = Colors.DARKGRAY
+                        }
                     }
                 }
             }

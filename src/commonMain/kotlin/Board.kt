@@ -3,6 +3,7 @@ import com.soywiz.kds.Extra
 import com.soywiz.korio.async.Signal
 import com.soywiz.korma.geom.PointInt
 import com.soywiz.korma.geom.ds.get
+import com.soywiz.korma.geom.ds.set
 import kotlin.random.Random
 
 enum class MineState { UNMARKED, EMPTY, MARKED, MINE }
@@ -11,6 +12,22 @@ enum class MineState { UNMARKED, EMPTY, MARKED, MINE }
  * Class to maintain board state
  */
 class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Double = 0.25) : Extra by Extra.Mixin() {
+
+    data class CountPosition(
+            // Use this value and the column position of the cell to get the count
+            val rowPosition: Int = -1,
+            // Use this value and the row position of the cell to get the count
+            val colPosition: Int = -1
+    )
+
+    /**
+     * Class to maintain the consecutive empty block count and signal when all the blocks in this span are done.
+     */
+    data class EmptyCount(
+            val numEmpty: Int = 0,
+            var numFlagged: Int = 0,
+            val signalDone: Signal<Unit> = Signal()
+    )
 
     /**
      * Class to maintain cell state
@@ -30,65 +47,109 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
         fun check() {
             if (state == MineState.UNMARKED) {
                 state = if (mineMap[pos]) {
-                    MineState.MINE
+                    MineState.MINE.also {
+                        mistakeSignal(Unit)
+                    }
                 } else {
                     MineState.EMPTY.also {
-                        emptyFlaggedSignal(Unit)
+                        emptyFlaggedSignal(pos)
                     }
                 }
             }
         }
     }
 
-    private val gameOverSignal = Signal<Unit>()
-    private val emptyFlaggedSignal = Signal<Unit>()
+    private val gameOverSignal = Signal<Int>()
+    private val emptyFlaggedSignal = Signal<PointInt>()
+    private val mistakeSignal = Signal<Unit>()
 
     private val mineMap = Array2(width, height) { Random.nextDouble() < mineCount }
     private val cells = Array2(width, height) { Cell(it % width, it / width) }
-    val board
-        get() = cells.map { it.state }
+    val board = cells.map { it.state }
 
     private val emptyCount = mineMap.count { !it }
     private var emptyFlaggedCount = 0
+    private var mistakeCount = 0
 
+    private val countMap = Array2(width, height) { CountPosition() }
+    private val colEmptyCount: List<List<EmptyCount>>
+    private val rowEmptyCount: List<List<EmptyCount>>
     /**
      * List of  size [width], holds the counts for each column
      */
-    val emptyCountCol = List(width) { mutableListOf<Int>() }
+    val emptyCountCol: List<List<Int>>
+        get() = colEmptyCount.map { list ->
+            list.map { it.numEmpty }
+        }
     /**
      * List of  size [height], holds the counts for each row
      */
-    val emptyCountRow = List(height) { mutableListOf<Int>() }
+    val emptyCountRow: List<List<Int>>
+        get() = rowEmptyCount.map { list ->
+            list.map { it.numEmpty }
+        }
 
     init {
         // generate the counts for each row/column
+        val emptyCountCol = List(width) { mutableListOf<Int>() }
+        val emptyCountRow = List(height) { mutableListOf<Int>() }
         cells.forEach {
             if (!mineMap[it.pos]) {
                 val posX = it.pos.x
                 val posY = it.pos.y
+                val countCol = emptyCountCol[posX]
+                val countRow = emptyCountRow[posY]
+                // For this row, if first empty position since last mine, add 1 to list.
+                // Otherwise, increment last value
                 if (posX == 0 || mineMap[posX - 1, posY]) {
-                    emptyCountRow[posY].add(1)
+                    countRow.add(1)
                 } else {
-                    val arr = emptyCountRow[posY]
-                    arr[arr.size - 1] = arr.last().inc()
+                    countRow[countRow.size - 1] = countRow.last().inc()
                 }
+                // For this col, if first empty position since last mine, add 1 to list.
+                // Otherwise, increment last value
                 if (posY == 0 || mineMap[posX, posY - 1]) {
-                    emptyCountCol[posX].add(1)
+                    countCol.add(1)
                 } else {
-                    val arr = emptyCountCol[posX]
-                    arr[arr.size - 1] = arr.last().inc()
+                    countCol[countCol.size - 1] = countCol.last().inc()
                 }
+                // Maintain position of count relating to this cell
+                countMap[it.pos] = CountPosition(countRow.size - 1, countCol.size - 1)
             }
         }
+        this.rowEmptyCount = emptyCountRow.map { list ->
+            list.map { EmptyCount(it) }
+        }
+        this.colEmptyCount = emptyCountCol.map { list ->
+            list.map { EmptyCount(it) }
+        }
+
 
         emptyFlaggedSignal {
+            // Check if count done value changed
+            val countPosition = countMap[it]
+            val colCount = colEmptyCount[it.x][countPosition.colPosition]
+            colCount.numFlagged += 1
+            if (colCount.numFlagged >= colCount.numEmpty) {
+                colCount.signalDone(Unit)
+            }
+            val rowCount = rowEmptyCount[it.y][countPosition.rowPosition]
+            rowCount.numFlagged += 1
+            if (rowCount.numFlagged >= rowCount.numEmpty) {
+                rowCount.signalDone(Unit)
+            }
+
+            // Check if game over
             emptyFlaggedCount++
             println("Remaining count ${emptyCount - emptyFlaggedCount}")
             if (emptyFlaggedCount == emptyCount) {
-                gameOverSignal(Unit)
+                gameOverSignal(mistakeCount)
             }
         }
 
+        mistakeSignal {
+            mistakeCount++
+        }
     }
 
     operator fun get(x: Int, y: Int) = cells[x, y]
@@ -96,7 +157,21 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
     /**
      * Register [handler] for game over event
      */
-    fun gameOver(handler: (Unit) -> Unit) {
+    fun gameOver(handler: (Int) -> Unit) {
         gameOverSignal.once(handler)
+    }
+
+    /**
+     * Register [handler] for count done change event
+     */
+    fun onColCountDone(col: Int, count: Int, handler: (Unit) -> Unit) {
+        colEmptyCount[col][count].signalDone.once(handler)
+    }
+
+    /**
+     * Register [handler] for count done change event
+     */
+    fun onRowCountDone(row: Int, count: Int, handler: (Unit) -> Unit) {
+        rowEmptyCount[row][count].signalDone.once(handler)
     }
 }
