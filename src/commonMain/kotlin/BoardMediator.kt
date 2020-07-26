@@ -44,8 +44,8 @@ fun Board.Cell.update() {
 fun Board.Cell.init(view: View, parent: Board) {
     this.view = view
 
-    // Set initial action and perform.
     view.onDown {
+        // Set initial action and perform.
         val action = getAction(it)
         if (action == Action.NONE) return@onDown
 
@@ -57,9 +57,9 @@ fun Board.Cell.init(view: View, parent: Board) {
         }
     }
 
-    // Perform action on drag in
-    // End if mine.
     view.onDownFromOutside {
+        // Perform action on drag in
+        // End if mine.
         if (state == MineState.MINE) {
             parent.drag = null
             return@onDownFromOutside
@@ -70,10 +70,10 @@ fun Board.Cell.init(view: View, parent: Board) {
         val sameY = pos.y == drag.start.y
         if (drag.direction == Direction.NONE) {
             if (sameX.xor(sameY)) {
-                drag.direction = if (sameX) Direction.ROW else Direction.COL
+                drag.direction = if (sameX) Direction.COL else Direction.ROW
             }
         }
-        if (sameX && drag.direction == Direction.ROW || sameY && drag.direction == Direction.COL) {
+        if (sameX && drag.direction == Direction.COL || sameY && drag.direction == Direction.ROW) {
             performAction(drag.action)
         }
         if (state == MineState.MINE) {

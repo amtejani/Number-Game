@@ -35,6 +35,7 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
     inner class Cell(x: Int, y: Int) : Extra by Extra.Mixin() {
         val pos = PointInt(x, y)
         var state = MineState.UNMARKED
+            private set
 
         fun mark() {
             if (state == MineState.UNMARKED) state = MineState.MARKED
@@ -64,8 +65,7 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
     private val mistakeSignal = Signal<Unit>()
 
     private val mineMap = Array2(width, height) { Random.nextDouble() < mineCount }
-    private val cells = Array2(width, height) { Cell(it % width, it / width) }
-    val board = cells.map { it.state }
+    val cells = Array2(width, height) { Cell(it % width, it / width) }
 
     private val emptyCount = mineMap.count { !it }
     private var emptyFlaggedCount = 0
