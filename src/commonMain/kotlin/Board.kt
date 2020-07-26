@@ -74,15 +74,17 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
     private val countMap = Array2(width, height) { CountPosition() }
     private val colEmptyCount: List<List<EmptyCount>>
     private val rowEmptyCount: List<List<EmptyCount>>
+
     /**
-     * List of  size [width], holds the counts for each column
+     * List of size [width], holds the counts for each column
      */
     val emptyCountCol: List<List<Int>>
         get() = colEmptyCount.map { list ->
             list.map { it.numEmpty }
         }
+
     /**
-     * List of  size [height], holds the counts for each row
+     * List of size [height], holds the counts for each row
      */
     val emptyCountRow: List<List<Int>>
         get() = rowEmptyCount.map { list ->
@@ -157,21 +159,31 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
     /**
      * Register [handler] for game over event
      */
-    fun gameOver(handler: (Int) -> Unit) {
-        gameOverSignal.once(handler)
-    }
+    fun gameOver(handler: (Int) -> Unit) = gameOverSignal.once(handler)
 
     /**
      * Register [handler] for count done change event
      */
-    fun onColCountDone(col: Int, count: Int, handler: (Unit) -> Unit) {
-        colEmptyCount[col][count].signalDone.once(handler)
-    }
+    fun onColCountDone(col: Int, count: Int, handler: (Unit) -> Unit) = colEmptyCount[col][count].signalDone.once(handler)
 
     /**
      * Register [handler] for count done change event
      */
-    fun onRowCountDone(row: Int, count: Int, handler: (Unit) -> Unit) {
-        rowEmptyCount[row][count].signalDone.once(handler)
+    fun onRowCountDone(row: Int, count: Int, handler: (Unit) -> Unit) = rowEmptyCount[row][count].signalDone.once(handler)
+
+    fun cleanUp() {
+        mistakeSignal.clear()
+        emptyFlaggedSignal.clear()
+        gameOverSignal.clear()
+        colEmptyCount.forEach { list ->
+            list.forEach {
+                it.signalDone.clear()
+            }
+        }
+        rowEmptyCount.forEach { list ->
+            list.forEach {
+                it.signalDone.clear()
+            }
+        }
     }
 }

@@ -1,45 +1,30 @@
 import com.soywiz.korge.Korge
 import com.soywiz.korge.input.onClick
+import com.soywiz.korge.ui.textButton
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.Colors
 import com.soywiz.korio.async.AsyncSignal
+import com.soywiz.korio.lang.Closeable
 
 suspend fun main() = Korge(width = 512, height = 512, bgcolor = Colors["#2b2b2b"]) {
     var board: Board? = null
     var boardContainer: Container? = null
     var gameOverText: Text? = null
-
+    var gameOverCloseable: Closeable? = null
     val newGame = AsyncSignal<Unit>()
-    newGame {
-        removeChild(boardContainer)
-        removeChild(gameOverText)
-        board = Board().also {
-            boardContainer = createBoard(it)
-            it.gameOver { mistakes ->
-                println("Game Over, mistakes: $mistakes")
-                gameOverText = text("Game Over, Mistakes made: $mistakes") {
-                    position(60.0, 60.0)
-                }
-            }
-        }
-    }
 
-    newGame(Unit)
-
-    val newGameButton = text("New Game") {
+    val newGameButton = textButton(text = "New Game") {
         parent?.let {
-            alignTopToTopOf(it, 20.0)
+            alignTopToTopOf(it, 60.0)
             alignLeftToLeftOf(it, 20.0)
         }
-        bgcolor = Colors.RED
         onClick {
             newGame(Unit)
         }
     }
-    text("Solve") {
+    textButton(text = "Solve") {
         alignTopToTopOf(newGameButton)
         alignLeftToRightOf(newGameButton, 20.0)
-        bgcolor = Colors.GREEN
         onClick {
             board?.let { board ->
                 Solver.solve(board) {
@@ -48,6 +33,26 @@ suspend fun main() = Korge(width = 512, height = 512, bgcolor = Colors["#2b2b2b"
             }
         }
     }
+
+    newGame {
+        removeChild(boardContainer)
+        removeChild(gameOverText)
+        gameOverCloseable?.close()
+        board?.cleanUp()
+
+        board = Board().also {
+            boardContainer = createBoard(it)
+            boardContainer?.alignTopToBottomOf(newGameButton, 20.0)
+            gameOverCloseable = it.gameOver { mistakes ->
+                println("Game Over, mistakes: $mistakes")
+                gameOverText = text("Game Over, Mistakes made: $mistakes") {
+                    position(20.0, 20.0)
+                }
+            }
+        }
+    }
+
+    newGame(Unit)
 }
 
 /**
