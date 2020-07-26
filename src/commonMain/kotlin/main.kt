@@ -13,22 +13,20 @@ suspend fun main() = Korge(width = 512, height = 512, bgcolor = Colors["#2b2b2b"
     var gameOverCloseable: Closeable? = null
     val newGame = AsyncSignal<Unit>()
 
-    val newGameButton = textButton(text = "New Game") {
-        parent?.let {
-            alignTopToTopOf(it, 60.0)
-            alignLeftToLeftOf(it, 20.0)
+    val buttonContainer = container {
+        position(40,40)
+        val newGameButton = textButton(text = "New Game") {
+            onClick {
+                newGame(Unit)
+            }
         }
-        onClick {
-            newGame(Unit)
-        }
-    }
-    textButton(text = "Solve") {
-        alignTopToTopOf(newGameButton)
-        alignLeftToRightOf(newGameButton, 20.0)
-        onClick {
-            board?.let { board ->
-                Solver.solve(board) {
-                    board[it.x, it.y].update()
+        textButton(text = "Solve") {
+            alignLeftToRightOf(newGameButton, 20.0)
+            onClick {
+                board?.let { board ->
+                    Solver.solve(board) {
+                        board[it.x, it.y].update()
+                    }
                 }
             }
         }
@@ -42,7 +40,7 @@ suspend fun main() = Korge(width = 512, height = 512, bgcolor = Colors["#2b2b2b"
 
         board = Board().also {
             boardContainer = createBoard(it)
-            boardContainer?.alignTopToBottomOf(newGameButton, 20.0)
+            boardContainer?.alignTopToBottomOf(buttonContainer, 20.0)
             gameOverCloseable = it.gameOver { mistakes ->
                 println("Game Over, mistakes: $mistakes")
                 gameOverText = text("Game Over, Mistakes made: $mistakes") {
