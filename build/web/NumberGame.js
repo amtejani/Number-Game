@@ -61,6 +61,7 @@
   var alignTopToTopOf = $module$korge_root_korge.com.soywiz.korge.view.alignTopToTopOf_qcv975$;
   var coerceIn = Kotlin.kotlin.ranges.coerceIn_nig4hr$;
   var position_0 = $module$korge_root_korge.com.soywiz.korge.view.position_2cbtc5$;
+  var coerceAtMost = Kotlin.kotlin.ranges.coerceAtMost_38ydlf$;
   var coerceIn_0 = Kotlin.kotlin.ranges.coerceIn_nayhkp$;
   var internal = Kotlin.kotlin.coroutines.js.internal;
   var get_defaultUISkin = $module$korge_root_korge.com.soywiz.korge.ui.get_defaultUISkin_gohfi1$;
@@ -70,6 +71,7 @@
   var color_0 = $module$korge_root_korge.$$importsForInline$$['korim-root-korim'].com.soywiz.korim.color;
   var Fonts = $module$korge_root_korge.com.soywiz.korge.view.Fonts;
   var Text = $module$korge_root_korge.com.soywiz.korge.view.Text;
+  var Math_0 = Math;
   var Container_init = $module$korge_root_korge.com.soywiz.korge.view.Container;
   var SolidRect_init = $module$korge_root_korge.com.soywiz.korge.view.SolidRect;
   var sum = Kotlin.kotlin.collections.sum_plj8ka$;
@@ -1560,12 +1562,17 @@
             var tmp$_1 = this.local$closure$board;
             var $receiver = new Board(this.local$closure$boardWidth.v, this.local$closure$boardHeight.v, coerceIn(this.local$closure$minePercent.v / 10, 0.0, 1.0));
             var this$ = this.local$this$;
+            var closure$boardWidth = this.local$closure$boardWidth;
+            var closure$boardHeight = this.local$closure$boardHeight;
             var closure$boardContainer = this.local$closure$boardContainer;
             var closure$buttonContainer = this.local$closure$buttonContainer;
             var closure$gameOverText = this.local$closure$gameOverText;
             var closure$gameOverCloseable = this.local$closure$gameOverCloseable;
             var tmp$_2;
-            closure$boardContainer.v = createBoard(this$, $receiver);
+            var a = this$.views.virtualWidth / (closure$boardWidth.v * 1.2);
+            var b = this$.views.virtualHeight / (closure$boardHeight.v * 1.2);
+            var blockSize = Math_0.min(a, b) / 2;
+            closure$boardContainer.v = createBoard(this$, $receiver, blockSize);
             (tmp$_2 = closure$boardContainer.v) != null ? alignTopToBottomOf(tmp$_2, closure$buttonContainer, 20.0) : null;
             closure$gameOverCloseable.v = $receiver.gameOver_b4k9x1$(main$lambda$lambda$lambda$lambda_1(this$, closure$gameOverText));
             return tmp$_1.v = $receiver, Unit;
@@ -1690,12 +1697,14 @@
       return Unit;
     };
   }
-  function createBoard($receiver, board) {
+  function createBoard($receiver, board, blockSize) {
+    if (blockSize === void 0)
+      blockSize = 40.0;
     var $receiver_0 = addTo(new Container_init(), $receiver);
     var tmp$, tmp$_0, tmp$_1, tmp$_2, tmp$_3, tmp$_4;
     position($receiver_0, 100, 100);
-    var size = 40.0;
-    var padding = 8.0;
+    var size = coerceAtMost(blockSize, 40.0);
+    var padding = size / 5;
     tmp$ = board.width;
     for (var i = 0; i < tmp$; i++) {
       tmp$_0 = board.height;
@@ -1710,11 +1719,12 @@
       tmp$_2 = board.emptyCountCol.get_za3lpa$(i_0);
       for (var j_0 = 0; j_0 !== tmp$_2.size; ++j_0) {
         var text = board.emptyCountCol.get_za3lpa$(i_0).get_za3lpa$(j_0).toString();
+        var textSize = coerceAtMost(size / 2, 16.0);
         var color_0_0;
         var font;
         color_0_0 = color_0.Colors.WHITE;
         font = Fonts.Companion.defaultFont;
-        var $receiver_0_1 = addTo(Text.Companion.invoke_8ii8iq$(text, 16.0, color_0_0, font), $receiver_0);
+        var $receiver_0_1 = addTo(Text.Companion.invoke_8ii8iq$(text, textSize, color_0_0, font), $receiver_0);
         position_0($receiver_0_1, i_0 * (size + padding), (j_0 + board.height | 0) * (size + padding));
         board.onColCountDone_dxxoxs$(i_0, j_0, createBoard$lambda$lambda$lambda($receiver_0_1));
       }
@@ -1724,11 +1734,12 @@
       tmp$_4 = board.emptyCountRow.get_za3lpa$(j_1);
       for (var i_1 = 0; i_1 !== tmp$_4.size; ++i_1) {
         var text_0 = board.emptyCountRow.get_za3lpa$(j_1).get_za3lpa$(i_1).toString();
+        var textSize_0 = coerceAtMost(size / 2, 16.0);
         var color_0_1;
         var font_0;
         color_0_1 = color_0.Colors.WHITE;
         font_0 = Fonts.Companion.defaultFont;
-        var $receiver_0_2 = addTo(Text.Companion.invoke_8ii8iq$(text_0, 16.0, color_0_1, font_0), $receiver_0);
+        var $receiver_0_2 = addTo(Text.Companion.invoke_8ii8iq$(text_0, textSize_0, color_0_1, font_0), $receiver_0);
         position_0($receiver_0_2, (i_1 + board.width | 0) * (size + padding), j_1 * (size + padding));
         board.onRowCountDone_dxxoxs$(j_1, i_1, createBoard$lambda$lambda$lambda_0($receiver_0_2));
       }
@@ -2337,7 +2348,7 @@
   _.getAction_8akief$ = getAction;
   _.performAction_nf53fp$ = performAction;
   _.main = main;
-  _.createBoard_qz8s5j$ = createBoard;
+  _.createBoard_jm6i93$ = createBoard;
   _.configuration_yrwhay$ = configuration;
   Object.defineProperty(Solver$CellState, 'NONE', {
     get: Solver$CellState$NONE_getInstance

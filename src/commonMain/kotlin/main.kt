@@ -5,6 +5,7 @@ import com.soywiz.korge.view.*
 import com.soywiz.korim.color.Colors
 import com.soywiz.korio.async.AsyncSignal
 import com.soywiz.korio.lang.Closeable
+import kotlin.math.min
 
 suspend fun main() = Korge(width = 1600, height = 900, bgcolor = Colors["#2b2b2b"]) {
     var board: Board? = null
@@ -71,7 +72,8 @@ suspend fun main() = Korge(width = 1600, height = 900, bgcolor = Colors["#2b2b2b
         board?.cleanUp()
 
         board = Board(boardWidth, boardHeight, (minePercent.toDouble() / 10).coerceIn(0.0, 1.0)).also {
-            boardContainer = createBoard(it)
+            val blockSize = min(views.virtualWidth / (boardWidth * 1.2), views.virtualHeight / (boardHeight * 1.2)) / 2
+            boardContainer = createBoard(it, blockSize)
             boardContainer?.alignTopToBottomOf(buttonContainer, 20.0)
             gameOverCloseable = it.gameOver { mistakes ->
                 println("Game Over, mistakes: $mistakes")
@@ -89,11 +91,11 @@ suspend fun main() = Korge(width = 1600, height = 900, bgcolor = Colors["#2b2b2b
  * Generate [Board] UI.
  * Show the empty counts next to the rows/columns
  */
-fun Container.createBoard(board: Board) =
+fun Container.createBoard(board: Board, blockSize: Double = 40.0) =
         container {
             position(100, 100)
-            val size = 40.0
-            val padding = 8.0
+            val size = blockSize.coerceAtMost(40.0)
+            val padding = size / 5
             for (i in 0 until board.width) {
                 for (j in 0 until board.height) {
                     solidRect(size, size, color = Colors.WHITE) {
@@ -104,7 +106,7 @@ fun Container.createBoard(board: Board) =
             }
             for (i in 0 until board.width) {
                 for (j in board.emptyCountCol[i].indices) {
-                    text(board.emptyCountCol[i][j].toString()) {
+                    text(board.emptyCountCol[i][j].toString(), textSize = (size/2).coerceAtMost(16.0)) {
                         position(i * (size + padding), (j + board.height) * (size + padding))
                         board.onColCountDone(i, j) {
                             color = Colors.DARKGRAY
@@ -114,7 +116,7 @@ fun Container.createBoard(board: Board) =
             }
             for (j in 0 until board.height) {
                 for (i in board.emptyCountRow[j].indices) {
-                    text(board.emptyCountRow[j][i].toString()) {
+                    text(board.emptyCountRow[j][i].toString(), textSize = (size/2).coerceAtMost(16.0)) {
                         position((i + board.width) * (size + padding), j * (size + padding))
                         board.onRowCountDone(j, i) {
                             color = Colors.DARKGRAY
