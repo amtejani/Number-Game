@@ -11,3 +11,5 @@ and the second row has two sets of consecutive empty positions, each of width 1.
 
 Your goal is to find all empty positions while hitting as few mines as possible.
 You can check an empty position with the left mouse button, and mark a position as a possible mine with the right mouse button.
+
+[Play here](/build/web/index.html)
