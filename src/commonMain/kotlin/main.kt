@@ -6,12 +6,14 @@ import com.soywiz.korim.color.Colors
 import com.soywiz.korio.async.AsyncSignal
 import com.soywiz.korio.lang.Closeable
 
-suspend fun main() = Korge(width = 512, height = 512, bgcolor = Colors["#2b2b2b"]) {
+suspend fun main() = Korge(width = 800, height = 800, bgcolor = Colors["#2b2b2b"]) {
     var board: Board? = null
     var boardContainer: Container? = null
     var gameOverText: Text? = null
     var gameOverCloseable: Closeable? = null
     val newGame = AsyncSignal<Unit>()
+    var boardSize = 5
+    var minePercent = 50
 
     val buttonContainer = container {
         position(40,40)
@@ -30,6 +32,61 @@ suspend fun main() = Korge(width = 512, height = 512, bgcolor = Colors["#2b2b2b"
                 }
             }
         }
+        val sizeSignal = AsyncSignal<Unit>()
+        val sizeLabel = text("Size:") {
+            alignTopToBottomOf(newGameButton, 20.0)
+        }
+        val sizeMinus = text("-") {
+            alignTopToTopOf(sizeLabel)
+            alignLeftToRightOf(sizeLabel, 20.0)
+            onClick {
+                boardSize = (boardSize - 1).coerceAtLeast(1)
+                sizeSignal(Unit)
+            }
+        }
+        val sizeText = text("$boardSize") {
+            alignTopToTopOf(sizeLabel)
+            alignLeftToRightOf(sizeMinus, 20.0)
+            sizeSignal {
+                text = "$boardSize"
+            }
+        }
+        val sizePlus = text("+") {
+            alignTopToTopOf(sizeLabel)
+            alignLeftToRightOf(sizeText, 20.0)
+            onClick {
+                boardSize += 1
+                sizeSignal(Unit)
+            }
+        }
+        val countSignal = AsyncSignal<Unit>()
+        val countLabel = text("Mine Percent:") {
+            alignTopToTopOf(sizeLabel)
+            alignLeftToRightOf(sizePlus, 40.0)
+        }
+        val countMinus = text("-") {
+            alignTopToTopOf(sizeLabel)
+            alignLeftToRightOf(countLabel, 20.0)
+            onClick {
+                minePercent = (minePercent - 10).coerceIn(0..100)
+                countSignal(Unit)
+            }
+        }
+        val countText = text("$minePercent%") {
+            alignTopToTopOf(sizeLabel)
+            alignLeftToRightOf(countMinus, 20.0)
+            sizeSignal {
+                text = "$minePercent%"
+            }
+        }
+        text("+") {
+            alignTopToTopOf(sizeLabel)
+            alignLeftToRightOf(countText, 20.0)
+            onClick {
+                minePercent = (minePercent + 10).coerceIn(0..100)
+                countSignal(Unit)
+            }
+        }
     }
 
     newGame {
@@ -38,7 +95,7 @@ suspend fun main() = Korge(width = 512, height = 512, bgcolor = Colors["#2b2b2b"
         gameOverCloseable?.close()
         board?.cleanUp()
 
-        board = Board().also {
+        board = Board(boardSize, boardSize, (minePercent.toDouble() / 100).coerceIn(0.0, 1.0)).also {
             boardContainer = createBoard(it)
             boardContainer?.alignTopToBottomOf(buttonContainer, 20.0)
             gameOverCloseable = it.gameOver { mistakes ->

@@ -57,6 +57,11 @@
   var position = $module$korge_root_korge.com.soywiz.korge.view.position_ajix5r$;
   var alignLeftToRightOf = $module$korge_root_korge.com.soywiz.korge.view.alignLeftToRightOf_qcv975$;
   var alignTopToBottomOf = $module$korge_root_korge.com.soywiz.korge.view.alignTopToBottomOf_qcv975$;
+  var alignTopToTopOf = $module$korge_root_korge.com.soywiz.korge.view.alignTopToTopOf_qcv975$;
+  var coerceAtLeast = Kotlin.kotlin.ranges.coerceAtLeast_dqglrj$;
+  var IntRange = Kotlin.kotlin.ranges.IntRange;
+  var coerceIn = Kotlin.kotlin.ranges.coerceIn_nayhkp$;
+  var coerceIn_0 = Kotlin.kotlin.ranges.coerceIn_nig4hr$;
   var position_0 = $module$korge_root_korge.com.soywiz.korge.view.position_2cbtc5$;
   var internal = Kotlin.kotlin.coroutines.js.internal;
   var get_defaultUISkin = $module$korge_root_korge.com.soywiz.korge.ui.get_defaultUISkin_gohfi1$;
@@ -68,15 +73,29 @@
   var Text = $module$korge_root_korge.com.soywiz.korge.view.Text;
   var Container_init = $module$korge_root_korge.com.soywiz.korge.view.Container;
   var SolidRect_init = $module$korge_root_korge.com.soywiz.korge.view.SolidRect;
+  var sum = Kotlin.kotlin.collections.sum_plj8ka$;
+  var zip = Kotlin.kotlin.collections.zip_45mdf7$;
+  var sequence = Kotlin.kotlin.sequences.sequence_o0x0bg$;
+  var toList = Kotlin.kotlin.sequences.toList_veqyi0$;
   var Kind_OBJECT = Kotlin.Kind.OBJECT;
+  var UnsupportedOperationException_init = Kotlin.kotlin.UnsupportedOperationException_init_pdl1vj$;
   var defineInlineFunction = Kotlin.defineInlineFunction;
   var wrapFunction = Kotlin.wrapFunction;
+  var toList_0 = Kotlin.kotlin.collections.toList_7wnvza$;
+  var until = Kotlin.kotlin.ranges.until_dqglrj$;
+  var slice = Kotlin.kotlin.collections.slice_6bjbi1$;
+  var slice_0 = Kotlin.kotlin.collections.slice_b9tsm5$;
+  var listOf = Kotlin.kotlin.collections.listOf_mh5how$;
+  var toMutableList = Kotlin.kotlin.collections.toMutableList_4c7yge$;
+  var get_lastIndex = Kotlin.kotlin.collections.get_lastIndex_55thoc$;
   MineState.prototype = Object.create(Enum.prototype);
   MineState.prototype.constructor = MineState;
   Action.prototype = Object.create(Enum.prototype);
   Action.prototype.constructor = Action;
   Direction.prototype = Object.create(Enum.prototype);
   Direction.prototype.constructor = Direction;
+  Solver$CellState.prototype = Object.create(Enum.prototype);
+  Solver$CellState.prototype.constructor = Solver$CellState;
   function MineState(name, ordinal) {
     Enum.call(this);
     this.name$ = name;
@@ -1332,7 +1351,299 @@
         return instance.doResume(null);
     };
   }
-  function main$lambda$lambda$lambda$lambda_1(this$, closure$gameOverText) {
+  function Coroutine$main$lambda$lambda$lambda$lambda_1(closure$boardSize_0, closure$sizeSignal_0, it_0, continuation_0) {
+    CoroutineImpl.call(this, continuation_0);
+    this.exceptionState_0 = 1;
+    this.local$closure$boardSize = closure$boardSize_0;
+    this.local$closure$sizeSignal = closure$sizeSignal_0;
+  }
+  Coroutine$main$lambda$lambda$lambda$lambda_1.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: null,
+    interfaces: [CoroutineImpl]
+  };
+  Coroutine$main$lambda$lambda$lambda$lambda_1.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$main$lambda$lambda$lambda$lambda_1.prototype.constructor = Coroutine$main$lambda$lambda$lambda$lambda_1;
+  Coroutine$main$lambda$lambda$lambda$lambda_1.prototype.doResume = function () {
+    do
+      try {
+        switch (this.state_0) {
+          case 0:
+            this.local$closure$boardSize.v = coerceAtLeast(this.local$closure$boardSize.v - 1 | 0, 1);
+            this.state_0 = 2;
+            this.result_0 = this.local$closure$sizeSignal.invoke_11rb$(Unit, this);
+            if (this.result_0 === COROUTINE_SUSPENDED)
+              return COROUTINE_SUSPENDED;
+            continue;
+          case 1:
+            throw this.exception_0;
+          case 2:
+            return this.result_0;
+          default:this.state_0 = 1;
+            throw new Error('State Machine Unreachable execution');
+        }
+      } catch (e) {
+        if (this.state_0 === 1) {
+          this.exceptionState_0 = this.state_0;
+          throw e;
+        } else {
+          this.state_0 = this.exceptionState_0;
+          this.exception_0 = e;
+        }
+      }
+     while (true);
+  };
+  function main$lambda$lambda$lambda$lambda_1(closure$boardSize_0, closure$sizeSignal_0) {
+    return function (it_0, continuation_0, suspended) {
+      var instance = new Coroutine$main$lambda$lambda$lambda$lambda_1(closure$boardSize_0, closure$sizeSignal_0, it_0, continuation_0);
+      if (suspended)
+        return instance;
+      else
+        return instance.doResume(null);
+    };
+  }
+  function Coroutine$main$lambda$lambda$lambda$lambda_2(closure$boardSize_0, this$_0, it_0, continuation_0) {
+    CoroutineImpl.call(this, continuation_0);
+    this.exceptionState_0 = 1;
+    this.local$closure$boardSize = closure$boardSize_0;
+    this.local$this$ = this$_0;
+  }
+  Coroutine$main$lambda$lambda$lambda$lambda_2.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: null,
+    interfaces: [CoroutineImpl]
+  };
+  Coroutine$main$lambda$lambda$lambda$lambda_2.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$main$lambda$lambda$lambda$lambda_2.prototype.constructor = Coroutine$main$lambda$lambda$lambda$lambda_2;
+  Coroutine$main$lambda$lambda$lambda$lambda_2.prototype.doResume = function () {
+    do
+      try {
+        switch (this.state_0) {
+          case 0:
+            return this.local$this$.text = this.local$closure$boardSize.v.toString(), Unit;
+          case 1:
+            throw this.exception_0;
+          default:this.state_0 = 1;
+            throw new Error('State Machine Unreachable execution');
+        }
+      } catch (e) {
+        if (this.state_0 === 1) {
+          this.exceptionState_0 = this.state_0;
+          throw e;
+        } else {
+          this.state_0 = this.exceptionState_0;
+          this.exception_0 = e;
+        }
+      }
+     while (true);
+  };
+  function main$lambda$lambda$lambda$lambda_2(closure$boardSize_0, this$_0) {
+    return function (it_0, continuation_0, suspended) {
+      var instance = new Coroutine$main$lambda$lambda$lambda$lambda_2(closure$boardSize_0, this$_0, it_0, continuation_0);
+      if (suspended)
+        return instance;
+      else
+        return instance.doResume(null);
+    };
+  }
+  function Coroutine$main$lambda$lambda$lambda$lambda_3(closure$boardSize_0, closure$sizeSignal_0, it_0, continuation_0) {
+    CoroutineImpl.call(this, continuation_0);
+    this.exceptionState_0 = 1;
+    this.local$closure$boardSize = closure$boardSize_0;
+    this.local$closure$sizeSignal = closure$sizeSignal_0;
+  }
+  Coroutine$main$lambda$lambda$lambda$lambda_3.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: null,
+    interfaces: [CoroutineImpl]
+  };
+  Coroutine$main$lambda$lambda$lambda$lambda_3.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$main$lambda$lambda$lambda$lambda_3.prototype.constructor = Coroutine$main$lambda$lambda$lambda$lambda_3;
+  Coroutine$main$lambda$lambda$lambda$lambda_3.prototype.doResume = function () {
+    do
+      try {
+        switch (this.state_0) {
+          case 0:
+            this.local$closure$boardSize.v = this.local$closure$boardSize.v + 1 | 0;
+            this.state_0 = 2;
+            this.result_0 = this.local$closure$sizeSignal.invoke_11rb$(Unit, this);
+            if (this.result_0 === COROUTINE_SUSPENDED)
+              return COROUTINE_SUSPENDED;
+            continue;
+          case 1:
+            throw this.exception_0;
+          case 2:
+            return this.result_0;
+          default:this.state_0 = 1;
+            throw new Error('State Machine Unreachable execution');
+        }
+      } catch (e) {
+        if (this.state_0 === 1) {
+          this.exceptionState_0 = this.state_0;
+          throw e;
+        } else {
+          this.state_0 = this.exceptionState_0;
+          this.exception_0 = e;
+        }
+      }
+     while (true);
+  };
+  function main$lambda$lambda$lambda$lambda_3(closure$boardSize_0, closure$sizeSignal_0) {
+    return function (it_0, continuation_0, suspended) {
+      var instance = new Coroutine$main$lambda$lambda$lambda$lambda_3(closure$boardSize_0, closure$sizeSignal_0, it_0, continuation_0);
+      if (suspended)
+        return instance;
+      else
+        return instance.doResume(null);
+    };
+  }
+  function Coroutine$main$lambda$lambda$lambda$lambda_4(closure$minePercent_0, closure$countSignal_0, it_0, continuation_0) {
+    CoroutineImpl.call(this, continuation_0);
+    this.exceptionState_0 = 1;
+    this.local$closure$minePercent = closure$minePercent_0;
+    this.local$closure$countSignal = closure$countSignal_0;
+  }
+  Coroutine$main$lambda$lambda$lambda$lambda_4.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: null,
+    interfaces: [CoroutineImpl]
+  };
+  Coroutine$main$lambda$lambda$lambda$lambda_4.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$main$lambda$lambda$lambda$lambda_4.prototype.constructor = Coroutine$main$lambda$lambda$lambda$lambda_4;
+  Coroutine$main$lambda$lambda$lambda$lambda_4.prototype.doResume = function () {
+    do
+      try {
+        switch (this.state_0) {
+          case 0:
+            this.local$closure$minePercent.v = coerceIn(this.local$closure$minePercent.v - 10 | 0, new IntRange(0, 100));
+            this.state_0 = 2;
+            this.result_0 = this.local$closure$countSignal.invoke_11rb$(Unit, this);
+            if (this.result_0 === COROUTINE_SUSPENDED)
+              return COROUTINE_SUSPENDED;
+            continue;
+          case 1:
+            throw this.exception_0;
+          case 2:
+            return this.result_0;
+          default:this.state_0 = 1;
+            throw new Error('State Machine Unreachable execution');
+        }
+      } catch (e) {
+        if (this.state_0 === 1) {
+          this.exceptionState_0 = this.state_0;
+          throw e;
+        } else {
+          this.state_0 = this.exceptionState_0;
+          this.exception_0 = e;
+        }
+      }
+     while (true);
+  };
+  function main$lambda$lambda$lambda$lambda_4(closure$minePercent_0, closure$countSignal_0) {
+    return function (it_0, continuation_0, suspended) {
+      var instance = new Coroutine$main$lambda$lambda$lambda$lambda_4(closure$minePercent_0, closure$countSignal_0, it_0, continuation_0);
+      if (suspended)
+        return instance;
+      else
+        return instance.doResume(null);
+    };
+  }
+  function Coroutine$main$lambda$lambda$lambda$lambda_5(closure$minePercent_0, this$_0, it_0, continuation_0) {
+    CoroutineImpl.call(this, continuation_0);
+    this.exceptionState_0 = 1;
+    this.local$closure$minePercent = closure$minePercent_0;
+    this.local$this$ = this$_0;
+  }
+  Coroutine$main$lambda$lambda$lambda$lambda_5.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: null,
+    interfaces: [CoroutineImpl]
+  };
+  Coroutine$main$lambda$lambda$lambda$lambda_5.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$main$lambda$lambda$lambda$lambda_5.prototype.constructor = Coroutine$main$lambda$lambda$lambda$lambda_5;
+  Coroutine$main$lambda$lambda$lambda$lambda_5.prototype.doResume = function () {
+    do
+      try {
+        switch (this.state_0) {
+          case 0:
+            return this.local$this$.text = this.local$closure$minePercent.v.toString() + '%', Unit;
+          case 1:
+            throw this.exception_0;
+          default:this.state_0 = 1;
+            throw new Error('State Machine Unreachable execution');
+        }
+      } catch (e) {
+        if (this.state_0 === 1) {
+          this.exceptionState_0 = this.state_0;
+          throw e;
+        } else {
+          this.state_0 = this.exceptionState_0;
+          this.exception_0 = e;
+        }
+      }
+     while (true);
+  };
+  function main$lambda$lambda$lambda$lambda_5(closure$minePercent_0, this$_0) {
+    return function (it_0, continuation_0, suspended) {
+      var instance = new Coroutine$main$lambda$lambda$lambda$lambda_5(closure$minePercent_0, this$_0, it_0, continuation_0);
+      if (suspended)
+        return instance;
+      else
+        return instance.doResume(null);
+    };
+  }
+  function Coroutine$main$lambda$lambda$lambda$lambda_6(closure$minePercent_0, closure$countSignal_0, it_0, continuation_0) {
+    CoroutineImpl.call(this, continuation_0);
+    this.exceptionState_0 = 1;
+    this.local$closure$minePercent = closure$minePercent_0;
+    this.local$closure$countSignal = closure$countSignal_0;
+  }
+  Coroutine$main$lambda$lambda$lambda$lambda_6.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: null,
+    interfaces: [CoroutineImpl]
+  };
+  Coroutine$main$lambda$lambda$lambda$lambda_6.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$main$lambda$lambda$lambda$lambda_6.prototype.constructor = Coroutine$main$lambda$lambda$lambda$lambda_6;
+  Coroutine$main$lambda$lambda$lambda$lambda_6.prototype.doResume = function () {
+    do
+      try {
+        switch (this.state_0) {
+          case 0:
+            this.local$closure$minePercent.v = coerceIn(this.local$closure$minePercent.v + 10 | 0, new IntRange(0, 100));
+            this.state_0 = 2;
+            this.result_0 = this.local$closure$countSignal.invoke_11rb$(Unit, this);
+            if (this.result_0 === COROUTINE_SUSPENDED)
+              return COROUTINE_SUSPENDED;
+            continue;
+          case 1:
+            throw this.exception_0;
+          case 2:
+            return this.result_0;
+          default:this.state_0 = 1;
+            throw new Error('State Machine Unreachable execution');
+        }
+      } catch (e) {
+        if (this.state_0 === 1) {
+          this.exceptionState_0 = this.state_0;
+          throw e;
+        } else {
+          this.state_0 = this.exceptionState_0;
+          this.exception_0 = e;
+        }
+      }
+     while (true);
+  };
+  function main$lambda$lambda$lambda$lambda_6(closure$minePercent_0, closure$countSignal_0) {
+    return function (it_0, continuation_0, suspended) {
+      var instance = new Coroutine$main$lambda$lambda$lambda$lambda_6(closure$minePercent_0, closure$countSignal_0, it_0, continuation_0);
+      if (suspended)
+        return instance;
+      else
+        return instance.doResume(null);
+    };
+  }
+  function main$lambda$lambda$lambda$lambda_7(this$, closure$gameOverText) {
     return function (mistakes) {
       println('Game Over, mistakes: ' + mistakes);
       var tmp$ = closure$gameOverText;
@@ -1348,7 +1659,7 @@
       return Unit;
     };
   }
-  function Coroutine$main$lambda$lambda(closure$boardContainer_0, this$_0, closure$gameOverText_0, closure$gameOverCloseable_0, closure$board_0, closure$buttonContainer_0, it_0, continuation_0) {
+  function Coroutine$main$lambda$lambda(closure$boardContainer_0, this$_0, closure$gameOverText_0, closure$gameOverCloseable_0, closure$board_0, closure$boardSize_0, closure$minePercent_0, closure$buttonContainer_0, it_0, continuation_0) {
     CoroutineImpl.call(this, continuation_0);
     this.exceptionState_0 = 1;
     this.local$closure$boardContainer = closure$boardContainer_0;
@@ -1356,6 +1667,8 @@
     this.local$closure$gameOverText = closure$gameOverText_0;
     this.local$closure$gameOverCloseable = closure$gameOverCloseable_0;
     this.local$closure$board = closure$board_0;
+    this.local$closure$boardSize = closure$boardSize_0;
+    this.local$closure$minePercent = closure$minePercent_0;
     this.local$closure$buttonContainer = closure$buttonContainer_0;
   }
   Coroutine$main$lambda$lambda.$metadata$ = {
@@ -1376,7 +1689,7 @@
             (tmp$ = this.local$closure$gameOverCloseable.v) != null ? (tmp$.close(), Unit) : null;
             (tmp$_0 = this.local$closure$board.v) != null ? (tmp$_0.cleanUp(), Unit) : null;
             var tmp$_1 = this.local$closure$board;
-            var $receiver = new Board();
+            var $receiver = new Board(this.local$closure$boardSize.v, this.local$closure$boardSize.v, coerceIn_0(this.local$closure$minePercent.v / 100, 0.0, 1.0));
             var this$ = this.local$this$;
             var closure$boardContainer = this.local$closure$boardContainer;
             var closure$buttonContainer = this.local$closure$buttonContainer;
@@ -1385,7 +1698,7 @@
             var tmp$_2;
             closure$boardContainer.v = createBoard(this$, $receiver);
             (tmp$_2 = closure$boardContainer.v) != null ? alignTopToBottomOf(tmp$_2, closure$buttonContainer, 20.0) : null;
-            closure$gameOverCloseable.v = $receiver.gameOver_b4k9x1$(main$lambda$lambda$lambda$lambda_1(this$, closure$gameOverText));
+            closure$gameOverCloseable.v = $receiver.gameOver_b4k9x1$(main$lambda$lambda$lambda$lambda_7(this$, closure$gameOverText));
             return tmp$_1.v = $receiver, Unit;
           case 1:
             throw this.exception_0;
@@ -1403,9 +1716,9 @@
       }
      while (true);
   };
-  function main$lambda$lambda(closure$boardContainer_0, this$_0, closure$gameOverText_0, closure$gameOverCloseable_0, closure$board_0, closure$buttonContainer_0) {
+  function main$lambda$lambda(closure$boardContainer_0, this$_0, closure$gameOverText_0, closure$gameOverCloseable_0, closure$board_0, closure$boardSize_0, closure$minePercent_0, closure$buttonContainer_0) {
     return function (it_0, continuation_0, suspended) {
-      var instance = new Coroutine$main$lambda$lambda(closure$boardContainer_0, this$_0, closure$gameOverText_0, closure$gameOverCloseable_0, closure$board_0, closure$buttonContainer_0, it_0, continuation_0);
+      var instance = new Coroutine$main$lambda$lambda(closure$boardContainer_0, this$_0, closure$gameOverText_0, closure$gameOverCloseable_0, closure$board_0, closure$boardSize_0, closure$minePercent_0, closure$buttonContainer_0, it_0, continuation_0);
       if (suspended)
         return instance;
       else
@@ -1435,6 +1748,8 @@
             var gameOverText = {v: null};
             var gameOverCloseable = {v: null};
             var newGame = new AsyncSignal();
+            var boardSize = {v: 5};
+            var minePercent = {v: 50};
             var $receiver_0_0 = addTo(new Container_init(), this.local$$receiver);
             position($receiver_0_0, 40, 40);
             var $receiver_0_1 = addTo(new TextButton_init(128.0, 64.0, 'New Game', get_defaultUISkin($receiver_0_0), get_defaultUIFont($receiver_0_0)), $receiver_0_0);
@@ -1455,8 +1770,106 @@
             if ((tmp$_0 = $receiver_0_2 != null ? get_mouse($receiver_0_2) : null) != null) {
               prop_0.get(tmp$_0).add_qlkmfe$(doMouseEvent$lambda$lambda_2(tmp$_0, main$lambda$lambda$lambda$lambda_0(board)));
             }
+            var sizeSignal = new AsyncSignal();
+            var color_0_0;
+            var font;
+            color_0_0 = color_0.Colors.WHITE;
+            font = Fonts.Companion.defaultFont;
+            var $receiver_0_3 = addTo(Text.Companion.invoke_8ii8iq$('Size:', 16.0, color_0_0, font), $receiver_0_0);
+            alignTopToBottomOf($receiver_0_3, newGameButton, 20.0);
+            var sizeLabel = $receiver_0_3;
+            var color_0_1;
+            var font_0;
+            color_0_1 = color_0.Colors.WHITE;
+            font_0 = Fonts.Companion.defaultFont;
+            var $receiver_0_4 = addTo(Text.Companion.invoke_8ii8iq$('-', 16.0, color_0_1, font_0), $receiver_0_0);
+            alignTopToTopOf($receiver_0_4, sizeLabel);
+            alignLeftToRightOf($receiver_0_4, sizeLabel, 20.0);
+            var prop_1 = getPropertyCallableRef('click', 1, function ($receiver_0) {
+              return $receiver_0.click;
+            });
+            var tmp$_1;
+            if ((tmp$_1 = $receiver_0_4 != null ? get_mouse($receiver_0_4) : null) != null) {
+              prop_1.get(tmp$_1).add_qlkmfe$(doMouseEvent$lambda$lambda_2(tmp$_1, main$lambda$lambda$lambda$lambda_1(boardSize, sizeSignal)));
+            }
+            var sizeMinus = $receiver_0_4;
+            var text = boardSize.v.toString();
+            var color_0_2;
+            var font_1;
+            color_0_2 = color_0.Colors.WHITE;
+            font_1 = Fonts.Companion.defaultFont;
+            var $receiver_0_5 = addTo(Text.Companion.invoke_8ii8iq$(text, 16.0, color_0_2, font_1), $receiver_0_0);
+            alignTopToTopOf($receiver_0_5, sizeLabel);
+            alignLeftToRightOf($receiver_0_5, sizeMinus, 20.0);
+            sizeSignal.invoke_25kf2w$(main$lambda$lambda$lambda$lambda_2(boardSize, $receiver_0_5));
+            var sizeText = $receiver_0_5;
+            var color_0_3;
+            var font_2;
+            color_0_3 = color_0.Colors.WHITE;
+            font_2 = Fonts.Companion.defaultFont;
+            var $receiver_0_6 = addTo(Text.Companion.invoke_8ii8iq$('+', 16.0, color_0_3, font_2), $receiver_0_0);
+            alignTopToTopOf($receiver_0_6, sizeLabel);
+            alignLeftToRightOf($receiver_0_6, sizeText, 20.0);
+            var prop_2 = getPropertyCallableRef('click', 1, function ($receiver_0) {
+              return $receiver_0.click;
+            });
+            var tmp$_2;
+            if ((tmp$_2 = $receiver_0_6 != null ? get_mouse($receiver_0_6) : null) != null) {
+              prop_2.get(tmp$_2).add_qlkmfe$(doMouseEvent$lambda$lambda_2(tmp$_2, main$lambda$lambda$lambda$lambda_3(boardSize, sizeSignal)));
+            }
+            var sizePlus = $receiver_0_6;
+            var countSignal = new AsyncSignal();
+            var text_0 = 'Mine Percent:';
+            var color_0_4;
+            var font_3;
+            color_0_4 = color_0.Colors.WHITE;
+            font_3 = Fonts.Companion.defaultFont;
+            var $receiver_0_7 = addTo(Text.Companion.invoke_8ii8iq$(text_0, 16.0, color_0_4, font_3), $receiver_0_0);
+            alignTopToTopOf($receiver_0_7, sizeLabel);
+            alignLeftToRightOf($receiver_0_7, sizePlus, 20.0);
+            var countLabel = $receiver_0_7;
+            var color_0_5;
+            var font_4;
+            color_0_5 = color_0.Colors.WHITE;
+            font_4 = Fonts.Companion.defaultFont;
+            var $receiver_0_8 = addTo(Text.Companion.invoke_8ii8iq$('-', 16.0, color_0_5, font_4), $receiver_0_0);
+            alignTopToTopOf($receiver_0_8, sizeLabel);
+            alignLeftToRightOf($receiver_0_8, countLabel, 20.0);
+            var prop_3 = getPropertyCallableRef('click', 1, function ($receiver_0) {
+              return $receiver_0.click;
+            });
+            var tmp$_3;
+            if ((tmp$_3 = $receiver_0_8 != null ? get_mouse($receiver_0_8) : null) != null) {
+              prop_3.get(tmp$_3).add_qlkmfe$(doMouseEvent$lambda$lambda_2(tmp$_3, main$lambda$lambda$lambda$lambda_4(minePercent, countSignal)));
+            }
+            var countMinus = $receiver_0_8;
+            var text_1 = minePercent.v.toString() + '%';
+            var color_0_6;
+            var font_5;
+            color_0_6 = color_0.Colors.WHITE;
+            font_5 = Fonts.Companion.defaultFont;
+            var $receiver_0_9 = addTo(Text.Companion.invoke_8ii8iq$(text_1, 16.0, color_0_6, font_5), $receiver_0_0);
+            alignTopToTopOf($receiver_0_9, sizeLabel);
+            alignLeftToRightOf($receiver_0_9, countMinus, 20.0);
+            sizeSignal.invoke_25kf2w$(main$lambda$lambda$lambda$lambda_5(minePercent, $receiver_0_9));
+            var countText = $receiver_0_9;
+            var color_0_7;
+            var font_6;
+            color_0_7 = color_0.Colors.WHITE;
+            font_6 = Fonts.Companion.defaultFont;
+            var $receiver_0_10 = addTo(Text.Companion.invoke_8ii8iq$('+', 16.0, color_0_7, font_6), $receiver_0_0);
+            alignTopToTopOf($receiver_0_10, sizeLabel);
+            alignLeftToRightOf($receiver_0_10, countText, 20.0);
+            var prop_4 = getPropertyCallableRef('click', 1, function ($receiver_0) {
+              return $receiver_0.click;
+            });
+            var tmp$_4;
+            if ((tmp$_4 = $receiver_0_10 != null ? get_mouse($receiver_0_10) : null) != null) {
+              prop_4.get(tmp$_4).add_qlkmfe$(doMouseEvent$lambda$lambda_2(tmp$_4, main$lambda$lambda$lambda$lambda_6(minePercent, countSignal)));
+            }
+            var countPlus = $receiver_0_10;
             var buttonContainer = $receiver_0_0;
-            newGame.invoke_25kf2w$(main$lambda$lambda(boardContainer, this.local$$receiver, gameOverText, gameOverCloseable, board, buttonContainer));
+            newGame.invoke_25kf2w$(main$lambda$lambda(boardContainer, this.local$$receiver, gameOverText, gameOverCloseable, board, boardSize, minePercent, buttonContainer));
             this.state_0 = 2;
             this.result_0 = newGame.invoke_11rb$(Unit, this);
             if (this.result_0 === COROUTINE_SUSPENDED)
@@ -1488,7 +1901,7 @@
       return instance.doResume(null);
   }
   function main(continuation) {
-    return korge.Korge.invoke_hyfg37$(void 0, 512, 512, void 0, void 0, void 0, void 0, void 0, void 0, void 0, void 0, void 0, void 0, void 0, color.Colors.get_61zpoe$('#2b2b2b'), void 0, void 0, void 0, void 0, void 0, void 0, main$lambda, continuation);
+    return korge.Korge.invoke_hyfg37$(void 0, 800, 800, void 0, void 0, void 0, void 0, void 0, void 0, void 0, void 0, void 0, void 0, void 0, color.Colors.get_61zpoe$('#2b2b2b'), void 0, void 0, void 0, void 0, void 0, void 0, main$lambda, continuation);
   }
   function createBoard$lambda$lambda$lambda(this$) {
     return function (it) {
@@ -1550,8 +1963,231 @@
   function Solver() {
     Solver_instance = this;
   }
+  function Solver$CellState(name, ordinal) {
+    Enum.call(this);
+    this.name$ = name;
+    this.ordinal$ = ordinal;
+  }
+  function Solver$CellState_initFields() {
+    Solver$CellState_initFields = function () {
+    };
+    Solver$CellState$NONE_instance = new Solver$CellState('NONE', 0);
+    Solver$CellState$EMPTY_instance = new Solver$CellState('EMPTY', 1);
+    Solver$CellState$MINE_instance = new Solver$CellState('MINE', 2);
+  }
+  var Solver$CellState$NONE_instance;
+  function Solver$CellState$NONE_getInstance() {
+    Solver$CellState_initFields();
+    return Solver$CellState$NONE_instance;
+  }
+  var Solver$CellState$EMPTY_instance;
+  function Solver$CellState$EMPTY_getInstance() {
+    Solver$CellState_initFields();
+    return Solver$CellState$EMPTY_instance;
+  }
+  var Solver$CellState$MINE_instance;
+  function Solver$CellState$MINE_getInstance() {
+    Solver$CellState_initFields();
+    return Solver$CellState$MINE_instance;
+  }
+  Solver$CellState.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'CellState',
+    interfaces: [Enum]
+  };
+  function Solver$CellState$values() {
+    return [Solver$CellState$NONE_getInstance(), Solver$CellState$EMPTY_getInstance(), Solver$CellState$MINE_getInstance()];
+  }
+  Solver$CellState.values = Solver$CellState$values;
+  function Solver$CellState$valueOf(name) {
+    switch (name) {
+      case 'NONE':
+        return Solver$CellState$NONE_getInstance();
+      case 'EMPTY':
+        return Solver$CellState$EMPTY_getInstance();
+      case 'MINE':
+        return Solver$CellState$MINE_getInstance();
+      default:throwISE('No enum constant Solver.CellState.' + name);
+    }
+  }
+  Solver$CellState.valueOf_61zpoe$ = Solver$CellState$valueOf;
   Solver.prototype.solve_f6xcb4$ = function (board, updateCell, continuation) {
     var boardVal = board.cells;
+  };
+  Solver.prototype.solveLine_n8dhtq$ = function (line, counts, continuation) {
+    var mines = line.size - sum(counts) | 0;
+    var availableMines = mines - (counts.size - 1) | 0;
+    var availablePositions = counts.size + 1 | 0;
+    var possibleMinePositions = partition(availableMines, availablePositions);
+    var destination = ArrayList_init(collectionSizeOrDefault(possibleMinePositions, 10));
+    var tmp$;
+    tmp$ = possibleMinePositions.iterator();
+    while (tmp$.hasNext()) {
+      var item = tmp$.next();
+      destination.add_11rb$(this.makeLine_0(item, counts));
+    }
+    var destination_0 = ArrayList_init_0();
+    var tmp$_0;
+    tmp$_0 = destination.iterator();
+    loop_label: while (tmp$_0.hasNext()) {
+      var element = tmp$_0.next();
+      var $receiver = zip(element, line);
+      var all$result;
+      all$break: do {
+        var tmp$_1;
+        if (Kotlin.isType($receiver, Collection) && $receiver.isEmpty()) {
+          all$result = true;
+          break all$break;
+        }tmp$_1 = $receiver.iterator();
+        while (tmp$_1.hasNext()) {
+          var element_0 = tmp$_1.next();
+          if (!(element_0.second === MineState$UNMARKED_getInstance() || (element_0.first === Solver$CellState$EMPTY_getInstance() && element_0.second !== MineState$MINE_getInstance() && element_0.second !== MineState$MARKED_getInstance()) || (element_0.first === Solver$CellState$MINE_getInstance() && (element_0.second === MineState$MINE_getInstance() || element_0.second === MineState$MARKED_getInstance())))) {
+            all$result = false;
+            break all$break;
+          }}
+        all$result = true;
+      }
+       while (false);
+      if (all$result)
+        destination_0.add_11rb$(element);
+    }
+    var iterator = destination_0.iterator();
+    if (!iterator.hasNext())
+      throw UnsupportedOperationException_init("Empty collection can't be reduced.");
+    var accumulator = iterator.next();
+    while (iterator.hasNext()) {
+      var $receiver_0 = zip(accumulator, iterator.next());
+      var destination_1 = ArrayList_init(collectionSizeOrDefault($receiver_0, 10));
+      var tmp$_2;
+      tmp$_2 = $receiver_0.iterator();
+      while (tmp$_2.hasNext()) {
+        var item_0 = tmp$_2.next();
+        var tmp$_3 = destination_1.add_11rb$;
+        var transform$result;
+        if (item_0.first === item_0.second) {
+          transform$result = item_0.first;
+        } else {
+          transform$result = Solver$CellState$NONE_getInstance();
+        }
+        tmp$_3.call(destination_1, transform$result);
+      }
+      accumulator = destination_1;
+    }
+    return accumulator;
+  };
+  function Coroutine$Solver$makeLine$lambda(closure$mineCount_0, closure$emptyCount_0, $receiver_0, controller, continuation_0) {
+    CoroutineImpl.call(this, continuation_0);
+    this.$controller = controller;
+    this.exceptionState_0 = 1;
+    this.local$closure$mineCount = closure$mineCount_0;
+    this.local$closure$emptyCount = closure$emptyCount_0;
+    this.local$mineList = void 0;
+    this.local$emptyList = void 0;
+    this.local$$receiver = $receiver_0;
+  }
+  Coroutine$Solver$makeLine$lambda.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: null,
+    interfaces: [CoroutineImpl]
+  };
+  Coroutine$Solver$makeLine$lambda.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$Solver$makeLine$lambda.prototype.constructor = Coroutine$Solver$makeLine$lambda;
+  Coroutine$Solver$makeLine$lambda.prototype.doResume = function () {
+    do
+      try {
+        switch (this.state_0) {
+          case 0:
+            this.local$mineList = this.local$closure$mineCount.iterator();
+            this.local$emptyList = this.local$closure$emptyCount.iterator();
+            this.state_0 = 2;
+            continue;
+          case 1:
+            throw this.exception_0;
+          case 2:
+            if (!this.local$mineList.hasNext() || !this.local$emptyList.hasNext()) {
+              this.state_0 = 7;
+              continue;
+            }
+            var size = this.local$mineList.next();
+            var list = ArrayList_init(size);
+            for (var index = 0; index < size; index++) {
+              list.add_11rb$(Solver$CellState$MINE_getInstance());
+            }
+
+            this.state_0 = 3;
+            this.result_0 = this.local$$receiver.yieldAll_p1ys8y$(list, this);
+            if (this.result_0 === COROUTINE_SUSPENDED)
+              return COROUTINE_SUSPENDED;
+            continue;
+          case 3:
+            var size_0 = this.local$emptyList.next();
+            var list_0 = ArrayList_init(size_0);
+            for (var index_0 = 0; index_0 < size_0; index_0++) {
+              list_0.add_11rb$(Solver$CellState$EMPTY_getInstance());
+            }
+
+            this.state_0 = 4;
+            this.result_0 = this.local$$receiver.yieldAll_p1ys8y$(list_0, this);
+            if (this.result_0 === COROUTINE_SUSPENDED)
+              return COROUTINE_SUSPENDED;
+            continue;
+          case 4:
+            if (this.local$emptyList.hasNext()) {
+              this.state_0 = 5;
+              this.result_0 = this.local$$receiver.yield_11rb$(Solver$CellState$MINE_getInstance(), this);
+              if (this.result_0 === COROUTINE_SUSPENDED)
+                return COROUTINE_SUSPENDED;
+              continue;
+            } else {
+              this.state_0 = 6;
+              continue;
+            }
+
+          case 5:
+            this.state_0 = 6;
+            continue;
+          case 6:
+            this.state_0 = 2;
+            continue;
+          case 7:
+            var size_1 = this.local$mineList.next();
+            var list_1 = ArrayList_init(size_1);
+            for (var index_1 = 0; index_1 < size_1; index_1++) {
+              list_1.add_11rb$(Solver$CellState$MINE_getInstance());
+            }
+
+            this.state_0 = 8;
+            this.result_0 = this.local$$receiver.yieldAll_p1ys8y$(list_1, this);
+            if (this.result_0 === COROUTINE_SUSPENDED)
+              return COROUTINE_SUSPENDED;
+            continue;
+          case 8:
+            return this.result_0;
+          default:this.state_0 = 1;
+            throw new Error('State Machine Unreachable execution');
+        }
+      } catch (e) {
+        if (this.state_0 === 1) {
+          this.exceptionState_0 = this.state_0;
+          throw e;
+        } else {
+          this.state_0 = this.exceptionState_0;
+          this.exception_0 = e;
+        }
+      }
+     while (true);
+  };
+  function Solver$makeLine$lambda(closure$mineCount_0, closure$emptyCount_0) {
+    return function ($receiver_0, continuation_0, suspended) {
+      var instance = new Coroutine$Solver$makeLine$lambda(closure$mineCount_0, closure$emptyCount_0, $receiver_0, this, continuation_0);
+      if (suspended)
+        return instance;
+      else
+        return instance.doResume(null);
+    };
+  }
+  Solver.prototype.makeLine_0 = function (mineCount, emptyCount) {
+    return toList(sequence(Solver$makeLine$lambda(mineCount, emptyCount)));
   };
   Solver.$metadata$ = {
     kind: Kind_OBJECT,
@@ -1581,6 +2217,94 @@
       return new Array2(width, height, Kotlin.isArray(tmp$ = array) ? tmp$ : throwCCE());
     };
   }));
+  function row($receiver, row) {
+    return slice(toList_0($receiver), until(Kotlin.imul(row, $receiver.width), Kotlin.imul(row, $receiver.width + 1 | 0)));
+  }
+  function col($receiver, col) {
+    var tmp$ = toList_0($receiver);
+    var $receiver_0 = until(0, $receiver.height);
+    var destination = ArrayList_init(collectionSizeOrDefault($receiver_0, 10));
+    var tmp$_0;
+    tmp$_0 = $receiver_0.iterator();
+    while (tmp$_0.hasNext()) {
+      var item = tmp$_0.next();
+      destination.add_11rb$(Kotlin.imul(item, $receiver.width) + col | 0);
+    }
+    return slice_0(tmp$, destination);
+  }
+  function factorial($receiver, min) {
+    if (min === void 0)
+      min = 1;
+    var tmp$;
+    var accumulator = 1;
+    tmp$ = (new IntRange(min, $receiver)).iterator();
+    while (tmp$.hasNext()) {
+      var element = tmp$.next();
+      accumulator = Kotlin.imul(accumulator, element);
+    }
+    return accumulator;
+  }
+  function choose($receiver, num) {
+    var high = num <= ($receiver / 2 | 0) ? $receiver - num | 0 : num;
+    var low = $receiver - high | 0;
+    return factorial($receiver, high + 1 | 0) / factorial(low) | 0;
+  }
+  function enumerateCombinations$enumerate(range, k) {
+    var tmp$, tmp$_0;
+    if (k === 1) {
+      var $receiver = toList_0(range);
+      var destination = ArrayList_init(collectionSizeOrDefault($receiver, 10));
+      var tmp$_1;
+      tmp$_1 = $receiver.iterator();
+      while (tmp$_1.hasNext()) {
+        var item = tmp$_1.next();
+        destination.add_11rb$(listOf(item));
+      }
+      return destination;
+    }var out = ArrayList_init_0();
+    tmp$ = range.first;
+    tmp$_0 = range.last - (k - 1) | 0;
+    for (var i = tmp$; i <= tmp$_0; i++) {
+      var $receiver_0 = enumerateCombinations$enumerate(new IntRange(i + 1 | 0, range.last), k - 1 | 0);
+      var destination_0 = ArrayList_init(collectionSizeOrDefault($receiver_0, 10));
+      var tmp$_2;
+      tmp$_2 = $receiver_0.iterator();
+      while (tmp$_2.hasNext()) {
+        var item_0 = tmp$_2.next();
+        var tmp$_3 = destination_0.add_11rb$;
+        var $receiver_1 = toMutableList(item_0);
+        $receiver_1.add_wxm5ur$(0, i);
+        tmp$_3.call(destination_0, $receiver_1);
+      }
+      var next = destination_0;
+      out.addAll_brywnq$(next);
+    }
+    return out;
+  }
+  function enumerateCombinations(n, k) {
+    var enumerate = enumerateCombinations$enumerate;
+    return enumerate(until(0, n), k);
+  }
+  function partition(n, k) {
+    var dividers = k - 1 | 0;
+    var total = n + dividers | 0;
+    var $receiver = enumerateCombinations(total, dividers);
+    var destination = ArrayList_init(collectionSizeOrDefault($receiver, 10));
+    var tmp$;
+    tmp$ = $receiver.iterator();
+    while (tmp$.hasNext()) {
+      var item = tmp$.next();
+      var tmp$_0 = destination.add_11rb$;
+      var out = ArrayList_init_0();
+      for (var i = 0; i < k; i++) {
+        var index = i - 1 | 0;
+        var count = (i >= 0 && i <= get_lastIndex(item) ? item.get_za3lpa$(i) : total) - (index >= 0 && index <= get_lastIndex(item) ? item.get_za3lpa$(index) : -1) - 1 | 0;
+        out.add_11rb$(count);
+      }
+      tmp$_0.call(destination, out);
+    }
+    return destination;
+  }
   Object.defineProperty(MineState, 'UNMARKED', {
     get: MineState$UNMARKED_getInstance
   });
@@ -1636,11 +2360,27 @@
   _.performAction_nf53fp$ = performAction;
   _.main = main;
   _.createBoard_qz8s5j$ = createBoard;
+  Object.defineProperty(Solver$CellState, 'NONE', {
+    get: Solver$CellState$NONE_getInstance
+  });
+  Object.defineProperty(Solver$CellState, 'EMPTY', {
+    get: Solver$CellState$EMPTY_getInstance
+  });
+  Object.defineProperty(Solver$CellState, 'MINE', {
+    get: Solver$CellState$MINE_getInstance
+  });
+  Solver.prototype.CellState = Solver$CellState;
   Object.defineProperty(_, 'Solver', {
     get: Solver_getInstance
   });
   $$importsForInline$$.NumberGame = _;
   _.map_a5qy59$ = map;
+  _.row_wca0k6$ = row;
+  _.col_wca0k6$ = col;
+  _.factorial_dqglrj$ = factorial;
+  _.choose_dqglrj$ = choose;
+  _.enumerateCombinations_vux9f0$ = enumerateCombinations;
+  _.partition_vux9f0$ = partition;
   view = new Extra$Property(void 0, view$lambda);
   drag = new Extra$Property(void 0, drag$lambda);
   main(internal.EmptyContinuation, false);
