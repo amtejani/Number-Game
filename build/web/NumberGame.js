@@ -56,13 +56,12 @@
   var AsyncSignal = $module$korio_root_korio.com.soywiz.korio.async.AsyncSignal;
   var position = $module$korge_root_korge.com.soywiz.korge.view.position_ajix5r$;
   var alignLeftToRightOf = $module$korge_root_korge.com.soywiz.korge.view.alignLeftToRightOf_qcv975$;
+  var IntRange = Kotlin.kotlin.ranges.IntRange;
   var alignTopToBottomOf = $module$korge_root_korge.com.soywiz.korge.view.alignTopToBottomOf_qcv975$;
   var alignTopToTopOf = $module$korge_root_korge.com.soywiz.korge.view.alignTopToTopOf_qcv975$;
-  var coerceAtLeast = Kotlin.kotlin.ranges.coerceAtLeast_dqglrj$;
-  var IntRange = Kotlin.kotlin.ranges.IntRange;
-  var coerceIn = Kotlin.kotlin.ranges.coerceIn_nayhkp$;
-  var coerceIn_0 = Kotlin.kotlin.ranges.coerceIn_nig4hr$;
+  var coerceIn = Kotlin.kotlin.ranges.coerceIn_nig4hr$;
   var position_0 = $module$korge_root_korge.com.soywiz.korge.view.position_2cbtc5$;
+  var coerceIn_0 = Kotlin.kotlin.ranges.coerceIn_nayhkp$;
   var internal = Kotlin.kotlin.coroutines.js.internal;
   var get_defaultUISkin = $module$korge_root_korge.com.soywiz.korge.ui.get_defaultUISkin_gohfi1$;
   var get_defaultUIFont = $module$korge_root_korge.com.soywiz.korge.ui.get_defaultUIFont_gohfi1$;
@@ -1351,76 +1350,28 @@
         return instance.doResume(null);
     };
   }
-  function Coroutine$main$lambda$lambda$lambda$lambda_1(closure$boardSize_0, closure$sizeSignal_0, it_0, continuation_0) {
+  function main$lambda$lambda$lambda(it) {
+    return it.toString();
+  }
+  function Coroutine$main$lambda$lambda$lambda(closure$boardWidth_0, it_0, continuation_0) {
     CoroutineImpl.call(this, continuation_0);
     this.exceptionState_0 = 1;
-    this.local$closure$boardSize = closure$boardSize_0;
-    this.local$closure$sizeSignal = closure$sizeSignal_0;
+    this.local$closure$boardWidth = closure$boardWidth_0;
+    this.local$it = it_0;
   }
-  Coroutine$main$lambda$lambda$lambda$lambda_1.$metadata$ = {
+  Coroutine$main$lambda$lambda$lambda.$metadata$ = {
     kind: Kotlin.Kind.CLASS,
     simpleName: null,
     interfaces: [CoroutineImpl]
   };
-  Coroutine$main$lambda$lambda$lambda$lambda_1.prototype = Object.create(CoroutineImpl.prototype);
-  Coroutine$main$lambda$lambda$lambda$lambda_1.prototype.constructor = Coroutine$main$lambda$lambda$lambda$lambda_1;
-  Coroutine$main$lambda$lambda$lambda$lambda_1.prototype.doResume = function () {
+  Coroutine$main$lambda$lambda$lambda.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$main$lambda$lambda$lambda.prototype.constructor = Coroutine$main$lambda$lambda$lambda;
+  Coroutine$main$lambda$lambda$lambda.prototype.doResume = function () {
     do
       try {
         switch (this.state_0) {
           case 0:
-            this.local$closure$boardSize.v = coerceAtLeast(this.local$closure$boardSize.v - 1 | 0, 1);
-            this.state_0 = 2;
-            this.result_0 = this.local$closure$sizeSignal.invoke_11rb$(Unit, this);
-            if (this.result_0 === COROUTINE_SUSPENDED)
-              return COROUTINE_SUSPENDED;
-            continue;
-          case 1:
-            throw this.exception_0;
-          case 2:
-            return this.result_0;
-          default:this.state_0 = 1;
-            throw new Error('State Machine Unreachable execution');
-        }
-      } catch (e) {
-        if (this.state_0 === 1) {
-          this.exceptionState_0 = this.state_0;
-          throw e;
-        } else {
-          this.state_0 = this.exceptionState_0;
-          this.exception_0 = e;
-        }
-      }
-     while (true);
-  };
-  function main$lambda$lambda$lambda$lambda_1(closure$boardSize_0, closure$sizeSignal_0) {
-    return function (it_0, continuation_0, suspended) {
-      var instance = new Coroutine$main$lambda$lambda$lambda$lambda_1(closure$boardSize_0, closure$sizeSignal_0, it_0, continuation_0);
-      if (suspended)
-        return instance;
-      else
-        return instance.doResume(null);
-    };
-  }
-  function Coroutine$main$lambda$lambda$lambda$lambda_2(closure$boardSize_0, this$_0, it_0, continuation_0) {
-    CoroutineImpl.call(this, continuation_0);
-    this.exceptionState_0 = 1;
-    this.local$closure$boardSize = closure$boardSize_0;
-    this.local$this$ = this$_0;
-  }
-  Coroutine$main$lambda$lambda$lambda$lambda_2.$metadata$ = {
-    kind: Kotlin.Kind.CLASS,
-    simpleName: null,
-    interfaces: [CoroutineImpl]
-  };
-  Coroutine$main$lambda$lambda$lambda$lambda_2.prototype = Object.create(CoroutineImpl.prototype);
-  Coroutine$main$lambda$lambda$lambda$lambda_2.prototype.constructor = Coroutine$main$lambda$lambda$lambda$lambda_2;
-  Coroutine$main$lambda$lambda$lambda$lambda_2.prototype.doResume = function () {
-    do
-      try {
-        switch (this.state_0) {
-          case 0:
-            return this.local$this$.text = this.local$closure$boardSize.v.toString(), Unit;
+            return this.local$closure$boardWidth.v = this.local$it, Unit;
           case 1:
             throw this.exception_0;
           default:this.state_0 = 1;
@@ -1437,43 +1388,45 @@
       }
      while (true);
   };
-  function main$lambda$lambda$lambda$lambda_2(closure$boardSize_0, this$_0) {
+  function main$lambda$lambda$lambda_0(closure$boardWidth_0) {
     return function (it_0, continuation_0, suspended) {
-      var instance = new Coroutine$main$lambda$lambda$lambda$lambda_2(closure$boardSize_0, this$_0, it_0, continuation_0);
+      var instance = new Coroutine$main$lambda$lambda$lambda(closure$boardWidth_0, it_0, continuation_0);
       if (suspended)
         return instance;
       else
         return instance.doResume(null);
     };
   }
-  function Coroutine$main$lambda$lambda$lambda$lambda_3(closure$boardSize_0, closure$sizeSignal_0, it_0, continuation_0) {
+  function main$lambda$lambda$lambda_1(closure$newGameButton) {
+    return function ($receiver) {
+      alignTopToBottomOf($receiver, closure$newGameButton, 20.0);
+      return Unit;
+    };
+  }
+  function main$lambda$lambda$lambda_2(it) {
+    return it.toString();
+  }
+  function Coroutine$main$lambda$lambda$lambda_0(closure$boardHeight_0, it_0, continuation_0) {
     CoroutineImpl.call(this, continuation_0);
     this.exceptionState_0 = 1;
-    this.local$closure$boardSize = closure$boardSize_0;
-    this.local$closure$sizeSignal = closure$sizeSignal_0;
+    this.local$closure$boardHeight = closure$boardHeight_0;
+    this.local$it = it_0;
   }
-  Coroutine$main$lambda$lambda$lambda$lambda_3.$metadata$ = {
+  Coroutine$main$lambda$lambda$lambda_0.$metadata$ = {
     kind: Kotlin.Kind.CLASS,
     simpleName: null,
     interfaces: [CoroutineImpl]
   };
-  Coroutine$main$lambda$lambda$lambda$lambda_3.prototype = Object.create(CoroutineImpl.prototype);
-  Coroutine$main$lambda$lambda$lambda$lambda_3.prototype.constructor = Coroutine$main$lambda$lambda$lambda$lambda_3;
-  Coroutine$main$lambda$lambda$lambda$lambda_3.prototype.doResume = function () {
+  Coroutine$main$lambda$lambda$lambda_0.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$main$lambda$lambda$lambda_0.prototype.constructor = Coroutine$main$lambda$lambda$lambda_0;
+  Coroutine$main$lambda$lambda$lambda_0.prototype.doResume = function () {
     do
       try {
         switch (this.state_0) {
           case 0:
-            this.local$closure$boardSize.v = this.local$closure$boardSize.v + 1 | 0;
-            this.state_0 = 2;
-            this.result_0 = this.local$closure$sizeSignal.invoke_11rb$(Unit, this);
-            if (this.result_0 === COROUTINE_SUSPENDED)
-              return COROUTINE_SUSPENDED;
-            continue;
+            return this.local$closure$boardHeight.v = this.local$it, Unit;
           case 1:
             throw this.exception_0;
-          case 2:
-            return this.result_0;
           default:this.state_0 = 1;
             throw new Error('State Machine Unreachable execution');
         }
@@ -1488,85 +1441,44 @@
       }
      while (true);
   };
-  function main$lambda$lambda$lambda$lambda_3(closure$boardSize_0, closure$sizeSignal_0) {
+  function main$lambda$lambda$lambda_3(closure$boardHeight_0) {
     return function (it_0, continuation_0, suspended) {
-      var instance = new Coroutine$main$lambda$lambda$lambda$lambda_3(closure$boardSize_0, closure$sizeSignal_0, it_0, continuation_0);
+      var instance = new Coroutine$main$lambda$lambda$lambda_0(closure$boardHeight_0, it_0, continuation_0);
       if (suspended)
         return instance;
       else
         return instance.doResume(null);
     };
   }
-  function Coroutine$main$lambda$lambda$lambda$lambda_4(closure$minePercent_0, closure$countSignal_0, it_0, continuation_0) {
+  function main$lambda$lambda$lambda_4(closure$widthConf) {
+    return function ($receiver) {
+      alignTopToTopOf($receiver, closure$widthConf);
+      alignLeftToRightOf($receiver, closure$widthConf, 40.0);
+      return Unit;
+    };
+  }
+  function main$lambda$lambda$lambda_5(it) {
+    return (it * 10 | 0).toString() + '%';
+  }
+  function Coroutine$main$lambda$lambda$lambda_1(closure$minePercent_0, it_0, continuation_0) {
     CoroutineImpl.call(this, continuation_0);
     this.exceptionState_0 = 1;
     this.local$closure$minePercent = closure$minePercent_0;
-    this.local$closure$countSignal = closure$countSignal_0;
+    this.local$it = it_0;
   }
-  Coroutine$main$lambda$lambda$lambda$lambda_4.$metadata$ = {
+  Coroutine$main$lambda$lambda$lambda_1.$metadata$ = {
     kind: Kotlin.Kind.CLASS,
     simpleName: null,
     interfaces: [CoroutineImpl]
   };
-  Coroutine$main$lambda$lambda$lambda$lambda_4.prototype = Object.create(CoroutineImpl.prototype);
-  Coroutine$main$lambda$lambda$lambda$lambda_4.prototype.constructor = Coroutine$main$lambda$lambda$lambda$lambda_4;
-  Coroutine$main$lambda$lambda$lambda$lambda_4.prototype.doResume = function () {
+  Coroutine$main$lambda$lambda$lambda_1.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$main$lambda$lambda$lambda_1.prototype.constructor = Coroutine$main$lambda$lambda$lambda_1;
+  Coroutine$main$lambda$lambda$lambda_1.prototype.doResume = function () {
     do
       try {
         switch (this.state_0) {
           case 0:
-            this.local$closure$minePercent.v = coerceIn(this.local$closure$minePercent.v - 10 | 0, new IntRange(0, 100));
-            this.state_0 = 2;
-            this.result_0 = this.local$closure$countSignal.invoke_11rb$(Unit, this);
-            if (this.result_0 === COROUTINE_SUSPENDED)
-              return COROUTINE_SUSPENDED;
-            continue;
-          case 1:
-            throw this.exception_0;
-          case 2:
-            return this.result_0;
-          default:this.state_0 = 1;
-            throw new Error('State Machine Unreachable execution');
-        }
-      } catch (e) {
-        if (this.state_0 === 1) {
-          this.exceptionState_0 = this.state_0;
-          throw e;
-        } else {
-          this.state_0 = this.exceptionState_0;
-          this.exception_0 = e;
-        }
-      }
-     while (true);
-  };
-  function main$lambda$lambda$lambda$lambda_4(closure$minePercent_0, closure$countSignal_0) {
-    return function (it_0, continuation_0, suspended) {
-      var instance = new Coroutine$main$lambda$lambda$lambda$lambda_4(closure$minePercent_0, closure$countSignal_0, it_0, continuation_0);
-      if (suspended)
-        return instance;
-      else
-        return instance.doResume(null);
-    };
-  }
-  function Coroutine$main$lambda$lambda$lambda$lambda_5(closure$minePercent_0, this$_0, it_0, continuation_0) {
-    CoroutineImpl.call(this, continuation_0);
-    this.exceptionState_0 = 1;
-    this.local$closure$minePercent = closure$minePercent_0;
-    this.local$this$ = this$_0;
-  }
-  Coroutine$main$lambda$lambda$lambda$lambda_5.$metadata$ = {
-    kind: Kotlin.Kind.CLASS,
-    simpleName: null,
-    interfaces: [CoroutineImpl]
-  };
-  Coroutine$main$lambda$lambda$lambda$lambda_5.prototype = Object.create(CoroutineImpl.prototype);
-  Coroutine$main$lambda$lambda$lambda$lambda_5.prototype.constructor = Coroutine$main$lambda$lambda$lambda$lambda_5;
-  Coroutine$main$lambda$lambda$lambda$lambda_5.prototype.doResume = function () {
-    do
-      try {
-        switch (this.state_0) {
-          case 0:
-            return this.local$this$.text = this.local$closure$minePercent.v.toString() + '%', Unit;
+            return this.local$closure$minePercent.v = this.local$it, Unit;
           case 1:
             throw this.exception_0;
           default:this.state_0 = 1;
@@ -1583,67 +1495,23 @@
       }
      while (true);
   };
-  function main$lambda$lambda$lambda$lambda_5(closure$minePercent_0, this$_0) {
+  function main$lambda$lambda$lambda_6(closure$minePercent_0) {
     return function (it_0, continuation_0, suspended) {
-      var instance = new Coroutine$main$lambda$lambda$lambda$lambda_5(closure$minePercent_0, this$_0, it_0, continuation_0);
+      var instance = new Coroutine$main$lambda$lambda$lambda_1(closure$minePercent_0, it_0, continuation_0);
       if (suspended)
         return instance;
       else
         return instance.doResume(null);
     };
   }
-  function Coroutine$main$lambda$lambda$lambda$lambda_6(closure$minePercent_0, closure$countSignal_0, it_0, continuation_0) {
-    CoroutineImpl.call(this, continuation_0);
-    this.exceptionState_0 = 1;
-    this.local$closure$minePercent = closure$minePercent_0;
-    this.local$closure$countSignal = closure$countSignal_0;
-  }
-  Coroutine$main$lambda$lambda$lambda$lambda_6.$metadata$ = {
-    kind: Kotlin.Kind.CLASS,
-    simpleName: null,
-    interfaces: [CoroutineImpl]
-  };
-  Coroutine$main$lambda$lambda$lambda$lambda_6.prototype = Object.create(CoroutineImpl.prototype);
-  Coroutine$main$lambda$lambda$lambda$lambda_6.prototype.constructor = Coroutine$main$lambda$lambda$lambda$lambda_6;
-  Coroutine$main$lambda$lambda$lambda$lambda_6.prototype.doResume = function () {
-    do
-      try {
-        switch (this.state_0) {
-          case 0:
-            this.local$closure$minePercent.v = coerceIn(this.local$closure$minePercent.v + 10 | 0, new IntRange(0, 100));
-            this.state_0 = 2;
-            this.result_0 = this.local$closure$countSignal.invoke_11rb$(Unit, this);
-            if (this.result_0 === COROUTINE_SUSPENDED)
-              return COROUTINE_SUSPENDED;
-            continue;
-          case 1:
-            throw this.exception_0;
-          case 2:
-            return this.result_0;
-          default:this.state_0 = 1;
-            throw new Error('State Machine Unreachable execution');
-        }
-      } catch (e) {
-        if (this.state_0 === 1) {
-          this.exceptionState_0 = this.state_0;
-          throw e;
-        } else {
-          this.state_0 = this.exceptionState_0;
-          this.exception_0 = e;
-        }
-      }
-     while (true);
-  };
-  function main$lambda$lambda$lambda$lambda_6(closure$minePercent_0, closure$countSignal_0) {
-    return function (it_0, continuation_0, suspended) {
-      var instance = new Coroutine$main$lambda$lambda$lambda$lambda_6(closure$minePercent_0, closure$countSignal_0, it_0, continuation_0);
-      if (suspended)
-        return instance;
-      else
-        return instance.doResume(null);
+  function main$lambda$lambda$lambda_7(closure$heightConf) {
+    return function ($receiver) {
+      alignTopToTopOf($receiver, closure$heightConf);
+      alignLeftToRightOf($receiver, closure$heightConf, 40.0);
+      return Unit;
     };
   }
-  function main$lambda$lambda$lambda$lambda_7(this$, closure$gameOverText) {
+  function main$lambda$lambda$lambda$lambda_1(this$, closure$gameOverText) {
     return function (mistakes) {
       println('Game Over, mistakes: ' + mistakes);
       var tmp$ = closure$gameOverText;
@@ -1659,7 +1527,7 @@
       return Unit;
     };
   }
-  function Coroutine$main$lambda$lambda(closure$boardContainer_0, this$_0, closure$gameOverText_0, closure$gameOverCloseable_0, closure$board_0, closure$boardSize_0, closure$minePercent_0, closure$buttonContainer_0, it_0, continuation_0) {
+  function Coroutine$main$lambda$lambda(closure$boardContainer_0, this$_0, closure$gameOverText_0, closure$gameOverCloseable_0, closure$board_0, closure$boardWidth_0, closure$boardHeight_0, closure$minePercent_0, closure$buttonContainer_0, it_0, continuation_0) {
     CoroutineImpl.call(this, continuation_0);
     this.exceptionState_0 = 1;
     this.local$closure$boardContainer = closure$boardContainer_0;
@@ -1667,7 +1535,8 @@
     this.local$closure$gameOverText = closure$gameOverText_0;
     this.local$closure$gameOverCloseable = closure$gameOverCloseable_0;
     this.local$closure$board = closure$board_0;
-    this.local$closure$boardSize = closure$boardSize_0;
+    this.local$closure$boardWidth = closure$boardWidth_0;
+    this.local$closure$boardHeight = closure$boardHeight_0;
     this.local$closure$minePercent = closure$minePercent_0;
     this.local$closure$buttonContainer = closure$buttonContainer_0;
   }
@@ -1689,7 +1558,7 @@
             (tmp$ = this.local$closure$gameOverCloseable.v) != null ? (tmp$.close(), Unit) : null;
             (tmp$_0 = this.local$closure$board.v) != null ? (tmp$_0.cleanUp(), Unit) : null;
             var tmp$_1 = this.local$closure$board;
-            var $receiver = new Board(this.local$closure$boardSize.v, this.local$closure$boardSize.v, coerceIn_0(this.local$closure$minePercent.v / 100, 0.0, 1.0));
+            var $receiver = new Board(this.local$closure$boardWidth.v, this.local$closure$boardHeight.v, coerceIn(this.local$closure$minePercent.v / 10, 0.0, 1.0));
             var this$ = this.local$this$;
             var closure$boardContainer = this.local$closure$boardContainer;
             var closure$buttonContainer = this.local$closure$buttonContainer;
@@ -1698,7 +1567,7 @@
             var tmp$_2;
             closure$boardContainer.v = createBoard(this$, $receiver);
             (tmp$_2 = closure$boardContainer.v) != null ? alignTopToBottomOf(tmp$_2, closure$buttonContainer, 20.0) : null;
-            closure$gameOverCloseable.v = $receiver.gameOver_b4k9x1$(main$lambda$lambda$lambda$lambda_7(this$, closure$gameOverText));
+            closure$gameOverCloseable.v = $receiver.gameOver_b4k9x1$(main$lambda$lambda$lambda$lambda_1(this$, closure$gameOverText));
             return tmp$_1.v = $receiver, Unit;
           case 1:
             throw this.exception_0;
@@ -1716,9 +1585,9 @@
       }
      while (true);
   };
-  function main$lambda$lambda(closure$boardContainer_0, this$_0, closure$gameOverText_0, closure$gameOverCloseable_0, closure$board_0, closure$boardSize_0, closure$minePercent_0, closure$buttonContainer_0) {
+  function main$lambda$lambda(closure$boardContainer_0, this$_0, closure$gameOverText_0, closure$gameOverCloseable_0, closure$board_0, closure$boardWidth_0, closure$boardHeight_0, closure$minePercent_0, closure$buttonContainer_0) {
     return function (it_0, continuation_0, suspended) {
-      var instance = new Coroutine$main$lambda$lambda(closure$boardContainer_0, this$_0, closure$gameOverText_0, closure$gameOverCloseable_0, closure$board_0, closure$boardSize_0, closure$minePercent_0, closure$buttonContainer_0, it_0, continuation_0);
+      var instance = new Coroutine$main$lambda$lambda(closure$boardContainer_0, this$_0, closure$gameOverText_0, closure$gameOverCloseable_0, closure$board_0, closure$boardWidth_0, closure$boardHeight_0, closure$minePercent_0, closure$buttonContainer_0, it_0, continuation_0);
       if (suspended)
         return instance;
       else
@@ -1748,8 +1617,9 @@
             var gameOverText = {v: null};
             var gameOverCloseable = {v: null};
             var newGame = new AsyncSignal();
-            var boardSize = {v: 5};
-            var minePercent = {v: 50};
+            var boardWidth = {v: 5};
+            var boardHeight = {v: 5};
+            var minePercent = {v: 5};
             var $receiver_0_0 = addTo(new Container_init(), this.local$$receiver);
             position($receiver_0_0, 40, 40);
             var $receiver_0_1 = addTo(new TextButton_init(128.0, 64.0, 'New Game', get_defaultUISkin($receiver_0_0), get_defaultUIFont($receiver_0_0)), $receiver_0_0);
@@ -1770,106 +1640,11 @@
             if ((tmp$_0 = $receiver_0_2 != null ? get_mouse($receiver_0_2) : null) != null) {
               prop_0.get(tmp$_0).add_qlkmfe$(doMouseEvent$lambda$lambda_2(tmp$_0, main$lambda$lambda$lambda$lambda_0(board)));
             }
-            var sizeSignal = new AsyncSignal();
-            var color_0_0;
-            var font;
-            color_0_0 = color_0.Colors.WHITE;
-            font = Fonts.Companion.defaultFont;
-            var $receiver_0_3 = addTo(Text.Companion.invoke_8ii8iq$('Size:', 16.0, color_0_0, font), $receiver_0_0);
-            alignTopToBottomOf($receiver_0_3, newGameButton, 20.0);
-            var sizeLabel = $receiver_0_3;
-            var color_0_1;
-            var font_0;
-            color_0_1 = color_0.Colors.WHITE;
-            font_0 = Fonts.Companion.defaultFont;
-            var $receiver_0_4 = addTo(Text.Companion.invoke_8ii8iq$('-', 16.0, color_0_1, font_0), $receiver_0_0);
-            alignTopToTopOf($receiver_0_4, sizeLabel);
-            alignLeftToRightOf($receiver_0_4, sizeLabel, 20.0);
-            var prop_1 = getPropertyCallableRef('click', 1, function ($receiver_0) {
-              return $receiver_0.click;
-            });
-            var tmp$_1;
-            if ((tmp$_1 = $receiver_0_4 != null ? get_mouse($receiver_0_4) : null) != null) {
-              prop_1.get(tmp$_1).add_qlkmfe$(doMouseEvent$lambda$lambda_2(tmp$_1, main$lambda$lambda$lambda$lambda_1(boardSize, sizeSignal)));
-            }
-            var sizeMinus = $receiver_0_4;
-            var text = boardSize.v.toString();
-            var color_0_2;
-            var font_1;
-            color_0_2 = color_0.Colors.WHITE;
-            font_1 = Fonts.Companion.defaultFont;
-            var $receiver_0_5 = addTo(Text.Companion.invoke_8ii8iq$(text, 16.0, color_0_2, font_1), $receiver_0_0);
-            alignTopToTopOf($receiver_0_5, sizeLabel);
-            alignLeftToRightOf($receiver_0_5, sizeMinus, 20.0);
-            sizeSignal.invoke_25kf2w$(main$lambda$lambda$lambda$lambda_2(boardSize, $receiver_0_5));
-            var sizeText = $receiver_0_5;
-            var color_0_3;
-            var font_2;
-            color_0_3 = color_0.Colors.WHITE;
-            font_2 = Fonts.Companion.defaultFont;
-            var $receiver_0_6 = addTo(Text.Companion.invoke_8ii8iq$('+', 16.0, color_0_3, font_2), $receiver_0_0);
-            alignTopToTopOf($receiver_0_6, sizeLabel);
-            alignLeftToRightOf($receiver_0_6, sizeText, 20.0);
-            var prop_2 = getPropertyCallableRef('click', 1, function ($receiver_0) {
-              return $receiver_0.click;
-            });
-            var tmp$_2;
-            if ((tmp$_2 = $receiver_0_6 != null ? get_mouse($receiver_0_6) : null) != null) {
-              prop_2.get(tmp$_2).add_qlkmfe$(doMouseEvent$lambda$lambda_2(tmp$_2, main$lambda$lambda$lambda$lambda_3(boardSize, sizeSignal)));
-            }
-            var sizePlus = $receiver_0_6;
-            var countSignal = new AsyncSignal();
-            var text_0 = 'Mine Percent:';
-            var color_0_4;
-            var font_3;
-            color_0_4 = color_0.Colors.WHITE;
-            font_3 = Fonts.Companion.defaultFont;
-            var $receiver_0_7 = addTo(Text.Companion.invoke_8ii8iq$(text_0, 16.0, color_0_4, font_3), $receiver_0_0);
-            alignTopToTopOf($receiver_0_7, sizeLabel);
-            alignLeftToRightOf($receiver_0_7, sizePlus, 20.0);
-            var countLabel = $receiver_0_7;
-            var color_0_5;
-            var font_4;
-            color_0_5 = color_0.Colors.WHITE;
-            font_4 = Fonts.Companion.defaultFont;
-            var $receiver_0_8 = addTo(Text.Companion.invoke_8ii8iq$('-', 16.0, color_0_5, font_4), $receiver_0_0);
-            alignTopToTopOf($receiver_0_8, sizeLabel);
-            alignLeftToRightOf($receiver_0_8, countLabel, 20.0);
-            var prop_3 = getPropertyCallableRef('click', 1, function ($receiver_0) {
-              return $receiver_0.click;
-            });
-            var tmp$_3;
-            if ((tmp$_3 = $receiver_0_8 != null ? get_mouse($receiver_0_8) : null) != null) {
-              prop_3.get(tmp$_3).add_qlkmfe$(doMouseEvent$lambda$lambda_2(tmp$_3, main$lambda$lambda$lambda$lambda_4(minePercent, countSignal)));
-            }
-            var countMinus = $receiver_0_8;
-            var text_1 = minePercent.v.toString() + '%';
-            var color_0_6;
-            var font_5;
-            color_0_6 = color_0.Colors.WHITE;
-            font_5 = Fonts.Companion.defaultFont;
-            var $receiver_0_9 = addTo(Text.Companion.invoke_8ii8iq$(text_1, 16.0, color_0_6, font_5), $receiver_0_0);
-            alignTopToTopOf($receiver_0_9, sizeLabel);
-            alignLeftToRightOf($receiver_0_9, countMinus, 20.0);
-            sizeSignal.invoke_25kf2w$(main$lambda$lambda$lambda$lambda_5(minePercent, $receiver_0_9));
-            var countText = $receiver_0_9;
-            var color_0_7;
-            var font_6;
-            color_0_7 = color_0.Colors.WHITE;
-            font_6 = Fonts.Companion.defaultFont;
-            var $receiver_0_10 = addTo(Text.Companion.invoke_8ii8iq$('+', 16.0, color_0_7, font_6), $receiver_0_0);
-            alignTopToTopOf($receiver_0_10, sizeLabel);
-            alignLeftToRightOf($receiver_0_10, countText, 20.0);
-            var prop_4 = getPropertyCallableRef('click', 1, function ($receiver_0) {
-              return $receiver_0.click;
-            });
-            var tmp$_4;
-            if ((tmp$_4 = $receiver_0_10 != null ? get_mouse($receiver_0_10) : null) != null) {
-              prop_4.get(tmp$_4).add_qlkmfe$(doMouseEvent$lambda$lambda_2(tmp$_4, main$lambda$lambda$lambda$lambda_6(minePercent, countSignal)));
-            }
-            var countPlus = $receiver_0_10;
+            var widthConf = configuration($receiver_0_0, 'Width:', boardWidth.v, main$lambda$lambda$lambda, new IntRange(0, 2147483647), main$lambda$lambda$lambda_0(boardWidth), main$lambda$lambda$lambda_1(newGameButton));
+            var heightConf = configuration($receiver_0_0, 'Height:', boardHeight.v, main$lambda$lambda$lambda_2, new IntRange(0, 2147483647), main$lambda$lambda$lambda_3(boardHeight), main$lambda$lambda$lambda_4(widthConf));
+            var count = configuration($receiver_0_0, 'Mine Percent:', minePercent.v, main$lambda$lambda$lambda_5, new IntRange(0, 10), main$lambda$lambda$lambda_6(minePercent), main$lambda$lambda$lambda_7(heightConf));
             var buttonContainer = $receiver_0_0;
-            newGame.invoke_25kf2w$(main$lambda$lambda(boardContainer, this.local$$receiver, gameOverText, gameOverCloseable, board, boardSize, minePercent, buttonContainer));
+            newGame.invoke_25kf2w$(main$lambda$lambda(boardContainer, this.local$$receiver, gameOverText, gameOverCloseable, board, boardWidth, boardHeight, minePercent, buttonContainer));
             this.state_0 = 2;
             this.result_0 = newGame.invoke_11rb$(Unit, this);
             if (this.result_0 === COROUTINE_SUSPENDED)
@@ -1901,7 +1676,7 @@
       return instance.doResume(null);
   }
   function main(continuation) {
-    return korge.Korge.invoke_hyfg37$(void 0, 800, 800, void 0, void 0, void 0, void 0, void 0, void 0, void 0, void 0, void 0, void 0, void 0, color.Colors.get_61zpoe$('#2b2b2b'), void 0, void 0, void 0, void 0, void 0, void 0, main$lambda, continuation);
+    return korge.Korge.invoke_hyfg37$(void 0, 1600, 900, void 0, void 0, void 0, void 0, void 0, void 0, void 0, void 0, void 0, void 0, void 0, color.Colors.get_61zpoe$('#2b2b2b'), void 0, void 0, void 0, void 0, void 0, void 0, main$lambda, continuation);
   }
   function createBoard$lambda$lambda$lambda(this$) {
     return function (it) {
@@ -1959,6 +1734,209 @@
       }
     }
     return $receiver_0;
+  }
+  function configuration$lambda($receiver) {
+    return Unit;
+  }
+  function Coroutine$configuration$lambda$lambda$lambda(closure$newVal_0, closure$range_0, closure$countSignal_0, it_0, continuation_0) {
+    CoroutineImpl.call(this, continuation_0);
+    this.exceptionState_0 = 1;
+    this.local$closure$newVal = closure$newVal_0;
+    this.local$closure$range = closure$range_0;
+    this.local$closure$countSignal = closure$countSignal_0;
+  }
+  Coroutine$configuration$lambda$lambda$lambda.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: null,
+    interfaces: [CoroutineImpl]
+  };
+  Coroutine$configuration$lambda$lambda$lambda.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$configuration$lambda$lambda$lambda.prototype.constructor = Coroutine$configuration$lambda$lambda$lambda;
+  Coroutine$configuration$lambda$lambda$lambda.prototype.doResume = function () {
+    do
+      try {
+        switch (this.state_0) {
+          case 0:
+            this.local$closure$newVal.v = coerceIn_0(this.local$closure$newVal.v - 1 | 0, this.local$closure$range);
+            this.state_0 = 2;
+            this.result_0 = this.local$closure$countSignal.invoke_11rb$(this.local$closure$newVal.v, this);
+            if (this.result_0 === COROUTINE_SUSPENDED)
+              return COROUTINE_SUSPENDED;
+            continue;
+          case 1:
+            throw this.exception_0;
+          case 2:
+            return this.result_0;
+          default:this.state_0 = 1;
+            throw new Error('State Machine Unreachable execution');
+        }
+      } catch (e) {
+        if (this.state_0 === 1) {
+          this.exceptionState_0 = this.state_0;
+          throw e;
+        } else {
+          this.state_0 = this.exceptionState_0;
+          this.exception_0 = e;
+        }
+      }
+     while (true);
+  };
+  function configuration$lambda$lambda$lambda(closure$newVal_0, closure$range_0, closure$countSignal_0) {
+    return function (it_0, continuation_0, suspended) {
+      var instance = new Coroutine$configuration$lambda$lambda$lambda(closure$newVal_0, closure$range_0, closure$countSignal_0, it_0, continuation_0);
+      if (suspended)
+        return instance;
+      else
+        return instance.doResume(null);
+    };
+  }
+  function Coroutine$configuration$lambda$lambda$lambda_0(closure$format_0, closure$newVal_0, this$_0, it_0, continuation_0) {
+    CoroutineImpl.call(this, continuation_0);
+    this.exceptionState_0 = 1;
+    this.local$closure$format = closure$format_0;
+    this.local$closure$newVal = closure$newVal_0;
+    this.local$this$ = this$_0;
+  }
+  Coroutine$configuration$lambda$lambda$lambda_0.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: null,
+    interfaces: [CoroutineImpl]
+  };
+  Coroutine$configuration$lambda$lambda$lambda_0.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$configuration$lambda$lambda$lambda_0.prototype.constructor = Coroutine$configuration$lambda$lambda$lambda_0;
+  Coroutine$configuration$lambda$lambda$lambda_0.prototype.doResume = function () {
+    do
+      try {
+        switch (this.state_0) {
+          case 0:
+            return this.local$this$.text = this.local$closure$format(this.local$closure$newVal.v), Unit;
+          case 1:
+            throw this.exception_0;
+          default:this.state_0 = 1;
+            throw new Error('State Machine Unreachable execution');
+        }
+      } catch (e) {
+        if (this.state_0 === 1) {
+          this.exceptionState_0 = this.state_0;
+          throw e;
+        } else {
+          this.state_0 = this.exceptionState_0;
+          this.exception_0 = e;
+        }
+      }
+     while (true);
+  };
+  function configuration$lambda$lambda$lambda_0(closure$format_0, closure$newVal_0, this$_0) {
+    return function (it_0, continuation_0, suspended) {
+      var instance = new Coroutine$configuration$lambda$lambda$lambda_0(closure$format_0, closure$newVal_0, this$_0, it_0, continuation_0);
+      if (suspended)
+        return instance;
+      else
+        return instance.doResume(null);
+    };
+  }
+  function Coroutine$configuration$lambda$lambda$lambda_1(closure$newVal_0, closure$range_0, closure$countSignal_0, it_0, continuation_0) {
+    CoroutineImpl.call(this, continuation_0);
+    this.exceptionState_0 = 1;
+    this.local$closure$newVal = closure$newVal_0;
+    this.local$closure$range = closure$range_0;
+    this.local$closure$countSignal = closure$countSignal_0;
+  }
+  Coroutine$configuration$lambda$lambda$lambda_1.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: null,
+    interfaces: [CoroutineImpl]
+  };
+  Coroutine$configuration$lambda$lambda$lambda_1.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$configuration$lambda$lambda$lambda_1.prototype.constructor = Coroutine$configuration$lambda$lambda$lambda_1;
+  Coroutine$configuration$lambda$lambda$lambda_1.prototype.doResume = function () {
+    do
+      try {
+        switch (this.state_0) {
+          case 0:
+            this.local$closure$newVal.v = coerceIn_0(this.local$closure$newVal.v + 1 | 0, this.local$closure$range);
+            this.state_0 = 2;
+            this.result_0 = this.local$closure$countSignal.invoke_11rb$(this.local$closure$newVal.v, this);
+            if (this.result_0 === COROUTINE_SUSPENDED)
+              return COROUTINE_SUSPENDED;
+            continue;
+          case 1:
+            throw this.exception_0;
+          case 2:
+            return this.result_0;
+          default:this.state_0 = 1;
+            throw new Error('State Machine Unreachable execution');
+        }
+      } catch (e) {
+        if (this.state_0 === 1) {
+          this.exceptionState_0 = this.state_0;
+          throw e;
+        } else {
+          this.state_0 = this.exceptionState_0;
+          this.exception_0 = e;
+        }
+      }
+     while (true);
+  };
+  function configuration$lambda$lambda$lambda_1(closure$newVal_0, closure$range_0, closure$countSignal_0) {
+    return function (it_0, continuation_0, suspended) {
+      var instance = new Coroutine$configuration$lambda$lambda$lambda_1(closure$newVal_0, closure$range_0, closure$countSignal_0, it_0, continuation_0);
+      if (suspended)
+        return instance;
+      else
+        return instance.doResume(null);
+    };
+  }
+  function configuration($receiver, label, initial, format, range, ntfy, callback) {
+    if (callback === void 0)
+      callback = configuration$lambda;
+    var $receiver_0_0 = addTo(new Container_init(), $receiver);
+    var newVal = {v: initial};
+    var countSignal = new AsyncSignal();
+    countSignal.add_25kf2w$(ntfy);
+    var color_0_0;
+    var font;
+    color_0_0 = color_0.Colors.WHITE;
+    font = Fonts.Companion.defaultFont;
+    var $receiver_0_1 = addTo(Text.Companion.invoke_8ii8iq$(label, 16.0, color_0_0, font), $receiver_0_0);
+    text$lambda($receiver_0_1);
+    var countLabel = $receiver_0_1;
+    var color_0_1;
+    var font_0;
+    color_0_1 = color_0.Colors.WHITE;
+    font_0 = Fonts.Companion.defaultFont;
+    var $receiver_0_2 = addTo(Text.Companion.invoke_8ii8iq$('-', 16.0, color_0_1, font_0), $receiver_0_0);
+    alignLeftToRightOf($receiver_0_2, countLabel, 20.0);
+    var prop = getPropertyCallableRef('click', 1, function ($receiver_0) {
+      return $receiver_0.click;
+    });
+    var tmp$;
+    if ((tmp$ = $receiver_0_2 != null ? get_mouse($receiver_0_2) : null) != null) {
+      prop.get(tmp$).add_qlkmfe$(doMouseEvent$lambda$lambda_2(tmp$, configuration$lambda$lambda$lambda(newVal, range, countSignal)));
+    }var countMinus = $receiver_0_2;
+    var text = format(newVal.v);
+    var color_0_2;
+    var font_1;
+    color_0_2 = color_0.Colors.WHITE;
+    font_1 = Fonts.Companion.defaultFont;
+    var $receiver_0_3 = addTo(Text.Companion.invoke_8ii8iq$(text, 16.0, color_0_2, font_1), $receiver_0_0);
+    alignLeftToRightOf($receiver_0_3, countMinus, 20.0);
+    countSignal.invoke_25kf2w$(configuration$lambda$lambda$lambda_0(format, newVal, $receiver_0_3));
+    var countText = $receiver_0_3;
+    var color_0_3;
+    var font_2;
+    color_0_3 = color_0.Colors.WHITE;
+    font_2 = Fonts.Companion.defaultFont;
+    var $receiver_0_4 = addTo(Text.Companion.invoke_8ii8iq$('+', 16.0, color_0_3, font_2), $receiver_0_0);
+    alignLeftToRightOf($receiver_0_4, countText, 20.0);
+    var prop_0 = getPropertyCallableRef('click', 1, function ($receiver_0) {
+      return $receiver_0.click;
+    });
+    var tmp$_0;
+    if ((tmp$_0 = $receiver_0_4 != null ? get_mouse($receiver_0_4) : null) != null) {
+      prop_0.get(tmp$_0).add_qlkmfe$(doMouseEvent$lambda$lambda_2(tmp$_0, configuration$lambda$lambda$lambda_1(newVal, range, countSignal)));
+    }callback($receiver_0_0);
+    return $receiver_0_0;
   }
   function Solver() {
     Solver_instance = this;
@@ -2360,6 +2338,7 @@
   _.performAction_nf53fp$ = performAction;
   _.main = main;
   _.createBoard_qz8s5j$ = createBoard;
+  _.configuration_yrwhay$ = configuration;
   Object.defineProperty(Solver$CellState, 'NONE', {
     get: Solver$CellState$NONE_getInstance
   });
