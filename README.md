@@ -10,6 +10,8 @@ and the second row has 3 consecutive empty positions.
 ![Example Board](/images/ExampleBoard.png)
 
 Your goal is to find all empty positions while hitting as few mines as possible.
-You can check an empty position with the left mouse button, and mark a position as a possible mine with the right mouse button.
+You can check an empty position with the left mouse button
+and mark a position as a possible mine with the right mouse button (or middle click, shift + left click, or control + left click).
+You can click and drag to perform any of these operations.
 
 [Play here](/build/web/index.html)

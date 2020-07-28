@@ -1,8 +1,8 @@
 (function (root, factory) {
   if (typeof define === 'function' && define.amd)
-    define(['exports', 'kotlin', 'korio-root-korio', 'korma-root-korma', 'kds-root-kds', 'korim-root-korim', 'korge-root-korge'], factory);
+    define(['exports', 'kotlin', 'korio-root-korio', 'korma-root-korma', 'kds-root-kds', 'korim-root-korim', 'korge-root-korge', 'korgw-root-korgw'], factory);
   else if (typeof exports === 'object')
-    factory(module.exports, require('kotlin'), require('korio-root-korio'), require('korma-root-korma'), require('kds-root-kds'), require('korim-root-korim'), require('korge-root-korge'));
+    factory(module.exports, require('kotlin'), require('korio-root-korio'), require('korma-root-korma'), require('kds-root-kds'), require('korim-root-korim'), require('korge-root-korge'), require('korgw-root-korgw'));
   else {
     if (typeof kotlin === 'undefined') {
       throw new Error("Error loading module 'NumberGame'. Its dependency 'kotlin' was not found. Please, check whether 'kotlin' is loaded prior to 'NumberGame'.");
@@ -16,9 +16,11 @@
       throw new Error("Error loading module 'NumberGame'. Its dependency 'korim-root-korim' was not found. Please, check whether 'korim-root-korim' is loaded prior to 'NumberGame'.");
     }if (typeof this['korge-root-korge'] === 'undefined') {
       throw new Error("Error loading module 'NumberGame'. Its dependency 'korge-root-korge' was not found. Please, check whether 'korge-root-korge' is loaded prior to 'NumberGame'.");
-    }root.NumberGame = factory(typeof NumberGame === 'undefined' ? {} : NumberGame, kotlin, this['korio-root-korio'], this['korma-root-korma'], this['kds-root-kds'], this['korim-root-korim'], this['korge-root-korge']);
+    }if (typeof this['korgw-root-korgw'] === 'undefined') {
+      throw new Error("Error loading module 'NumberGame'. Its dependency 'korgw-root-korgw' was not found. Please, check whether 'korgw-root-korgw' is loaded prior to 'NumberGame'.");
+    }root.NumberGame = factory(typeof NumberGame === 'undefined' ? {} : NumberGame, kotlin, this['korio-root-korio'], this['korma-root-korma'], this['kds-root-kds'], this['korim-root-korim'], this['korge-root-korge'], this['korgw-root-korgw']);
   }
-}(this, function (_, Kotlin, $module$korio_root_korio, $module$korma_root_korma, $module$kds_root_kds, $module$korim_root_korim, $module$korge_root_korge) {
+}(this, function (_, Kotlin, $module$korio_root_korio, $module$korma_root_korma, $module$kds_root_kds, $module$korim_root_korim, $module$korge_root_korge, $module$korgw_root_korgw) {
   'use strict';
   var $$importsForInline$$ = _.$$importsForInline$$ || (_.$$importsForInline$$ = {});
   var Enum = Kotlin.kotlin.Enum;
@@ -46,6 +48,7 @@
   var color = $module$korim_root_korim.com.soywiz.korim.color;
   var COROUTINE_SUSPENDED = Kotlin.kotlin.coroutines.intrinsics.COROUTINE_SUSPENDED;
   var CoroutineImpl = Kotlin.kotlin.coroutines.CoroutineImpl;
+  var MouseButton = $module$korgw_root_korgw.com.soywiz.korev.MouseButton;
   var equals = Kotlin.equals;
   var Any = Object;
   var setExtra = $module$kds_root_kds.com.soywiz.kds.setExtra_46skc7$;
@@ -75,10 +78,12 @@
   var Container_init = $module$korge_root_korge.com.soywiz.korge.view.Container;
   var SolidRect_init = $module$korge_root_korge.com.soywiz.korge.view.SolidRect;
   var sum = Kotlin.kotlin.collections.sum_plj8ka$;
+  var coerceAtLeast = Kotlin.kotlin.ranges.coerceAtLeast_dqglrj$;
   var zip = Kotlin.kotlin.collections.zip_45mdf7$;
   var sequence = Kotlin.kotlin.sequences.sequence_o0x0bg$;
   var toList = Kotlin.kotlin.sequences.toList_veqyi0$;
   var Kind_OBJECT = Kotlin.Kind.OBJECT;
+  var AssertionError_init = Kotlin.kotlin.AssertionError_init_s8jyv4$;
   var UnsupportedOperationException_init = Kotlin.kotlin.UnsupportedOperationException_init_pdl1vj$;
   var defineInlineFunction = Kotlin.defineInlineFunction;
   var wrapFunction = Kotlin.wrapFunction;
@@ -86,6 +91,7 @@
   var until = Kotlin.kotlin.ranges.until_dqglrj$;
   var slice = Kotlin.kotlin.collections.slice_6bjbi1$;
   var slice_0 = Kotlin.kotlin.collections.slice_b9tsm5$;
+  var emptyList = Kotlin.kotlin.collections.emptyList_287e2$;
   var listOf = Kotlin.kotlin.collections.listOf_mh5how$;
   var toMutableList = Kotlin.kotlin.collections.toMutableList_4c7yge$;
   var get_lastIndex = Kotlin.kotlin.collections.get_lastIndex_55thoc$;
@@ -1111,23 +1117,21 @@
       prop_1.get(tmp$_1).add_qlkmfe$(doMouseEvent$lambda$lambda_1(tmp$_1, init$lambda_1(parent)));
     }}
   function getAction($receiver, event) {
-    switch (event.button.name) {
-      case 'LEFT':
-        if (equals($receiver.state, MineState$UNMARKED_getInstance()))
-          return Action$CHECK_getInstance();
-        else
-          return Action$NONE_getInstance();
-      case 'RIGHT':
-        switch ($receiver.state.name) {
-          case 'MARKED':
-            return Action$UNMARK_getInstance();
-          case 'UNMARKED':
-            return Action$MARK_getInstance();
-          default:return Action$NONE_getInstance();
-        }
-
-      default:return Action$NONE_getInstance();
-    }
+    if (event.button === MouseButton.RIGHT || event.button === MouseButton.MIDDLE || (event.button === MouseButton.LEFT && (event.isShiftDown || event.isCtrlDown))) {
+      switch ($receiver.state.name) {
+        case 'MARKED':
+          return Action$UNMARK_getInstance();
+        case 'UNMARKED':
+          return Action$MARK_getInstance();
+        default:return Action$NONE_getInstance();
+      }
+    } else if (event.button === MouseButton.LEFT) {
+      if (equals($receiver.state, MineState$UNMARKED_getInstance()))
+        return Action$CHECK_getInstance();
+      else
+        return Action$NONE_getInstance();
+    } else
+      return Action$NONE_getInstance();
   }
   function performAction($receiver, action) {
     action.execute($receiver);
@@ -1649,7 +1653,7 @@
             }
             var widthConf = configuration($receiver_0_0, 'Width:', boardWidth.v, main$lambda$lambda$lambda, new IntRange(0, 2147483647), main$lambda$lambda$lambda_0(boardWidth), main$lambda$lambda$lambda_1(newGameButton));
             var heightConf = configuration($receiver_0_0, 'Height:', boardHeight.v, main$lambda$lambda$lambda_2, new IntRange(0, 2147483647), main$lambda$lambda$lambda_3(boardHeight), main$lambda$lambda$lambda_4(widthConf));
-            var count = configuration($receiver_0_0, 'Mine Percent:', minePercent.v, main$lambda$lambda$lambda_5, new IntRange(0, 10), main$lambda$lambda$lambda_6(minePercent), main$lambda$lambda$lambda_7(heightConf));
+            configuration($receiver_0_0, 'Mine Percent:', minePercent.v, main$lambda$lambda$lambda_5, new IntRange(0, 10), main$lambda$lambda$lambda_6(minePercent), main$lambda$lambda$lambda_7(heightConf));
             var buttonContainer = $receiver_0_0;
             newGame.invoke_25kf2w$(main$lambda$lambda(boardContainer, this.local$$receiver, gameOverText, gameOverCloseable, board, boardWidth, boardHeight, minePercent, buttonContainer));
             this.state_0 = 2;
@@ -2003,33 +2007,51 @@
   Solver.prototype.solve_f6xcb4$ = function (board, updateCell, continuation) {
     var boardVal = board.cells;
   };
-  Solver.prototype.solveLine_n8dhtq$ = function (line, counts, continuation) {
+  Solver.prototype.solveLine_n8dhtq$ = function (line, counts) {
     var mines = line.size - sum(counts) | 0;
-    var availableMines = mines - (counts.size - 1) | 0;
+    var availableMines = mines - coerceAtLeast(counts.size - 1 | 0, 0) | 0;
     var availablePositions = counts.size + 1 | 0;
-    var possibleMinePositions = partition(availableMines, availablePositions);
+    if (availableMines === 0) {
+      var list = ArrayList_init(availablePositions);
+      for (var index = 0; index < availablePositions; index++) {
+        list.add_11rb$(0);
+      }
+      return this.makeLine_0(list, counts);
+    } else if (availablePositions === 1) {
+      var list_0 = ArrayList_init(availablePositions);
+      for (var index_0 = 0; index_0 < availablePositions; index_0++) {
+        list_0.add_11rb$(availableMines);
+      }
+      return this.makeLine_0(list_0, counts);
+    }var possibleMinePositions = partition(availableMines, availablePositions);
     var destination = ArrayList_init(collectionSizeOrDefault(possibleMinePositions, 10));
     var tmp$;
     tmp$ = possibleMinePositions.iterator();
     while (tmp$.hasNext()) {
       var item = tmp$.next();
-      destination.add_11rb$(this.makeLine_0(item, counts));
+      var tmp$_0 = destination.add_11rb$;
+      var $receiver = this.makeLine_0(item, counts);
+      var cond = $receiver.size === line.size;
+      var message = 'Possible line matches new line length';
+      if (!cond)
+        throw AssertionError_init(message);
+      tmp$_0.call(destination, $receiver);
     }
     var destination_0 = ArrayList_init_0();
-    var tmp$_0;
-    tmp$_0 = destination.iterator();
-    loop_label: while (tmp$_0.hasNext()) {
-      var element = tmp$_0.next();
-      var $receiver = zip(element, line);
+    var tmp$_1;
+    tmp$_1 = destination.iterator();
+    loop_label: while (tmp$_1.hasNext()) {
+      var element = tmp$_1.next();
+      var $receiver_0 = zip(element, line);
       var all$result;
       all$break: do {
-        var tmp$_1;
-        if (Kotlin.isType($receiver, Collection) && $receiver.isEmpty()) {
+        var tmp$_2;
+        if (Kotlin.isType($receiver_0, Collection) && $receiver_0.isEmpty()) {
           all$result = true;
           break all$break;
-        }tmp$_1 = $receiver.iterator();
-        while (tmp$_1.hasNext()) {
-          var element_0 = tmp$_1.next();
+        }tmp$_2 = $receiver_0.iterator();
+        while (tmp$_2.hasNext()) {
+          var element_0 = tmp$_2.next();
           if (!(element_0.second === MineState$UNMARKED_getInstance() || (element_0.first === Solver$CellState$EMPTY_getInstance() && element_0.second !== MineState$MINE_getInstance() && element_0.second !== MineState$MARKED_getInstance()) || (element_0.first === Solver$CellState$MINE_getInstance() && (element_0.second === MineState$MINE_getInstance() || element_0.second === MineState$MARKED_getInstance())))) {
             all$result = false;
             break all$break;
@@ -2045,20 +2067,20 @@
       throw UnsupportedOperationException_init("Empty collection can't be reduced.");
     var accumulator = iterator.next();
     while (iterator.hasNext()) {
-      var $receiver_0 = zip(accumulator, iterator.next());
-      var destination_1 = ArrayList_init(collectionSizeOrDefault($receiver_0, 10));
-      var tmp$_2;
-      tmp$_2 = $receiver_0.iterator();
-      while (tmp$_2.hasNext()) {
-        var item_0 = tmp$_2.next();
-        var tmp$_3 = destination_1.add_11rb$;
+      var $receiver_1 = zip(accumulator, iterator.next());
+      var destination_1 = ArrayList_init(collectionSizeOrDefault($receiver_1, 10));
+      var tmp$_3;
+      tmp$_3 = $receiver_1.iterator();
+      while (tmp$_3.hasNext()) {
+        var item_0 = tmp$_3.next();
+        var tmp$_4 = destination_1.add_11rb$;
         var transform$result;
         if (item_0.first === item_0.second) {
           transform$result = item_0.first;
         } else {
           transform$result = Solver$CellState$NONE_getInstance();
         }
-        tmp$_3.call(destination_1, transform$result);
+        tmp$_4.call(destination_1, transform$result);
       }
       accumulator = destination_1;
     }
@@ -2139,6 +2161,14 @@
             this.state_0 = 2;
             continue;
           case 7:
+            var cond = !this.local$emptyList.hasNext();
+            var message = 'Empty list is longer than mine list';
+            if (!cond)
+              throw AssertionError_init(message);
+            var cond_0 = this.local$mineList.hasNext();
+            var message_0 = 'Mine list is same length as empty list';
+            if (!cond_0)
+              throw AssertionError_init(message_0);
             var size_1 = this.local$mineList.next();
             var list_1 = ArrayList_init(size_1);
             for (var index_1 = 0; index_1 < size_1; index_1++) {
@@ -2151,7 +2181,11 @@
               return COROUTINE_SUSPENDED;
             continue;
           case 8:
-            return this.result_0;
+            var cond_1 = !this.local$mineList.hasNext();
+            var message_1 = 'Mine list should be one value longer than empty list';
+            if (!cond_1)
+              throw AssertionError_init(message_1);
+            return Unit;
           default:this.state_0 = 1;
             throw new Error('State Machine Unreachable execution');
         }
@@ -2206,6 +2240,15 @@
       return new Array2(width, height, Kotlin.isArray(tmp$ = array) ? tmp$ : throwCCE());
     };
   }));
+  var assert = defineInlineFunction('NumberGame.assert_qlx5jl$', wrapFunction(function () {
+    var AssertionError_init = Kotlin.kotlin.AssertionError_init_s8jyv4$;
+    return function (cond, message) {
+      if (message === void 0)
+        message = null;
+      if (!cond)
+        throw AssertionError_init(message);
+    };
+  }));
   function row($receiver, row) {
     return slice(toList_0($receiver), until(Kotlin.imul(row, $receiver.width), Kotlin.imul(row, $receiver.width + 1 | 0)));
   }
@@ -2240,6 +2283,8 @@
   }
   function enumerateCombinations$enumerate(range, k) {
     var tmp$, tmp$_0;
+    if (k === 0)
+      return listOf(emptyList());
     if (k === 1) {
       var $receiver = toList_0(range);
       var destination = ArrayList_init(collectionSizeOrDefault($receiver, 10));
@@ -2360,11 +2405,12 @@
     get: Solver$CellState$MINE_getInstance
   });
   Solver.prototype.CellState = Solver$CellState;
+  $$importsForInline$$.NumberGame = _;
   Object.defineProperty(_, 'Solver', {
     get: Solver_getInstance
   });
-  $$importsForInline$$.NumberGame = _;
   _.map_a5qy59$ = map;
+  _.assert_qlx5jl$ = assert;
   _.row_wca0k6$ = row;
   _.col_wca0k6$ = col;
   _.factorial_dqglrj$ = factorial;

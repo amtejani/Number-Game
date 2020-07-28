@@ -93,17 +93,19 @@ fun Board.Cell.init(view: View, parent: Board) {
  * If right click and marked, return [Action.UNMARK]
  */
 fun Board.Cell.getAction(event: MouseEvents) =
-        when (event.button) {
-            MouseButton.LEFT -> {
+        when {
+            event.button == MouseButton.RIGHT ||
+            event.button == MouseButton.MIDDLE ||
+            event.button == MouseButton.LEFT && (event.isShiftDown || event.isCtrlDown) -> when (state) {
+                MineState.MARKED -> Action.UNMARK
+                MineState.UNMARKED -> Action.MARK
+                else -> Action.NONE
+            }
+            event.button == MouseButton.LEFT -> {
                 when (state) {
                     MineState.UNMARKED -> Action.CHECK
                     else -> Action.NONE
                 }
-            }
-            MouseButton.RIGHT -> when (state) {
-                MineState.MARKED -> Action.UNMARK
-                MineState.UNMARKED -> Action.MARK
-                else -> Action.NONE
             }
             else -> Action.NONE
         }

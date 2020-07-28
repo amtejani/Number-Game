@@ -17,7 +17,7 @@ object Solver {
         val availableMines = mines - (counts.size - 1).coerceAtLeast(0)
         val availablePositions = counts.size + 1
 
-        //  TODO add logic to check if a count is complete
+        //  TODO Optimization: add logic to check if a count is complete
         if (availableMines == 0) {
             // If no available mines (total count + spacing mines = row size), then we can fill all positions with EMPTY
             return makeLine(List(availablePositions) { 0 }, counts)
@@ -28,8 +28,9 @@ object Solver {
         val possibleMinePositions = partition(availableMines, availablePositions)
 
         return possibleMinePositions.map {
-            makeLine(it, counts)
-            // TODO assert same size as line
+            makeLine(it, counts).also { newLine ->
+                assert(newLine.size == line.size, "Possible line matches new line length")
+            }
         }.filter { possibleLine ->
             // Only consider possible lines if they match the current board state
             possibleLine.zip(line).all {
@@ -56,8 +57,9 @@ object Solver {
             yieldAll(List(emptyList.next()) { CellState.EMPTY })
             if (emptyList.hasNext()) yield(CellState.MINE)
         }
-        // TODO assert empty.hasNext is false
+        assert(!emptyList.hasNext(), "Empty list is longer than mine list")
+        assert(mineList.hasNext(), "Mine list is same length as empty list")
         yieldAll(List(mineList.next()) { CellState.MINE })
-        // TODO assert mines.hasNext is false
+        assert(!mineList.hasNext(), "Mine list should be one value longer than empty list")
     }.toList()
 }
