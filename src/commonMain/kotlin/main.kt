@@ -53,7 +53,7 @@ suspend fun main() = Korge(width = 1600, height = 900, bgcolor = Colors["#2b2b2b
             alignTopToTopOf(widthConf)
             alignLeftToRightOf(widthConf, 40.0)
         }
-        val count = configuration(
+        configuration(
                 "Mine Percent:",
                 minePercent,
                 { "${it * 10}%" },

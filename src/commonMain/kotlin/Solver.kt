@@ -7,13 +7,24 @@ object Solver {
         val boardVal = board.cells
     }
 
-    suspend fun solveLine(line: List<MineState>, counts: List<Int>): List<CellState> {
+    /**
+     * Solve a single line given the [line] state and the counts
+     */
+    fun solveLine(line: List<MineState>, counts: List<Int>): List<CellState> {
         // get num of mines
         val mines = line.size - counts.sum()
         // Ignore number of mines that are required to be placed between consecutive empty positions
-        val availableMines = mines - (counts.size - 1)
+        val availableMines = mines - (counts.size - 1).coerceAtLeast(0)
         val availablePositions = counts.size + 1
 
+        //  TODO add logic to check if a count is complete
+        if (availableMines == 0) {
+            // If no available mines (total count + spacing mines = row size), then we can fill all positions with EMPTY
+            return makeLine(List(availablePositions) { 0 }, counts)
+        } else if (availablePositions == 1) {
+            // If no available positions (total count = 0), then we can fill all positions with MINE
+            return makeLine(List(availablePositions) { availableMines }, counts)
+        }
         val possibleMinePositions = partition(availableMines, availablePositions)
 
         return possibleMinePositions.map {

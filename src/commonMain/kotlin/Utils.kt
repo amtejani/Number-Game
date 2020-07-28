@@ -33,6 +33,7 @@ fun Int.choose(num: Int): Int {
  */
 fun enumerateCombinations(n: Int, k: Int): List<List<Int>> {
     fun enumerate(range: IntRange, k: Int): List<List<Int>> {
+        if (k == 0) return listOf(emptyList())
         if (k == 1) return range.toList().map { listOf(it) }
         val out = mutableListOf<List<Int>>()
         for (i in range.first..(range.last - (k - 1))) {
