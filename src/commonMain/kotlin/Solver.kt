@@ -1,10 +1,81 @@
+import com.soywiz.kds.Array2
+import com.soywiz.kds.Queue
+import com.soywiz.korio.async.AsyncSignal
+import com.soywiz.korio.async.mapSignal
 import com.soywiz.korma.geom.PointInt
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 object Solver {
     enum class CellState { NONE, EMPTY, MINE }
+    enum class Line { ROW, COL }
+    data class Info(
+            val line: Line,
+            val pos: PointInt
+    )
 
-    suspend fun solve(board: Board, updateCell: suspend (PointInt) -> Unit) {
-        val boardVal = board.cells
+    data class NextLine(
+            val line: Line,
+            val pos: Int
+    )
+
+    /**
+     * Solve the board by attempting to solve each row and column, then solve any row or column that has changed.
+     */
+    suspend fun solve(board: Board, updateCell: suspend (PointInt) -> Unit) = withContext(Dispatchers.Default) {
+        val queue = Queue<NextLine>()
+        val signal = AsyncSignal<Info>()
+        signal.mapSignal { it.pos }.add(updateCell)
+        signal.mapSignal {
+            if (it.line == Line.ROW) {
+                NextLine(Line.COL, it.pos.x)
+            } else {
+                NextLine(Line.ROW, it.pos.y)
+            }
+        }.add {
+            if (!queue.contains(it)) {
+                queue.enqueue(it)
+            }
+        }
+        val cells = board.cells
+        val countsRow = board.emptyCountRow
+        val countsCol = board.emptyCountCol
+        for (r in 0 until board.height) {
+            val row = cells.row(r)
+            updateLine(row, countsRow[r], Line.ROW, signal)
+        }
+        for (c in 0 until board.width) {
+            val col = cells.col(c)
+            updateLine(col, countsCol[c], Line.COL, signal)
+        }
+        while (queue.peek() != null) {
+            val i = queue.dequeue()
+            println("Next Line: $i")
+            val getLine = if (i.line == Line.ROW) Array2<Board.Cell>::row else Array2<Board.Cell>::col
+            val counts = if (i.line == Line.ROW) countsRow else countsCol
+            updateLine(getLine(cells, i.pos), counts[i.pos], i.line, signal)
+        }
+        println("Done solve pass")
+        signal.clear()
+    }
+
+    /**
+     * Solve line. Mark any mines, and check any empty positions.
+     * Notify [signal] if operation was performed.
+     */
+    private suspend fun updateLine(line: List<Board.Cell>, counts: List<Int>, dir: Line, signal: AsyncSignal<Info>) {
+        val sol = solveLine(line.map { it.state }, counts)
+        sol.zip(line).forEach {
+            if (it.second.state == MineState.UNMARKED) {
+                if (it.first == CellState.MINE) {
+                    it.second.mark()
+                    signal(Info(dir, it.second.pos))
+                } else if (it.first == CellState.EMPTY) {
+                    it.second.check()
+                    signal(Info(dir, it.second.pos))
+                }
+            }
+        }
     }
 
     /**

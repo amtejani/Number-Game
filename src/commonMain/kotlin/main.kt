@@ -4,7 +4,10 @@ import com.soywiz.korge.ui.textButton
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.Colors
 import com.soywiz.korio.async.AsyncSignal
+import com.soywiz.korio.async.launch
 import com.soywiz.korio.lang.Closeable
+import com.soywiz.korma.geom.PointInt
+import kotlinx.coroutines.channels.Channel
 import kotlin.math.min
 
 suspend fun main() = Korge(width = 1600, height = 900, bgcolor = Colors["#2b2b2b"]) {
@@ -13,6 +16,7 @@ suspend fun main() = Korge(width = 1600, height = 900, bgcolor = Colors["#2b2b2b
     var gameOverText: Text? = null
     var gameOverCloseable: Closeable? = null
     val newGame = AsyncSignal<Unit>()
+    var channel: Channel<PointInt>? = null
     var boardWidth = 5
     var boardHeight = 5
     var minePercent = 5
@@ -28,9 +32,11 @@ suspend fun main() = Korge(width = 1600, height = 900, bgcolor = Colors["#2b2b2b
             alignLeftToRightOf(newGameButton, 20.0)
             onClick {
                 board?.let { board ->
+                    enabled = false
                     Solver.solve(board) {
-                        board[it.x, it.y].update()
+                        channel?.send(it)
                     }
+                    enabled = true
                 }
             }
         }
@@ -70,6 +76,7 @@ suspend fun main() = Korge(width = 1600, height = 900, bgcolor = Colors["#2b2b2b
         removeChild(gameOverText)
         gameOverCloseable?.close()
         board?.cleanUp()
+        channel?.close()
 
         board = Board(boardWidth, boardHeight, (minePercent.toDouble() / 10).coerceIn(0.0, 1.0)).also {
             val blockSize = min(views.virtualWidth / (boardWidth * 1.2), views.virtualHeight / (boardHeight * 1.2)) / 2
@@ -79,6 +86,14 @@ suspend fun main() = Korge(width = 1600, height = 900, bgcolor = Colors["#2b2b2b
                 println("Game Over, mistakes: $mistakes")
                 gameOverText = text("Game Over, Mistakes made: $mistakes") {
                     position(20.0, 20.0)
+                }
+            }
+        }
+        channel = Channel()
+        launch {
+            channel?.also {
+                for (i in it) {
+                    board?.get(i.x, i.y)?.update()
                 }
             }
         }

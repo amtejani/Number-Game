@@ -7,12 +7,12 @@ inline fun <T, R : Any> Array2<T>.map(transform: (T) -> R): Array2<R> {
     return Array2(width, height) { transform(get(it % width, it / width)) }
 }
 
-inline fun assert(cond: Boolean, message: Any? = null) {
+fun assert(cond: Boolean, message: Any? = null) {
     if (!cond) throw AssertionError(message)
 }
 
 fun <T> Array2<T>.row(row: Int): List<T> {
-    return this.toList().slice((row * width) until (row * (width + 1)))
+    return this.toList().slice((row * width) until ((row + 1) * width))
 }
 
 fun <T> Array2<T>.col(col: Int): List<T> {

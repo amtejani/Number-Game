@@ -1,8 +1,8 @@
 (function (root, factory) {
   if (typeof define === 'function' && define.amd)
-    define(['exports', 'kotlin', 'korio-root-korio', 'korma-root-korma', 'kds-root-kds', 'korim-root-korim', 'korge-root-korge', 'korgw-root-korgw'], factory);
+    define(['exports', 'kotlin', 'korio-root-korio', 'korma-root-korma', 'kds-root-kds', 'korim-root-korim', 'korge-root-korge', 'korgw-root-korgw', 'kotlinx-coroutines-core'], factory);
   else if (typeof exports === 'object')
-    factory(module.exports, require('kotlin'), require('korio-root-korio'), require('korma-root-korma'), require('kds-root-kds'), require('korim-root-korim'), require('korge-root-korge'), require('korgw-root-korgw'));
+    factory(module.exports, require('kotlin'), require('korio-root-korio'), require('korma-root-korma'), require('kds-root-kds'), require('korim-root-korim'), require('korge-root-korge'), require('korgw-root-korgw'), require('kotlinx-coroutines-core'));
   else {
     if (typeof kotlin === 'undefined') {
       throw new Error("Error loading module 'NumberGame'. Its dependency 'kotlin' was not found. Please, check whether 'kotlin' is loaded prior to 'NumberGame'.");
@@ -18,9 +18,11 @@
       throw new Error("Error loading module 'NumberGame'. Its dependency 'korge-root-korge' was not found. Please, check whether 'korge-root-korge' is loaded prior to 'NumberGame'.");
     }if (typeof this['korgw-root-korgw'] === 'undefined') {
       throw new Error("Error loading module 'NumberGame'. Its dependency 'korgw-root-korgw' was not found. Please, check whether 'korgw-root-korgw' is loaded prior to 'NumberGame'.");
-    }root.NumberGame = factory(typeof NumberGame === 'undefined' ? {} : NumberGame, kotlin, this['korio-root-korio'], this['korma-root-korma'], this['kds-root-kds'], this['korim-root-korim'], this['korge-root-korge'], this['korgw-root-korgw']);
+    }if (typeof this['kotlinx-coroutines-core'] === 'undefined') {
+      throw new Error("Error loading module 'NumberGame'. Its dependency 'kotlinx-coroutines-core' was not found. Please, check whether 'kotlinx-coroutines-core' is loaded prior to 'NumberGame'.");
+    }root.NumberGame = factory(typeof NumberGame === 'undefined' ? {} : NumberGame, kotlin, this['korio-root-korio'], this['korma-root-korma'], this['kds-root-kds'], this['korim-root-korim'], this['korge-root-korge'], this['korgw-root-korgw'], this['kotlinx-coroutines-core']);
   }
-}(this, function (_, Kotlin, $module$korio_root_korio, $module$korma_root_korma, $module$kds_root_kds, $module$korim_root_korim, $module$korge_root_korge, $module$korgw_root_korgw) {
+}(this, function (_, Kotlin, $module$korio_root_korio, $module$korma_root_korma, $module$kds_root_kds, $module$korim_root_korim, $module$korge_root_korge, $module$korgw_root_korgw, $module$kotlinx_coroutines_core) {
   'use strict';
   var $$importsForInline$$ = _.$$importsForInline$$ || (_.$$importsForInline$$ = {});
   var Enum = Kotlin.kotlin.Enum;
@@ -64,6 +66,8 @@
   var alignTopToTopOf = $module$korge_root_korge.com.soywiz.korge.view.alignTopToTopOf_qcv975$;
   var coerceIn = Kotlin.kotlin.ranges.coerceIn_nig4hr$;
   var position_0 = $module$korge_root_korge.com.soywiz.korge.view.position_2cbtc5$;
+  var Channel = $module$kotlinx_coroutines_core.kotlinx.coroutines.channels.Channel_ww73n8$;
+  var launch = $module$korio_root_korio.com.soywiz.korio.async.launch_hilpzi$;
   var coerceAtMost = Kotlin.kotlin.ranges.coerceAtMost_38ydlf$;
   var coerceIn_0 = Kotlin.kotlin.ranges.coerceIn_nayhkp$;
   var internal = Kotlin.kotlin.coroutines.js.internal;
@@ -77,16 +81,20 @@
   var Math_0 = Math;
   var Container_init = $module$korge_root_korge.com.soywiz.korge.view.Container;
   var SolidRect_init = $module$korge_root_korge.com.soywiz.korge.view.SolidRect;
+  var coroutines = $module$kotlinx_coroutines_core.kotlinx.coroutines;
+  var TGenQueue = $module$kds_root_kds.com.soywiz.kds.TGenQueue;
+  var mapSignal = $module$korio_root_korio.com.soywiz.korio.async.mapSignal_d1llwn$;
+  var withContext = $module$kotlinx_coroutines_core.kotlinx.coroutines.withContext_i5cbzn$;
+  var zip = Kotlin.kotlin.collections.zip_45mdf7$;
   var sum = Kotlin.kotlin.collections.sum_plj8ka$;
   var coerceAtLeast = Kotlin.kotlin.ranges.coerceAtLeast_dqglrj$;
-  var zip = Kotlin.kotlin.collections.zip_45mdf7$;
   var sequence = Kotlin.kotlin.sequences.sequence_o0x0bg$;
   var toList = Kotlin.kotlin.sequences.toList_veqyi0$;
   var Kind_OBJECT = Kotlin.Kind.OBJECT;
-  var AssertionError_init = Kotlin.kotlin.AssertionError_init_s8jyv4$;
   var UnsupportedOperationException_init = Kotlin.kotlin.UnsupportedOperationException_init_pdl1vj$;
   var defineInlineFunction = Kotlin.defineInlineFunction;
   var wrapFunction = Kotlin.wrapFunction;
+  var AssertionError_init = Kotlin.kotlin.AssertionError_init_s8jyv4$;
   var toList_0 = Kotlin.kotlin.collections.toList_7wnvza$;
   var until = Kotlin.kotlin.ranges.until_dqglrj$;
   var slice = Kotlin.kotlin.collections.slice_6bjbi1$;
@@ -103,6 +111,8 @@
   Direction.prototype.constructor = Direction;
   Solver$CellState.prototype = Object.create(Enum.prototype);
   Solver$CellState.prototype.constructor = Solver$CellState;
+  Solver$Line.prototype = Object.create(Enum.prototype);
+  Solver$Line.prototype.constructor = Solver$Line;
   function MineState(name, ordinal) {
     Enum.call(this);
     this.name$ = name;
@@ -1250,10 +1260,10 @@
         return instance.doResume(null);
     };
   }
-  function Coroutine$main$lambda$lambda$lambda$lambda$lambda$lambda(closure$board_0, it_0, continuation_0) {
+  function Coroutine$main$lambda$lambda$lambda$lambda$lambda$lambda(closure$channel_0, it_0, continuation_0) {
     CoroutineImpl.call(this, continuation_0);
     this.exceptionState_0 = 1;
-    this.local$closure$board = closure$board_0;
+    this.local$closure$channel = closure$channel_0;
     this.local$it = it_0;
   }
   Coroutine$main$lambda$lambda$lambda$lambda$lambda$lambda.$metadata$ = {
@@ -1268,9 +1278,27 @@
       try {
         switch (this.state_0) {
           case 0:
-            return update(this.local$closure$board.get_vux9f0$(this.local$it.x, this.local$it.y)), Unit;
+            var tmp$;
+            if ((tmp$ = this.local$closure$channel.v) != null) {
+              this.state_0 = 2;
+              this.result_0 = tmp$.send_11rb$(this.local$it, this);
+              if (this.result_0 === COROUTINE_SUSPENDED)
+                return COROUTINE_SUSPENDED;
+              continue;
+            } else {
+              this.result_0 = null;
+              this.state_0 = 3;
+              continue;
+            }
+
           case 1:
             throw this.exception_0;
+          case 2:
+            this.result_0 = Unit;
+            this.state_0 = 3;
+            continue;
+          case 3:
+            return this.result_0;
           default:this.state_0 = 1;
             throw new Error('State Machine Unreachable execution');
         }
@@ -1285,20 +1313,23 @@
       }
      while (true);
   };
-  function main$lambda$lambda$lambda$lambda$lambda$lambda(closure$board_0) {
+  function main$lambda$lambda$lambda$lambda$lambda$lambda(closure$channel_0) {
     return function (it_0, continuation_0, suspended) {
-      var instance = new Coroutine$main$lambda$lambda$lambda$lambda$lambda$lambda(closure$board_0, it_0, continuation_0);
+      var instance = new Coroutine$main$lambda$lambda$lambda$lambda$lambda$lambda(closure$channel_0, it_0, continuation_0);
       if (suspended)
         return instance;
       else
         return instance.doResume(null);
     };
   }
-  function Coroutine$main$lambda$lambda$lambda$lambda_0(closure$board_0, it_0, continuation_0) {
+  function Coroutine$main$lambda$lambda$lambda$lambda_0(closure$board_0, this$_0, closure$channel_0, it_0, continuation_0) {
     CoroutineImpl.call(this, continuation_0);
     this.exceptionState_0 = 1;
     this.local$closure$board = closure$board_0;
+    this.local$this$ = this$_0;
+    this.local$closure$channel = closure$channel_0;
     this.local$tmp$ = void 0;
+    this.local$this$_0 = void 0;
   }
   Coroutine$main$lambda$lambda$lambda$lambda_0.$metadata$ = {
     kind: Kotlin.Kind.CLASS,
@@ -1314,8 +1345,11 @@
           case 0:
             var tmp$;
             if ((tmp$ = this.local$closure$board.v) != null) {
+              this.local$this$_0 = this.local$this$;
+              var closure$channel = this.local$closure$channel;
+              this.local$this$_0.enabled = false;
               this.state_0 = 2;
-              this.result_0 = Solver_getInstance().solve_f6xcb4$(tmp$, main$lambda$lambda$lambda$lambda$lambda$lambda(tmp$), this);
+              this.result_0 = Solver_getInstance().solve_f6xcb4$(tmp$, main$lambda$lambda$lambda$lambda$lambda$lambda(closure$channel), this);
               if (this.result_0 === COROUTINE_SUSPENDED)
                 return COROUTINE_SUSPENDED;
               continue;
@@ -1328,6 +1362,7 @@
           case 1:
             throw this.exception_0;
           case 2:
+            this.local$this$_0.enabled = true;
             this.local$tmp$ = Unit;
             this.state_0 = 3;
             continue;
@@ -1347,9 +1382,9 @@
       }
      while (true);
   };
-  function main$lambda$lambda$lambda$lambda_0(closure$board_0) {
+  function main$lambda$lambda$lambda$lambda_0(closure$board_0, this$_0, closure$channel_0) {
     return function (it_0, continuation_0, suspended) {
-      var instance = new Coroutine$main$lambda$lambda$lambda$lambda_0(closure$board_0, it_0, continuation_0);
+      var instance = new Coroutine$main$lambda$lambda$lambda$lambda_0(closure$board_0, this$_0, closure$channel_0, it_0, continuation_0);
       if (suspended)
         return instance;
       else
@@ -1533,7 +1568,92 @@
       return Unit;
     };
   }
-  function Coroutine$main$lambda$lambda(closure$boardContainer_0, this$_0, closure$gameOverText_0, closure$gameOverCloseable_0, closure$board_0, closure$boardWidth_0, closure$boardHeight_0, closure$minePercent_0, closure$buttonContainer_0, it_0, continuation_0) {
+  function Coroutine$main$lambda$lambda$lambda_2(closure$channel_0, closure$board_0, continuation_0) {
+    CoroutineImpl.call(this, continuation_0);
+    this.exceptionState_0 = 1;
+    this.local$closure$channel = closure$channel_0;
+    this.local$closure$board = closure$board_0;
+    this.local$tmp$ = void 0;
+    this.local$tmp$_0 = void 0;
+    this.local$closure$board_0 = void 0;
+    this.local$tmp$_1 = void 0;
+  }
+  Coroutine$main$lambda$lambda$lambda_2.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: null,
+    interfaces: [CoroutineImpl]
+  };
+  Coroutine$main$lambda$lambda$lambda_2.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$main$lambda$lambda$lambda_2.prototype.constructor = Coroutine$main$lambda$lambda$lambda_2;
+  Coroutine$main$lambda$lambda$lambda_2.prototype.doResume = function () {
+    do
+      try {
+        switch (this.state_0) {
+          case 0:
+            if ((this.local$tmp$ = this.local$closure$channel.v) != null) {
+              this.local$closure$board_0 = this.local$closure$board;
+              var tmp$, tmp$_0;
+              this.local$tmp$_1 = this.local$tmp$.iterator();
+              this.state_0 = 2;
+              continue;
+            } else {
+              this.local$tmp$_0 = null;
+              this.state_0 = 6;
+              continue;
+            }
+
+          case 1:
+            throw this.exception_0;
+          case 2:
+            this.state_0 = 3;
+            this.result_0 = this.local$tmp$_1.hasNext(this);
+            if (this.result_0 === COROUTINE_SUSPENDED)
+              return COROUTINE_SUSPENDED;
+            continue;
+          case 3:
+            if (!this.result_0) {
+              this.state_0 = 5;
+              continue;
+            } else {
+              this.state_0 = 4;
+              continue;
+            }
+
+          case 4:
+            var i = this.local$tmp$_1.next();
+            (tmp$_0 = (tmp$ = this.local$closure$board_0.v) != null ? tmp$.get_vux9f0$(i.x, i.y) : null) != null ? (update(tmp$_0), Unit) : null;
+            this.state_0 = 2;
+            continue;
+          case 5:
+            this.local$tmp$_0 = this.local$tmp$;
+            this.state_0 = 6;
+            continue;
+          case 6:
+            return this.local$tmp$_0;
+          default:this.state_0 = 1;
+            throw new Error('State Machine Unreachable execution');
+        }
+      } catch (e) {
+        if (this.state_0 === 1) {
+          this.exceptionState_0 = this.state_0;
+          throw e;
+        } else {
+          this.state_0 = this.exceptionState_0;
+          this.exception_0 = e;
+        }
+      }
+     while (true);
+  };
+  function main$lambda$lambda$lambda_8(closure$channel_0, closure$board_0) {
+    return function (continuation_0, suspended) {
+      var instance = new Coroutine$main$lambda$lambda$lambda_2(closure$channel_0, closure$board_0, continuation_0);
+      if (suspended)
+        return instance;
+      else
+        return instance.doResume(null);
+    };
+  }
+  function Coroutine$main$lambda$lambda(closure$boardContainer_0, this$_0, closure$gameOverText_0, closure$gameOverCloseable_0, closure$board_0, closure$channel_0, closure$boardWidth_0, closure$boardHeight_0, closure$minePercent_0, closure$buttonContainer_0, it_0, continuation_0) {
     CoroutineImpl.call(this, continuation_0);
     this.exceptionState_0 = 1;
     this.local$closure$boardContainer = closure$boardContainer_0;
@@ -1541,6 +1661,7 @@
     this.local$closure$gameOverText = closure$gameOverText_0;
     this.local$closure$gameOverCloseable = closure$gameOverCloseable_0;
     this.local$closure$board = closure$board_0;
+    this.local$closure$channel = closure$channel_0;
     this.local$closure$boardWidth = closure$boardWidth_0;
     this.local$closure$boardHeight = closure$boardHeight_0;
     this.local$closure$minePercent = closure$minePercent_0;
@@ -1558,12 +1679,13 @@
       try {
         switch (this.state_0) {
           case 0:
-            var tmp$, tmp$_0;
+            var tmp$, tmp$_0, tmp$_1;
             this.local$this$.removeChild_gohfih$(this.local$closure$boardContainer.v);
             this.local$this$.removeChild_gohfih$(this.local$closure$gameOverText.v);
             (tmp$ = this.local$closure$gameOverCloseable.v) != null ? (tmp$.close(), Unit) : null;
             (tmp$_0 = this.local$closure$board.v) != null ? (tmp$_0.cleanUp(), Unit) : null;
-            var tmp$_1 = this.local$closure$board;
+            (tmp$_1 = this.local$closure$channel.v) != null ? tmp$_1.close_dbl4no$() : null;
+            var tmp$_2 = this.local$closure$board;
             var $receiver = new Board(this.local$closure$boardWidth.v, this.local$closure$boardHeight.v, coerceIn(this.local$closure$minePercent.v / 10, 0.0, 1.0));
             var this$ = this.local$this$;
             var closure$boardWidth = this.local$closure$boardWidth;
@@ -1572,14 +1694,16 @@
             var closure$buttonContainer = this.local$closure$buttonContainer;
             var closure$gameOverText = this.local$closure$gameOverText;
             var closure$gameOverCloseable = this.local$closure$gameOverCloseable;
-            var tmp$_2;
+            var tmp$_3;
             var a = this$.views.virtualWidth / (closure$boardWidth.v * 1.2);
             var b = this$.views.virtualHeight / (closure$boardHeight.v * 1.2);
             var blockSize = Math_0.min(a, b) / 2;
             closure$boardContainer.v = createBoard(this$, $receiver, blockSize);
-            (tmp$_2 = closure$boardContainer.v) != null ? alignTopToBottomOf(tmp$_2, closure$buttonContainer, 20.0) : null;
+            (tmp$_3 = closure$boardContainer.v) != null ? alignTopToBottomOf(tmp$_3, closure$buttonContainer, 20.0) : null;
             closure$gameOverCloseable.v = $receiver.gameOver_b4k9x1$(main$lambda$lambda$lambda$lambda_1(this$, closure$gameOverText));
-            return tmp$_1.v = $receiver, Unit;
+            tmp$_2.v = $receiver;
+            this.local$closure$channel.v = Channel();
+            return launch(this.local$this$, main$lambda$lambda$lambda_8(this.local$closure$channel, this.local$closure$board));
           case 1:
             throw this.exception_0;
           default:this.state_0 = 1;
@@ -1596,9 +1720,9 @@
       }
      while (true);
   };
-  function main$lambda$lambda(closure$boardContainer_0, this$_0, closure$gameOverText_0, closure$gameOverCloseable_0, closure$board_0, closure$boardWidth_0, closure$boardHeight_0, closure$minePercent_0, closure$buttonContainer_0) {
+  function main$lambda$lambda(closure$boardContainer_0, this$_0, closure$gameOverText_0, closure$gameOverCloseable_0, closure$board_0, closure$channel_0, closure$boardWidth_0, closure$boardHeight_0, closure$minePercent_0, closure$buttonContainer_0) {
     return function (it_0, continuation_0, suspended) {
-      var instance = new Coroutine$main$lambda$lambda(closure$boardContainer_0, this$_0, closure$gameOverText_0, closure$gameOverCloseable_0, closure$board_0, closure$boardWidth_0, closure$boardHeight_0, closure$minePercent_0, closure$buttonContainer_0, it_0, continuation_0);
+      var instance = new Coroutine$main$lambda$lambda(closure$boardContainer_0, this$_0, closure$gameOverText_0, closure$gameOverCloseable_0, closure$board_0, closure$channel_0, closure$boardWidth_0, closure$boardHeight_0, closure$minePercent_0, closure$buttonContainer_0, it_0, continuation_0);
       if (suspended)
         return instance;
       else
@@ -1628,6 +1752,7 @@
             var gameOverText = {v: null};
             var gameOverCloseable = {v: null};
             var newGame = new AsyncSignal();
+            var channel = {v: null};
             var boardWidth = {v: 5};
             var boardHeight = {v: 5};
             var minePercent = {v: 5};
@@ -1649,13 +1774,13 @@
             });
             var tmp$_0;
             if ((tmp$_0 = $receiver_0_2 != null ? get_mouse($receiver_0_2) : null) != null) {
-              prop_0.get(tmp$_0).add_qlkmfe$(doMouseEvent$lambda$lambda_2(tmp$_0, main$lambda$lambda$lambda$lambda_0(board)));
+              prop_0.get(tmp$_0).add_qlkmfe$(doMouseEvent$lambda$lambda_2(tmp$_0, main$lambda$lambda$lambda$lambda_0(board, $receiver_0_2, channel)));
             }
             var widthConf = configuration($receiver_0_0, 'Width:', boardWidth.v, main$lambda$lambda$lambda, new IntRange(0, 2147483647), main$lambda$lambda$lambda_0(boardWidth), main$lambda$lambda$lambda_1(newGameButton));
             var heightConf = configuration($receiver_0_0, 'Height:', boardHeight.v, main$lambda$lambda$lambda_2, new IntRange(0, 2147483647), main$lambda$lambda$lambda_3(boardHeight), main$lambda$lambda$lambda_4(widthConf));
             configuration($receiver_0_0, 'Mine Percent:', minePercent.v, main$lambda$lambda$lambda_5, new IntRange(0, 10), main$lambda$lambda$lambda_6(minePercent), main$lambda$lambda$lambda_7(heightConf));
             var buttonContainer = $receiver_0_0;
-            newGame.invoke_25kf2w$(main$lambda$lambda(boardContainer, this.local$$receiver, gameOverText, gameOverCloseable, board, boardWidth, boardHeight, minePercent, buttonContainer));
+            newGame.invoke_25kf2w$(main$lambda$lambda(boardContainer, this.local$$receiver, gameOverText, gameOverCloseable, board, channel, boardWidth, boardHeight, minePercent, buttonContainer));
             this.state_0 = 2;
             this.result_0 = newGame.invoke_11rb$(Unit, this);
             if (this.result_0 === COROUTINE_SUSPENDED)
@@ -2004,8 +2129,404 @@
     }
   }
   Solver$CellState.valueOf_61zpoe$ = Solver$CellState$valueOf;
+  function Solver$Line(name, ordinal) {
+    Enum.call(this);
+    this.name$ = name;
+    this.ordinal$ = ordinal;
+  }
+  function Solver$Line_initFields() {
+    Solver$Line_initFields = function () {
+    };
+    Solver$Line$ROW_instance = new Solver$Line('ROW', 0);
+    Solver$Line$COL_instance = new Solver$Line('COL', 1);
+  }
+  var Solver$Line$ROW_instance;
+  function Solver$Line$ROW_getInstance() {
+    Solver$Line_initFields();
+    return Solver$Line$ROW_instance;
+  }
+  var Solver$Line$COL_instance;
+  function Solver$Line$COL_getInstance() {
+    Solver$Line_initFields();
+    return Solver$Line$COL_instance;
+  }
+  Solver$Line.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'Line',
+    interfaces: [Enum]
+  };
+  function Solver$Line$values() {
+    return [Solver$Line$ROW_getInstance(), Solver$Line$COL_getInstance()];
+  }
+  Solver$Line.values = Solver$Line$values;
+  function Solver$Line$valueOf(name) {
+    switch (name) {
+      case 'ROW':
+        return Solver$Line$ROW_getInstance();
+      case 'COL':
+        return Solver$Line$COL_getInstance();
+      default:throwISE('No enum constant Solver.Line.' + name);
+    }
+  }
+  Solver$Line.valueOf_61zpoe$ = Solver$Line$valueOf;
+  function Solver$Info(line, pos) {
+    this.line = line;
+    this.pos = pos;
+  }
+  Solver$Info.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'Info',
+    interfaces: []
+  };
+  Solver$Info.prototype.component1 = function () {
+    return this.line;
+  };
+  Solver$Info.prototype.component2 = function () {
+    return this.pos;
+  };
+  Solver$Info.prototype.copy_z5hquk$ = function (line, pos) {
+    return new Solver$Info(line === void 0 ? this.line : line, pos === void 0 ? this.pos : pos);
+  };
+  Solver$Info.prototype.toString = function () {
+    return 'Info(line=' + Kotlin.toString(this.line) + (', pos=' + Kotlin.toString(this.pos)) + ')';
+  };
+  Solver$Info.prototype.hashCode = function () {
+    var result = 0;
+    result = result * 31 + Kotlin.hashCode(this.line) | 0;
+    result = result * 31 + Kotlin.hashCode(this.pos) | 0;
+    return result;
+  };
+  Solver$Info.prototype.equals = function (other) {
+    return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && (Kotlin.equals(this.line, other.line) && Kotlin.equals(this.pos, other.pos)))));
+  };
+  function Solver$NextLine(line, pos) {
+    this.line = line;
+    this.pos = pos;
+  }
+  Solver$NextLine.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'NextLine',
+    interfaces: []
+  };
+  Solver$NextLine.prototype.component1 = function () {
+    return this.line;
+  };
+  Solver$NextLine.prototype.component2 = function () {
+    return this.pos;
+  };
+  Solver$NextLine.prototype.copy_x56gg1$ = function (line, pos) {
+    return new Solver$NextLine(line === void 0 ? this.line : line, pos === void 0 ? this.pos : pos);
+  };
+  Solver$NextLine.prototype.toString = function () {
+    return 'NextLine(line=' + Kotlin.toString(this.line) + (', pos=' + Kotlin.toString(this.pos)) + ')';
+  };
+  Solver$NextLine.prototype.hashCode = function () {
+    var result = 0;
+    result = result * 31 + Kotlin.hashCode(this.line) | 0;
+    result = result * 31 + Kotlin.hashCode(this.pos) | 0;
+    return result;
+  };
+  Solver$NextLine.prototype.equals = function (other) {
+    return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && (Kotlin.equals(this.line, other.line) && Kotlin.equals(this.pos, other.pos)))));
+  };
+  function Solver$solve$lambda$lambda(it) {
+    return it.pos;
+  }
+  function Solver$solve$lambda$lambda_0(it) {
+    if (it.line === Solver$Line$ROW_getInstance()) {
+      return new Solver$NextLine(Solver$Line$COL_getInstance(), it.pos.x);
+    } else {
+      return new Solver$NextLine(Solver$Line$ROW_getInstance(), it.pos.y);
+    }
+  }
+  function Coroutine$Solver$solve$lambda$lambda(closure$queue_0, it_0, continuation_0) {
+    CoroutineImpl.call(this, continuation_0);
+    this.exceptionState_0 = 1;
+    this.local$closure$queue = closure$queue_0;
+    this.local$it = it_0;
+  }
+  Coroutine$Solver$solve$lambda$lambda.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: null,
+    interfaces: [CoroutineImpl]
+  };
+  Coroutine$Solver$solve$lambda$lambda.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$Solver$solve$lambda$lambda.prototype.constructor = Coroutine$Solver$solve$lambda$lambda;
+  Coroutine$Solver$solve$lambda$lambda.prototype.doResume = function () {
+    do
+      try {
+        switch (this.state_0) {
+          case 0:
+            if (!this.local$closure$queue.contains_11rb$(this.local$it)) {
+              return this.local$closure$queue.enqueue_11rb$(this.local$it), Unit;
+            }
+            return Unit;
+          case 1:
+            throw this.exception_0;
+          default:this.state_0 = 1;
+            throw new Error('State Machine Unreachable execution');
+        }
+      } catch (e) {
+        if (this.state_0 === 1) {
+          this.exceptionState_0 = this.state_0;
+          throw e;
+        } else {
+          this.state_0 = this.exceptionState_0;
+          this.exception_0 = e;
+        }
+      }
+     while (true);
+  };
+  function Solver$solve$lambda$lambda_1(closure$queue_0) {
+    return function (it_0, continuation_0, suspended) {
+      var instance = new Coroutine$Solver$solve$lambda$lambda(closure$queue_0, it_0, continuation_0);
+      if (suspended)
+        return instance;
+      else
+        return instance.doResume(null);
+    };
+  }
+  function Coroutine$Solver$solve$lambda(closure$updateCell_0, closure$board_0, this$Solver_0, $receiver_0, controller, continuation_0) {
+    CoroutineImpl.call(this, continuation_0);
+    this.$controller = controller;
+    this.exceptionState_0 = 1;
+    this.local$closure$updateCell = closure$updateCell_0;
+    this.local$closure$board = closure$board_0;
+    this.local$this$Solver = this$Solver_0;
+    this.local$tmp$ = void 0;
+    this.local$tmp$_0 = void 0;
+    this.local$queue = void 0;
+    this.local$signal = void 0;
+    this.local$cells = void 0;
+    this.local$countsRow = void 0;
+    this.local$countsCol = void 0;
+    this.local$r = void 0;
+    this.local$c = void 0;
+  }
+  Coroutine$Solver$solve$lambda.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: null,
+    interfaces: [CoroutineImpl]
+  };
+  Coroutine$Solver$solve$lambda.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$Solver$solve$lambda.prototype.constructor = Coroutine$Solver$solve$lambda;
+  Coroutine$Solver$solve$lambda.prototype.doResume = function () {
+    do
+      try {
+        switch (this.state_0) {
+          case 0:
+            this.local$queue = new TGenQueue();
+            this.local$signal = new AsyncSignal();
+            mapSignal(this.local$signal, Solver$solve$lambda$lambda).add_25kf2w$(this.local$closure$updateCell);
+            mapSignal(this.local$signal, Solver$solve$lambda$lambda_0).add_25kf2w$(Solver$solve$lambda$lambda_1(this.local$queue));
+            this.local$cells = this.local$closure$board.cells;
+            this.local$countsRow = this.local$closure$board.emptyCountRow;
+            this.local$countsCol = this.local$closure$board.emptyCountCol;
+            this.local$tmp$ = this.local$closure$board.height;
+            this.local$r = 0;
+            this.state_0 = 2;
+            continue;
+          case 1:
+            throw this.exception_0;
+          case 2:
+            if (this.local$r >= this.local$tmp$) {
+              this.state_0 = 5;
+              continue;
+            }
+            var row_0 = row(this.local$cells, this.local$r);
+            this.state_0 = 3;
+            this.result_0 = this.local$this$Solver.updateLine_0(row_0, this.local$countsRow.get_za3lpa$(this.local$r), Solver$Line$ROW_getInstance(), this.local$signal, this);
+            if (this.result_0 === COROUTINE_SUSPENDED)
+              return COROUTINE_SUSPENDED;
+            continue;
+          case 3:
+            this.state_0 = 4;
+            continue;
+          case 4:
+            this.local$r++;
+            this.state_0 = 2;
+            continue;
+          case 5:
+            this.local$tmp$_0 = this.local$closure$board.width;
+            this.local$c = 0;
+            this.state_0 = 6;
+            continue;
+          case 6:
+            if (this.local$c >= this.local$tmp$_0) {
+              this.state_0 = 9;
+              continue;
+            }
+            var col_0 = col(this.local$cells, this.local$c);
+            this.state_0 = 7;
+            this.result_0 = this.local$this$Solver.updateLine_0(col_0, this.local$countsCol.get_za3lpa$(this.local$c), Solver$Line$COL_getInstance(), this.local$signal, this);
+            if (this.result_0 === COROUTINE_SUSPENDED)
+              return COROUTINE_SUSPENDED;
+            continue;
+          case 7:
+            this.state_0 = 8;
+            continue;
+          case 8:
+            this.local$c++;
+            this.state_0 = 6;
+            continue;
+          case 9:
+            this.state_0 = 10;
+            continue;
+          case 10:
+            if (this.local$queue.peek() == null) {
+              this.state_0 = 12;
+              continue;
+            }
+            var i = this.local$queue.dequeue();
+            println('Next Line: ' + i);
+            var getLine = i.line === Solver$Line$ROW_getInstance() ? getCallableRef('row', function ($receiver, row_0) {
+              return row($receiver, row_0);
+            }) : getCallableRef('col', function ($receiver, col_0) {
+              return col($receiver, col_0);
+            });
+            var counts = i.line === Solver$Line$ROW_getInstance() ? this.local$countsRow : this.local$countsCol;
+            this.state_0 = 11;
+            this.result_0 = this.local$this$Solver.updateLine_0(getLine(this.local$cells, i.pos), counts.get_za3lpa$(i.pos), i.line, this.local$signal, this);
+            if (this.result_0 === COROUTINE_SUSPENDED)
+              return COROUTINE_SUSPENDED;
+            continue;
+          case 11:
+            this.state_0 = 10;
+            continue;
+          case 12:
+            println('Done solve pass');
+            return this.local$signal.clear(), Unit;
+          default:this.state_0 = 1;
+            throw new Error('State Machine Unreachable execution');
+        }
+      } catch (e) {
+        if (this.state_0 === 1) {
+          this.exceptionState_0 = this.state_0;
+          throw e;
+        } else {
+          this.state_0 = this.exceptionState_0;
+          this.exception_0 = e;
+        }
+      }
+     while (true);
+  };
+  function Solver$solve$lambda(closure$updateCell_0, closure$board_0, this$Solver_0) {
+    return function ($receiver_0, continuation_0, suspended) {
+      var instance = new Coroutine$Solver$solve$lambda(closure$updateCell_0, closure$board_0, this$Solver_0, $receiver_0, this, continuation_0);
+      if (suspended)
+        return instance;
+      else
+        return instance.doResume(null);
+    };
+  }
   Solver.prototype.solve_f6xcb4$ = function (board, updateCell, continuation) {
-    var boardVal = board.cells;
+    return withContext(coroutines.Dispatchers.Default, Solver$solve$lambda(updateCell, board, this), continuation);
+  };
+  function Coroutine$updateLine_0($this, line_0, counts_0, dir_0, signal_0, continuation_0) {
+    CoroutineImpl.call(this, continuation_0);
+    this.exceptionState_0 = 1;
+    this.$this = $this;
+    this.local$tmp$ = void 0;
+    this.local$line = line_0;
+    this.local$counts = counts_0;
+    this.local$dir = dir_0;
+    this.local$signal = signal_0;
+  }
+  Coroutine$updateLine_0.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: null,
+    interfaces: [CoroutineImpl]
+  };
+  Coroutine$updateLine_0.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$updateLine_0.prototype.constructor = Coroutine$updateLine_0;
+  Coroutine$updateLine_0.prototype.doResume = function () {
+    do
+      try {
+        switch (this.state_0) {
+          case 0:
+            var destination = ArrayList_init(collectionSizeOrDefault(this.local$line, 10));
+            var tmp$;
+            tmp$ = this.local$line.iterator();
+            while (tmp$.hasNext()) {
+              var item = tmp$.next();
+              destination.add_11rb$(item.state);
+            }
+
+            var sol = this.$this.solveLine_n8dhtq$(destination, this.local$counts);
+            this.local$tmp$ = zip(sol, this.local$line).iterator();
+            this.state_0 = 2;
+            continue;
+          case 1:
+            throw this.exception_0;
+          case 2:
+            if (!this.local$tmp$.hasNext()) {
+              this.state_0 = 8;
+              continue;
+            }
+            var element = this.local$tmp$.next();
+            if (element.second.state === MineState$UNMARKED_getInstance()) {
+              if (element.first === Solver$CellState$MINE_getInstance()) {
+                element.second.mark();
+                this.state_0 = 5;
+                this.result_0 = this.local$signal.invoke_11rb$(new Solver$Info(this.local$dir, element.second.pos), this);
+                if (this.result_0 === COROUTINE_SUSPENDED)
+                  return COROUTINE_SUSPENDED;
+                continue;
+              } else {
+                if (element.first === Solver$CellState$EMPTY_getInstance()) {
+                  element.second.check();
+                  this.state_0 = 3;
+                  this.result_0 = this.local$signal.invoke_11rb$(new Solver$Info(this.local$dir, element.second.pos), this);
+                  if (this.result_0 === COROUTINE_SUSPENDED)
+                    return COROUTINE_SUSPENDED;
+                  continue;
+                } else {
+                  this.state_0 = 4;
+                  continue;
+                }
+              }
+            } else {
+              this.state_0 = 7;
+              continue;
+            }
+
+          case 3:
+            this.state_0 = 4;
+            continue;
+          case 4:
+            this.state_0 = 6;
+            continue;
+          case 5:
+            this.state_0 = 6;
+            continue;
+          case 6:
+            this.state_0 = 7;
+            continue;
+          case 7:
+            this.state_0 = 2;
+            continue;
+          case 8:
+            return;
+          default:this.state_0 = 1;
+            throw new Error('State Machine Unreachable execution');
+        }
+      } catch (e) {
+        if (this.state_0 === 1) {
+          this.exceptionState_0 = this.state_0;
+          throw e;
+        } else {
+          this.state_0 = this.exceptionState_0;
+          this.exception_0 = e;
+        }
+      }
+     while (true);
+  };
+  Solver.prototype.updateLine_0 = function (line_0, counts_0, dir_0, signal_0, continuation_0, suspended) {
+    var instance = new Coroutine$updateLine_0(this, line_0, counts_0, dir_0, signal_0, continuation_0);
+    if (suspended)
+      return instance;
+    else
+      return instance.doResume(null);
   };
   Solver.prototype.solveLine_n8dhtq$ = function (line, counts) {
     var mines = line.size - sum(counts) | 0;
@@ -2031,10 +2552,7 @@
       var item = tmp$.next();
       var tmp$_0 = destination.add_11rb$;
       var $receiver = this.makeLine_0(item, counts);
-      var cond = $receiver.size === line.size;
-      var message = 'Possible line matches new line length';
-      if (!cond)
-        throw AssertionError_init(message);
+      assert($receiver.size === line.size, 'Possible line matches new line length');
       tmp$_0.call(destination, $receiver);
     }
     var destination_0 = ArrayList_init_0();
@@ -2161,14 +2679,8 @@
             this.state_0 = 2;
             continue;
           case 7:
-            var cond = !this.local$emptyList.hasNext();
-            var message = 'Empty list is longer than mine list';
-            if (!cond)
-              throw AssertionError_init(message);
-            var cond_0 = this.local$mineList.hasNext();
-            var message_0 = 'Mine list is same length as empty list';
-            if (!cond_0)
-              throw AssertionError_init(message_0);
+            assert(!this.local$emptyList.hasNext(), 'Empty list is longer than mine list');
+            assert(this.local$mineList.hasNext(), 'Mine list is same length as empty list');
             var size_1 = this.local$mineList.next();
             var list_1 = ArrayList_init(size_1);
             for (var index_1 = 0; index_1 < size_1; index_1++) {
@@ -2181,11 +2693,7 @@
               return COROUTINE_SUSPENDED;
             continue;
           case 8:
-            var cond_1 = !this.local$mineList.hasNext();
-            var message_1 = 'Mine list should be one value longer than empty list';
-            if (!cond_1)
-              throw AssertionError_init(message_1);
-            return Unit;
+            return assert(!this.local$mineList.hasNext(), 'Mine list should be one value longer than empty list'), Unit;
           default:this.state_0 = 1;
             throw new Error('State Machine Unreachable execution');
         }
@@ -2240,17 +2748,14 @@
       return new Array2(width, height, Kotlin.isArray(tmp$ = array) ? tmp$ : throwCCE());
     };
   }));
-  var assert = defineInlineFunction('NumberGame.assert_qlx5jl$', wrapFunction(function () {
-    var AssertionError_init = Kotlin.kotlin.AssertionError_init_s8jyv4$;
-    return function (cond, message) {
-      if (message === void 0)
-        message = null;
-      if (!cond)
-        throw AssertionError_init(message);
-    };
-  }));
+  function assert(cond, message) {
+    if (message === void 0)
+      message = null;
+    if (!cond)
+      throw AssertionError_init(message);
+  }
   function row($receiver, row) {
-    return slice(toList_0($receiver), until(Kotlin.imul(row, $receiver.width), Kotlin.imul(row, $receiver.width + 1 | 0)));
+    return slice(toList_0($receiver), until(Kotlin.imul(row, $receiver.width), Kotlin.imul(row + 1 | 0, $receiver.width)));
   }
   function col($receiver, col) {
     var tmp$ = toList_0($receiver);
@@ -2405,10 +2910,19 @@
     get: Solver$CellState$MINE_getInstance
   });
   Solver.prototype.CellState = Solver$CellState;
-  $$importsForInline$$.NumberGame = _;
+  Object.defineProperty(Solver$Line, 'ROW', {
+    get: Solver$Line$ROW_getInstance
+  });
+  Object.defineProperty(Solver$Line, 'COL', {
+    get: Solver$Line$COL_getInstance
+  });
+  Solver.prototype.Line = Solver$Line;
+  Solver.prototype.Info = Solver$Info;
+  Solver.prototype.NextLine = Solver$NextLine;
   Object.defineProperty(_, 'Solver', {
     get: Solver_getInstance
   });
+  $$importsForInline$$.NumberGame = _;
   _.map_a5qy59$ = map;
   _.assert_qlx5jl$ = assert;
   _.row_wca0k6$ = row;
