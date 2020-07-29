@@ -19,6 +19,13 @@ object Solver {
             val pos: Int
     )
 
+    data class Count(
+            val count: Int,
+            var complete: Boolean = false,
+            // Range of completed count
+            var range: IntRange? = null
+    )
+
     /**
      * Solve the board by attempting to solve each row and column, then solve any row or column that has changed.
      */
@@ -38,8 +45,24 @@ object Solver {
             }
         }
         val cells = board.cells
-        val countsRow = board.emptyCountRow
-        val countsCol = board.emptyCountCol
+        val countsRow = board.emptyCountRow.map { list -> list.map { Count(it) } }
+        val countsCol = board.emptyCountCol.map { list -> list.map { Count(it) } }
+        for (i in countsRow.indices) {
+            for (j in countsRow[i].indices) {
+                board.onRowCountDone(i, j) { point ->
+                    countsRow[i][j].complete = true
+                    countsRow[i][j].range = getRanges(point.x, cells.row(i).map { it.state })
+                }
+            }
+        }
+        for (i in countsCol.indices) {
+            for (j in countsCol[i].indices) {
+                board.onColCountDone(i, j) { point ->
+                    countsCol[i][j].complete = true
+                    countsCol[i][j].range = getRanges(point.y, cells.col(i).map { it.state })
+                }
+            }
+        }
         for (r in 0 until board.height) {
             val row = cells.row(r)
             updateLine(row, countsRow[r], Line.ROW, signal)
@@ -59,11 +82,16 @@ object Solver {
         signal.clear()
     }
 
+    private fun getRanges(pos: Int, line: List<MineState>): IntRange {
+        return line.countConsecutiveRange { it == MineState.EMPTY }
+                .first { pos in it }
+    }
+
     /**
      * Solve line. Mark any mines, and check any empty positions.
      * Notify [signal] if operation was performed.
      */
-    private suspend fun updateLine(line: List<Board.Cell>, counts: List<Int>, dir: Line, signal: AsyncSignal<Info>) {
+    private suspend fun updateLine(line: List<Board.Cell>, counts: List<Count>, dir: Line, signal: AsyncSignal<Info>) {
         val sol = solveLine(line.map { it.state }, counts)
         sol.zip(line).forEach {
             if (it.second.state == MineState.UNMARKED) {
@@ -81,14 +109,13 @@ object Solver {
     /**
      * Solve a single line given the [line] state and the counts
      */
-    fun solveLine(line: List<MineState>, counts: List<Int>): List<CellState> {
+    fun solveLine(line: List<MineState>, counts: List<Count>): List<CellState> {
         // get num of mines
-        val mines = line.size - counts.sum()
+        val mines = line.size - counts.sumBy { it.count }
         // Ignore number of mines that are required to be placed between consecutive empty positions
         val availableMines = mines - (counts.size - 1).coerceAtLeast(0)
         val availablePositions = counts.size + 1
 
-        //  TODO Optimization: add logic to check if a count is complete
         if (availableMines == 0) {
             // If no available mines (total count + spacing mines = row size), then we can fill all positions with EMPTY
             return makeLine(List(availablePositions) { 0 }, counts)
@@ -96,11 +123,19 @@ object Solver {
             // If no available positions (total count = 0), then we can fill all positions with MINE
             return makeLine(List(availablePositions) { availableMines }, counts)
         }
+
         val possibleMinePositions = partition(availableMines, availablePositions)
 
         return possibleMinePositions.map {
             makeLine(it, counts).also { newLine ->
-                assert(newLine.size == line.size, "Possible line matches new line length")
+                assert(newLine.size == line.size, "Possible line doesn't match line length")
+            }
+        }.filter { possibleLine ->
+            // Make sure every complete count is included in the possible line
+            val ranges = possibleLine.countConsecutiveRange { it == CellState.EMPTY }
+            assert(counts.size == ranges.size, "Possible line counts do not match line's complete count")
+            counts.zip(ranges).all {
+                it.first.complete && it.first.range!! == it.second || !it.first.complete
             }
         }.filter { possibleLine ->
             // Only consider possible lines if they match the current board state
@@ -120,12 +155,12 @@ object Solver {
         }
     }
 
-    private fun makeLine(mineCount: List<Int>, emptyCount: List<Int>): List<CellState> = sequence {
+    private fun makeLine(mineCount: List<Int>, emptyCount: List<Count>): List<CellState> = sequence {
         val mineList = mineCount.iterator()
         val emptyList = emptyCount.iterator()
         while (mineList.hasNext() && emptyList.hasNext()) {
             yieldAll(List(mineList.next()) { CellState.MINE })
-            yieldAll(List(emptyList.next()) { CellState.EMPTY })
+            yieldAll(List(emptyList.next().count) { CellState.EMPTY })
             if (emptyList.hasNext()) yield(CellState.MINE)
         }
         assert(!emptyList.hasNext(), "Empty list is longer than mine list")

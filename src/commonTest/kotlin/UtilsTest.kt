@@ -1,5 +1,7 @@
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class UtilsTest {
     @Test
@@ -59,5 +61,26 @@ class UtilsTest {
                 assertEquals(test[j + 1], test[j] + partition[j] + 1)
             }
         }
+    }
+
+    @Test
+    fun testCountRanges() {
+        val len = 100
+        val condition: (Boolean) -> Boolean = { !it }
+        val mineList = List(len) { Random.nextBoolean() }
+        val countList = mineList.countConsecutiveRange(condition)
+
+        println("Mines: " + mineList.joinToString())
+        println("Counts: " + countList.joinToString())
+
+        val indexes = countList.fold((0 until 0).toSet()) { acc, value ->
+            acc.union(value)
+        }
+        val match = mineList.mapIndexed { i, value ->
+            // return true if condition is true and index is in countList
+            // or if condition is false and index is not in countList
+            !condition(value).xor(i in indexes)
+        }.all { it }
+        assertTrue(match)
     }
 }

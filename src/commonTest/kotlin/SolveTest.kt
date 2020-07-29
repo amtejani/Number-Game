@@ -8,7 +8,7 @@ class SolveTest {
     fun testSolveLine() {
         val len = 6
         val mineList = List(len) { Random.nextBoolean() }
-        val countList = mineList.countConsecutive { !it }
+        val countList = mineList.countConsecutive { !it }.map { Solver.Count(it) }
         val stateList = List(len) { MineState.UNMARKED }
 
         println("Mines: " + mineList.joinToString())
@@ -26,18 +26,23 @@ class SolveTest {
         assertTrue(correct)
     }
 
-    /**
-     * Count the consecutive fields in this iterable that match [condition].
-     */
-    private fun <T> Iterable<T>.countConsecutive(condition: (T) -> Boolean) = sequence {
-        val lastCount = fold(0) { acc, i ->
-            if (condition(i)) {
-                acc + 1
-            } else {
-                if (acc != 0) yield(acc)
-                0
-            }
-        }
-        if (lastCount != 0) yield(lastCount)
-    }.toList()
+    @Test
+    fun testSolvePartiallyCompletedLine() {
+        val mineList = listOf(true, true, false, true, false, false, false)
+        val countList = listOf(Solver.Count(1, true, 2..2), Solver.Count(3))
+        val stateList = listOf(MineState.UNMARKED, MineState.UNMARKED, MineState.EMPTY, MineState.UNMARKED, MineState.EMPTY, MineState.UNMARKED, MineState.UNMARKED)
+
+        println("Mines: " + mineList.joinToString())
+        println("Counts: " + countList.joinToString())
+
+        val line = Solver.solveLine(stateList, countList)
+        println("Solve out: " + line.joinToString())
+
+        val correct = mineList.zip(line).map {
+            it.first && it.second == Solver.CellState.MINE
+                    || !it.first && it.second == Solver.CellState.EMPTY
+        }.all { it }
+
+        assertTrue(correct)
+    }
 }

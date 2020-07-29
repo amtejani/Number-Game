@@ -86,11 +86,12 @@
   var mapSignal = $module$korio_root_korio.com.soywiz.korio.async.mapSignal_d1llwn$;
   var withContext = $module$kotlinx_coroutines_core.kotlinx.coroutines.withContext_i5cbzn$;
   var zip = Kotlin.kotlin.collections.zip_45mdf7$;
-  var sum = Kotlin.kotlin.collections.sum_plj8ka$;
   var coerceAtLeast = Kotlin.kotlin.ranges.coerceAtLeast_dqglrj$;
+  var ensureNotNull = Kotlin.ensureNotNull;
   var sequence = Kotlin.kotlin.sequences.sequence_o0x0bg$;
   var toList = Kotlin.kotlin.sequences.toList_veqyi0$;
   var Kind_OBJECT = Kotlin.Kind.OBJECT;
+  var NoSuchElementException_init = Kotlin.kotlin.NoSuchElementException;
   var UnsupportedOperationException_init = Kotlin.kotlin.UnsupportedOperationException_init_pdl1vj$;
   var defineInlineFunction = Kotlin.defineInlineFunction;
   var wrapFunction = Kotlin.wrapFunction;
@@ -103,6 +104,7 @@
   var listOf = Kotlin.kotlin.collections.listOf_mh5how$;
   var toMutableList = Kotlin.kotlin.collections.toMutableList_4c7yge$;
   var get_lastIndex = Kotlin.kotlin.collections.get_lastIndex_55thoc$;
+  var checkIndexOverflow = Kotlin.kotlin.collections.checkIndexOverflow_za3lpa$;
   MineState.prototype = Object.create(Enum.prototype);
   MineState.prototype.constructor = MineState;
   Action.prototype = Object.create(Enum.prototype);
@@ -366,7 +368,7 @@
   Board$EmptyCount.prototype.component3 = function () {
     return this.signalDone;
   };
-  Board$EmptyCount.prototype.copy_azi3zz$ = function (numEmpty, numFlagged, signalDone) {
+  Board$EmptyCount.prototype.copy_k76n5v$ = function (numEmpty, numFlagged, signalDone) {
     return new Board$EmptyCount(numEmpty === void 0 ? this.numEmpty : numEmpty, numFlagged === void 0 ? this.numFlagged : numFlagged, signalDone === void 0 ? this.signalDone : signalDone);
   };
   Board$EmptyCount.prototype.toString = function () {
@@ -405,21 +407,15 @@
       this.state = MineState$UNMARKED_getInstance();
   };
   Board$Cell.prototype.check = function () {
-    var tmp$;
     if (this.state === MineState$UNMARKED_getInstance()) {
       var p = this.pos;
       if (this.$outer.mineMap_0.get_vux9f0$(p.x, p.y)) {
-        var $receiver = MineState$MINE_getInstance();
-        this.$outer;
+        this.state = MineState$MINE_getInstance();
         this.$outer.mistakeSignal_0.invoke_11rb$(Unit);
-        tmp$ = $receiver;
       } else {
-        var $receiver_0 = MineState$EMPTY_getInstance();
-        this.$outer;
+        this.state = MineState$EMPTY_getInstance();
         this.$outer.emptyFlaggedSignal_0.invoke_11rb$(this.pos);
-        tmp$ = $receiver_0;
       }
-      this.state = tmp$;
     }};
   Object.defineProperty(Board$Cell.prototype, 'extra', {
     get: function () {
@@ -482,10 +478,10 @@
   Board.prototype.gameOver_b4k9x1$ = function (handler) {
     return this.gameOverSignal_0.once_qlkmfe$(handler);
   };
-  Board.prototype.onColCountDone_dxxoxs$ = function (col, count, handler) {
+  Board.prototype.onColCountDone_9v0qew$ = function (col, count, handler) {
     return this.colEmptyCount_0.get_za3lpa$(col).get_za3lpa$(count).signalDone.once_qlkmfe$(handler);
   };
-  Board.prototype.onRowCountDone_dxxoxs$ = function (row, count, handler) {
+  Board.prototype.onRowCountDone_9v0qew$ = function (row, count, handler) {
     return this.rowEmptyCount_0.get_za3lpa$(row).get_za3lpa$(count).signalDone.once_qlkmfe$(handler);
   };
   Board.prototype.cleanUp = function () {
@@ -530,11 +526,11 @@
       var colCount = this$Board.colEmptyCount_0.get_za3lpa$(it.x).get_za3lpa$(countPosition.colPosition);
       colCount.numFlagged = colCount.numFlagged + 1 | 0;
       if (colCount.numFlagged >= colCount.numEmpty) {
-        colCount.signalDone.invoke_11rb$(Unit);
+        colCount.signalDone.invoke_11rb$(it);
       }var rowCount = this$Board.rowEmptyCount_0.get_za3lpa$(it.y).get_za3lpa$(countPosition.rowPosition);
       rowCount.numFlagged = rowCount.numFlagged + 1 | 0;
       if (rowCount.numFlagged >= rowCount.numEmpty) {
-        rowCount.signalDone.invoke_11rb$(Unit);
+        rowCount.signalDone.invoke_11rb$(it);
       }tmp$ = this$Board.emptyFlaggedCount_0;
       this$Board.emptyFlaggedCount_0 = tmp$ + 1 | 0;
       println('Remaining count ' + (this$Board.emptyCount_0 - this$Board.emptyFlaggedCount_0 | 0));
@@ -1855,7 +1851,7 @@
         font = Fonts.Companion.defaultFont;
         var $receiver_0_1 = addTo(Text.Companion.invoke_8ii8iq$(text, textSize, color_0_0, font), $receiver_0);
         position_0($receiver_0_1, i_0 * (size + padding), (j_0 + board.height | 0) * (size + padding));
-        board.onColCountDone_dxxoxs$(i_0, j_0, createBoard$lambda$lambda$lambda($receiver_0_1));
+        board.onColCountDone_9v0qew$(i_0, j_0, createBoard$lambda$lambda$lambda($receiver_0_1));
       }
     }
     tmp$_3 = board.height;
@@ -1870,7 +1866,7 @@
         font_0 = Fonts.Companion.defaultFont;
         var $receiver_0_2 = addTo(Text.Companion.invoke_8ii8iq$(text_0, textSize_0, color_0_1, font_0), $receiver_0);
         position_0($receiver_0_2, (i_1 + board.width | 0) * (size + padding), j_1 * (size + padding));
-        board.onRowCountDone_dxxoxs$(j_1, i_1, createBoard$lambda$lambda$lambda_0($receiver_0_2));
+        board.onRowCountDone_9v0qew$(j_1, i_1, createBoard$lambda$lambda$lambda_0($receiver_0_2));
       }
     }
     return $receiver_0;
@@ -2229,6 +2225,45 @@
   Solver$NextLine.prototype.equals = function (other) {
     return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && (Kotlin.equals(this.line, other.line) && Kotlin.equals(this.pos, other.pos)))));
   };
+  function Solver$Count(count, complete, range) {
+    if (complete === void 0)
+      complete = false;
+    if (range === void 0)
+      range = null;
+    this.count = count;
+    this.complete = complete;
+    this.range = range;
+  }
+  Solver$Count.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'Count',
+    interfaces: []
+  };
+  Solver$Count.prototype.component1 = function () {
+    return this.count;
+  };
+  Solver$Count.prototype.component2 = function () {
+    return this.complete;
+  };
+  Solver$Count.prototype.component3 = function () {
+    return this.range;
+  };
+  Solver$Count.prototype.copy_qk70qp$ = function (count, complete, range) {
+    return new Solver$Count(count === void 0 ? this.count : count, complete === void 0 ? this.complete : complete, range === void 0 ? this.range : range);
+  };
+  Solver$Count.prototype.toString = function () {
+    return 'Count(count=' + Kotlin.toString(this.count) + (', complete=' + Kotlin.toString(this.complete)) + (', range=' + Kotlin.toString(this.range)) + ')';
+  };
+  Solver$Count.prototype.hashCode = function () {
+    var result = 0;
+    result = result * 31 + Kotlin.hashCode(this.count) | 0;
+    result = result * 31 + Kotlin.hashCode(this.complete) | 0;
+    result = result * 31 + Kotlin.hashCode(this.range) | 0;
+    return result;
+  };
+  Solver$Count.prototype.equals = function (other) {
+    return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && (Kotlin.equals(this.count, other.count) && Kotlin.equals(this.complete, other.complete) && Kotlin.equals(this.range, other.range)))));
+  };
   function Solver$solve$lambda$lambda(it) {
     return it.pos;
   }
@@ -2286,6 +2321,42 @@
         return instance.doResume(null);
     };
   }
+  function Solver$solve$lambda$lambda_2(closure$countsRow, closure$i, closure$j, closure$cells, this$Solver) {
+    return function (point) {
+      closure$countsRow.get_za3lpa$(closure$i).get_za3lpa$(closure$j).complete = true;
+      var tmp$ = closure$countsRow.get_za3lpa$(closure$i).get_za3lpa$(closure$j);
+      var tmp$_0 = this$Solver;
+      var tmp$_1 = point.x;
+      var $receiver = row(closure$cells, closure$i);
+      var destination = ArrayList_init(collectionSizeOrDefault($receiver, 10));
+      var tmp$_2;
+      tmp$_2 = $receiver.iterator();
+      while (tmp$_2.hasNext()) {
+        var item = tmp$_2.next();
+        destination.add_11rb$(item.state);
+      }
+      tmp$.range = tmp$_0.getRanges_0(tmp$_1, destination);
+      return Unit;
+    };
+  }
+  function Solver$solve$lambda$lambda_3(closure$countsCol, closure$i, closure$j, closure$cells, this$Solver) {
+    return function (point) {
+      closure$countsCol.get_za3lpa$(closure$i).get_za3lpa$(closure$j).complete = true;
+      var tmp$ = closure$countsCol.get_za3lpa$(closure$i).get_za3lpa$(closure$j);
+      var tmp$_0 = this$Solver;
+      var tmp$_1 = point.y;
+      var $receiver = col(closure$cells, closure$i);
+      var destination = ArrayList_init(collectionSizeOrDefault($receiver, 10));
+      var tmp$_2;
+      tmp$_2 = $receiver.iterator();
+      while (tmp$_2.hasNext()) {
+        var item = tmp$_2.next();
+        destination.add_11rb$(item.state);
+      }
+      tmp$.range = tmp$_0.getRanges_0(tmp$_1, destination);
+      return Unit;
+    };
+  }
   function Coroutine$Solver$solve$lambda(closure$updateCell_0, closure$board_0, this$Solver_0, $receiver_0, controller, continuation_0) {
     CoroutineImpl.call(this, continuation_0);
     this.$controller = controller;
@@ -2320,8 +2391,58 @@
             mapSignal(this.local$signal, Solver$solve$lambda$lambda).add_25kf2w$(this.local$closure$updateCell);
             mapSignal(this.local$signal, Solver$solve$lambda$lambda_0).add_25kf2w$(Solver$solve$lambda$lambda_1(this.local$queue));
             this.local$cells = this.local$closure$board.cells;
-            this.local$countsRow = this.local$closure$board.emptyCountRow;
-            this.local$countsCol = this.local$closure$board.emptyCountCol;
+            var $receiver = this.local$closure$board.emptyCountRow;
+            var destination = ArrayList_init(collectionSizeOrDefault($receiver, 10));
+            var tmp$;
+            tmp$ = $receiver.iterator();
+            while (tmp$.hasNext()) {
+              var item = tmp$.next();
+              var tmp$_0 = destination.add_11rb$;
+              var destination_0 = ArrayList_init(collectionSizeOrDefault(item, 10));
+              var tmp$_1;
+              tmp$_1 = item.iterator();
+              while (tmp$_1.hasNext()) {
+                var item_0 = tmp$_1.next();
+                destination_0.add_11rb$(new Solver$Count(item_0));
+              }
+              tmp$_0.call(destination, destination_0);
+            }
+
+            this.local$countsRow = destination;
+            var $receiver_0 = this.local$closure$board.emptyCountCol;
+            var destination_1 = ArrayList_init(collectionSizeOrDefault($receiver_0, 10));
+            var tmp$_2;
+            tmp$_2 = $receiver_0.iterator();
+            while (tmp$_2.hasNext()) {
+              var item_1 = tmp$_2.next();
+              var tmp$_3 = destination_1.add_11rb$;
+              var destination_2 = ArrayList_init(collectionSizeOrDefault(item_1, 10));
+              var tmp$_4;
+              tmp$_4 = item_1.iterator();
+              while (tmp$_4.hasNext()) {
+                var item_2 = tmp$_4.next();
+                destination_2.add_11rb$(new Solver$Count(item_2));
+              }
+              tmp$_3.call(destination_1, destination_2);
+            }
+
+            this.local$countsCol = destination_1;
+            for (var i = 0; i !== this.local$countsRow.size; ++i) {
+              var tmp$_5;
+              tmp$_5 = this.local$countsRow.get_za3lpa$(i);
+              for (var j = 0; j !== tmp$_5.size; ++j) {
+                this.local$closure$board.onRowCountDone_9v0qew$(i, j, Solver$solve$lambda$lambda_2(this.local$countsRow, i, j, this.local$cells, this.local$this$Solver));
+              }
+            }
+
+            for (var i_0 = 0; i_0 !== this.local$countsCol.size; ++i_0) {
+              var tmp$_6;
+              tmp$_6 = this.local$countsCol.get_za3lpa$(i_0);
+              for (var j_0 = 0; j_0 !== tmp$_6.size; ++j_0) {
+                this.local$closure$board.onColCountDone_9v0qew$(i_0, j_0, Solver$solve$lambda$lambda_3(this.local$countsCol, i_0, j_0, this.local$cells, this.local$this$Solver));
+              }
+            }
+
             this.local$tmp$ = this.local$closure$board.height;
             this.local$r = 0;
             this.state_0 = 2;
@@ -2377,16 +2498,16 @@
               this.state_0 = 12;
               continue;
             }
-            var i = this.local$queue.dequeue();
-            println('Next Line: ' + i);
-            var getLine = i.line === Solver$Line$ROW_getInstance() ? getCallableRef('row', function ($receiver, row_0) {
+            var i_1 = this.local$queue.dequeue();
+            println('Next Line: ' + i_1);
+            var getLine = i_1.line === Solver$Line$ROW_getInstance() ? getCallableRef('row', function ($receiver, row_0) {
               return row($receiver, row_0);
             }) : getCallableRef('col', function ($receiver, col_0) {
               return col($receiver, col_0);
             });
-            var counts = i.line === Solver$Line$ROW_getInstance() ? this.local$countsRow : this.local$countsCol;
+            var counts = i_1.line === Solver$Line$ROW_getInstance() ? this.local$countsRow : this.local$countsCol;
             this.state_0 = 11;
-            this.result_0 = this.local$this$Solver.updateLine_0(getLine(this.local$cells, i.pos), counts.get_za3lpa$(i.pos), i.line, this.local$signal, this);
+            this.result_0 = this.local$this$Solver.updateLine_0(getLine(this.local$cells, i_1.pos), counts.get_za3lpa$(i_1.pos), i_1.line, this.local$signal, this);
             if (this.result_0 === COROUTINE_SUSPENDED)
               return COROUTINE_SUSPENDED;
             continue;
@@ -2422,6 +2543,26 @@
   Solver.prototype.solve_f6xcb4$ = function (board, updateCell, continuation) {
     return withContext(coroutines.Dispatchers.Default, Solver$solve$lambda(updateCell, board, this), continuation);
   };
+  function Solver$getRanges$lambda(it) {
+    return it === MineState$EMPTY_getInstance();
+  }
+  Solver.prototype.getRanges_0 = function (pos, line) {
+    var $receiver = countConsecutiveRange(line, Solver$getRanges$lambda);
+    var first$result;
+    first$break: do {
+      var tmp$;
+      tmp$ = $receiver.iterator();
+      while (tmp$.hasNext()) {
+        var element = tmp$.next();
+        if (element.contains_mef7kx$(pos)) {
+          first$result = element;
+          break first$break;
+        }}
+      throw new NoSuchElementException_init('Collection contains no element matching the predicate.');
+    }
+     while (false);
+    return first$result;
+  };
   function Coroutine$updateLine_0($this, line_0, counts_0, dir_0, signal_0, continuation_0) {
     CoroutineImpl.call(this, continuation_0);
     this.exceptionState_0 = 1;
@@ -2452,7 +2593,7 @@
               destination.add_11rb$(item.state);
             }
 
-            var sol = this.$this.solveLine_n8dhtq$(destination, this.local$counts);
+            var sol = this.$this.solveLine_xnwshc$(destination, this.local$counts);
             this.local$tmp$ = zip(sol, this.local$line).iterator();
             this.state_0 = 2;
             continue;
@@ -2528,8 +2669,19 @@
     else
       return instance.doResume(null);
   };
-  Solver.prototype.solveLine_n8dhtq$ = function (line, counts) {
-    var mines = line.size - sum(counts) | 0;
+  function Solver$solveLine$lambda$lambda(it) {
+    return it === Solver$CellState$EMPTY_getInstance();
+  }
+  Solver.prototype.solveLine_xnwshc$ = function (line, counts) {
+    var tmp$ = line.size;
+    var tmp$_0;
+    var sum = 0;
+    tmp$_0 = counts.iterator();
+    while (tmp$_0.hasNext()) {
+      var element = tmp$_0.next();
+      sum = sum + element.count | 0;
+    }
+    var mines = tmp$ - sum | 0;
     var availableMines = mines - coerceAtLeast(counts.size - 1 | 0, 0) | 0;
     var availablePositions = counts.size + 1 | 0;
     if (availableMines === 0) {
@@ -2546,31 +2698,34 @@
       return this.makeLine_0(list_0, counts);
     }var possibleMinePositions = partition(availableMines, availablePositions);
     var destination = ArrayList_init(collectionSizeOrDefault(possibleMinePositions, 10));
-    var tmp$;
-    tmp$ = possibleMinePositions.iterator();
-    while (tmp$.hasNext()) {
-      var item = tmp$.next();
-      var tmp$_0 = destination.add_11rb$;
+    var tmp$_1;
+    tmp$_1 = possibleMinePositions.iterator();
+    while (tmp$_1.hasNext()) {
+      var item = tmp$_1.next();
+      var tmp$_2 = destination.add_11rb$;
       var $receiver = this.makeLine_0(item, counts);
-      assert($receiver.size === line.size, 'Possible line matches new line length');
-      tmp$_0.call(destination, $receiver);
+      assert($receiver.size === line.size, "Possible line doesn't match line length");
+      tmp$_2.call(destination, $receiver);
     }
     var destination_0 = ArrayList_init_0();
-    var tmp$_1;
-    tmp$_1 = destination.iterator();
-    loop_label: while (tmp$_1.hasNext()) {
-      var element = tmp$_1.next();
-      var $receiver_0 = zip(element, line);
+    var tmp$_3;
+    tmp$_3 = destination.iterator();
+    loop_label: while (tmp$_3.hasNext()) {
+      var element_0 = tmp$_3.next();
+      var ranges = countConsecutiveRange(element_0, Solver$solveLine$lambda$lambda);
+      assert(counts.size === ranges.size, "Possible line counts do not match line's complete count");
+      var $receiver_0 = zip(counts, ranges);
       var all$result;
       all$break: do {
-        var tmp$_2;
+        var tmp$_4;
         if (Kotlin.isType($receiver_0, Collection) && $receiver_0.isEmpty()) {
           all$result = true;
           break all$break;
-        }tmp$_2 = $receiver_0.iterator();
-        while (tmp$_2.hasNext()) {
-          var element_0 = tmp$_2.next();
-          if (!(element_0.second === MineState$UNMARKED_getInstance() || (element_0.first === Solver$CellState$EMPTY_getInstance() && element_0.second !== MineState$MINE_getInstance() && element_0.second !== MineState$MARKED_getInstance()) || (element_0.first === Solver$CellState$MINE_getInstance() && (element_0.second === MineState$MINE_getInstance() || element_0.second === MineState$MARKED_getInstance())))) {
+        }tmp$_4 = $receiver_0.iterator();
+        while (tmp$_4.hasNext()) {
+          var element_1 = tmp$_4.next();
+          var tmp$_5;
+          if (!(element_1.first.complete && ((tmp$_5 = ensureNotNull(element_1.first.range)) != null ? tmp$_5.equals(element_1.second) : null) || !element_1.first.complete)) {
             all$result = false;
             break all$break;
           }}
@@ -2578,29 +2733,54 @@
       }
        while (false);
       if (all$result)
-        destination_0.add_11rb$(element);
+        destination_0.add_11rb$(element_0);
     }
-    var iterator = destination_0.iterator();
+    var destination_1 = ArrayList_init_0();
+    var tmp$_6;
+    tmp$_6 = destination_0.iterator();
+    loop_label: while (tmp$_6.hasNext()) {
+      var element_2 = tmp$_6.next();
+      var $receiver_1 = zip(element_2, line);
+      var all$result_0;
+      all$break: do {
+        var tmp$_7;
+        if (Kotlin.isType($receiver_1, Collection) && $receiver_1.isEmpty()) {
+          all$result_0 = true;
+          break all$break;
+        }tmp$_7 = $receiver_1.iterator();
+        while (tmp$_7.hasNext()) {
+          var element_3 = tmp$_7.next();
+          if (!(element_3.second === MineState$UNMARKED_getInstance() || (element_3.first === Solver$CellState$EMPTY_getInstance() && element_3.second !== MineState$MINE_getInstance() && element_3.second !== MineState$MARKED_getInstance()) || (element_3.first === Solver$CellState$MINE_getInstance() && (element_3.second === MineState$MINE_getInstance() || element_3.second === MineState$MARKED_getInstance())))) {
+            all$result_0 = false;
+            break all$break;
+          }}
+        all$result_0 = true;
+      }
+       while (false);
+      if (all$result_0)
+        destination_1.add_11rb$(element_2);
+    }
+    var iterator = destination_1.iterator();
     if (!iterator.hasNext())
       throw UnsupportedOperationException_init("Empty collection can't be reduced.");
     var accumulator = iterator.next();
     while (iterator.hasNext()) {
-      var $receiver_1 = zip(accumulator, iterator.next());
-      var destination_1 = ArrayList_init(collectionSizeOrDefault($receiver_1, 10));
-      var tmp$_3;
-      tmp$_3 = $receiver_1.iterator();
-      while (tmp$_3.hasNext()) {
-        var item_0 = tmp$_3.next();
-        var tmp$_4 = destination_1.add_11rb$;
+      var $receiver_2 = zip(accumulator, iterator.next());
+      var destination_2 = ArrayList_init(collectionSizeOrDefault($receiver_2, 10));
+      var tmp$_8;
+      tmp$_8 = $receiver_2.iterator();
+      while (tmp$_8.hasNext()) {
+        var item_0 = tmp$_8.next();
+        var tmp$_9 = destination_2.add_11rb$;
         var transform$result;
         if (item_0.first === item_0.second) {
           transform$result = item_0.first;
         } else {
           transform$result = Solver$CellState$NONE_getInstance();
         }
-        tmp$_4.call(destination_1, transform$result);
+        tmp$_9.call(destination_2, transform$result);
       }
-      accumulator = destination_1;
+      accumulator = destination_2;
     }
     return accumulator;
   };
@@ -2649,7 +2829,7 @@
               return COROUTINE_SUSPENDED;
             continue;
           case 3:
-            var size_0 = this.local$emptyList.next();
+            var size_0 = this.local$emptyList.next().count;
             var list_0 = ArrayList_init(size_0);
             for (var index_0 = 0; index_0 < size_0; index_0++) {
               list_0.add_11rb$(Solver$CellState$EMPTY_getInstance());
@@ -2844,6 +3024,230 @@
     }
     return destination;
   }
+  function Coroutine$countConsecutive$lambda(closure$condition_0, this$countConsecutive_0, $receiver_0, controller, continuation_0) {
+    CoroutineImpl.call(this, continuation_0);
+    this.$controller = controller;
+    this.exceptionState_0 = 1;
+    this.local$closure$condition = closure$condition_0;
+    this.local$this$countConsecutive = this$countConsecutive_0;
+    this.local$tmp$ = void 0;
+    this.local$accumulator = void 0;
+    this.local$operation$result = void 0;
+    this.local$$receiver = $receiver_0;
+  }
+  Coroutine$countConsecutive$lambda.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: null,
+    interfaces: [CoroutineImpl]
+  };
+  Coroutine$countConsecutive$lambda.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$countConsecutive$lambda.prototype.constructor = Coroutine$countConsecutive$lambda;
+  Coroutine$countConsecutive$lambda.prototype.doResume = function () {
+    do
+      try {
+        switch (this.state_0) {
+          case 0:
+            var $receiver = this.local$this$countConsecutive;
+            this.local$accumulator = 0;
+            this.local$tmp$ = $receiver.iterator();
+            this.state_0 = 2;
+            continue;
+          case 1:
+            throw this.exception_0;
+          case 2:
+            if (!this.local$tmp$.hasNext()) {
+              this.state_0 = 6;
+              continue;
+            }
+            var element = this.local$tmp$.next();
+            var acc = this.local$accumulator;
+            if (this.local$closure$condition(element)) {
+              this.local$operation$result = acc + 1 | 0;
+              this.state_0 = 5;
+              continue;
+            } else {
+              if (acc !== 0) {
+                this.state_0 = 3;
+                this.result_0 = this.local$$receiver.yield_11rb$(acc, this);
+                if (this.result_0 === COROUTINE_SUSPENDED)
+                  return COROUTINE_SUSPENDED;
+                continue;
+              } else {
+                this.state_0 = 4;
+                continue;
+              }
+            }
+
+          case 3:
+            this.state_0 = 4;
+            continue;
+          case 4:
+            this.local$operation$result = 0;
+            this.state_0 = 5;
+            continue;
+          case 5:
+            this.local$accumulator = this.local$operation$result;
+            this.state_0 = 2;
+            continue;
+          case 6:
+            var lastCount = this.local$accumulator;
+            if (lastCount !== 0) {
+              this.state_0 = 7;
+              this.result_0 = this.local$$receiver.yield_11rb$(lastCount, this);
+              if (this.result_0 === COROUTINE_SUSPENDED)
+                return COROUTINE_SUSPENDED;
+              continue;
+            } else {
+              this.state_0 = 8;
+              continue;
+            }
+
+          case 7:
+            return Unit;
+          case 8:
+            return Unit;
+          default:this.state_0 = 1;
+            throw new Error('State Machine Unreachable execution');
+        }
+      } catch (e) {
+        if (this.state_0 === 1) {
+          this.exceptionState_0 = this.state_0;
+          throw e;
+        } else {
+          this.state_0 = this.exceptionState_0;
+          this.exception_0 = e;
+        }
+      }
+     while (true);
+  };
+  function countConsecutive$lambda(closure$condition_0, this$countConsecutive_0) {
+    return function ($receiver_0, continuation_0, suspended) {
+      var instance = new Coroutine$countConsecutive$lambda(closure$condition_0, this$countConsecutive_0, $receiver_0, this, continuation_0);
+      if (suspended)
+        return instance;
+      else
+        return instance.doResume(null);
+    };
+  }
+  function countConsecutive($receiver, condition) {
+    return toList(sequence(countConsecutive$lambda(condition, $receiver)));
+  }
+  function Coroutine$countConsecutiveRange$lambda(closure$condition_0, this$countConsecutiveRange_0, $receiver_0, controller, continuation_0) {
+    CoroutineImpl.call(this, continuation_0);
+    this.$controller = controller;
+    this.exceptionState_0 = 1;
+    this.local$closure$condition = closure$condition_0;
+    this.local$this$countConsecutiveRange = this$countConsecutiveRange_0;
+    this.local$tmp$ = void 0;
+    this.local$index = void 0;
+    this.local$accumulator = void 0;
+    this.local$i = void 0;
+    this.local$operation$result = void 0;
+    this.local$$receiver = $receiver_0;
+  }
+  Coroutine$countConsecutiveRange$lambda.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: null,
+    interfaces: [CoroutineImpl]
+  };
+  Coroutine$countConsecutiveRange$lambda.prototype = Object.create(CoroutineImpl.prototype);
+  Coroutine$countConsecutiveRange$lambda.prototype.constructor = Coroutine$countConsecutiveRange$lambda;
+  Coroutine$countConsecutiveRange$lambda.prototype.doResume = function () {
+    do
+      try {
+        switch (this.state_0) {
+          case 0:
+            var $receiver = this.local$this$countConsecutiveRange;
+            var initial = until(0, 0);
+            var tmp$_0;
+            this.local$index = 0;
+            this.local$accumulator = initial;
+            this.local$tmp$ = $receiver.iterator();
+            this.state_0 = 2;
+            continue;
+          case 1:
+            throw this.exception_0;
+          case 2:
+            if (!this.local$tmp$.hasNext()) {
+              this.state_0 = 6;
+              continue;
+            }
+            var element = this.local$tmp$.next();
+            var closure$condition = this.local$closure$condition;
+            this.local$i = checkIndexOverflow((tmp$_0 = this.local$index, this.local$index = tmp$_0 + 1 | 0, tmp$_0));
+            var acc = this.local$accumulator;
+            if (closure$condition(element)) {
+              var first = acc.isEmpty() ? this.local$i : acc.first;
+              this.local$operation$result = until(first, this.local$i + 1 | 0);
+              this.state_0 = 5;
+              continue;
+            } else {
+              if (!acc.isEmpty()) {
+                this.state_0 = 3;
+                this.result_0 = this.local$$receiver.yield_11rb$(acc, this);
+                if (this.result_0 === COROUTINE_SUSPENDED)
+                  return COROUTINE_SUSPENDED;
+                continue;
+              } else {
+                this.state_0 = 4;
+                continue;
+              }
+            }
+
+          case 3:
+            this.state_0 = 4;
+            continue;
+          case 4:
+            this.local$operation$result = until(this.local$i, this.local$i);
+            this.state_0 = 5;
+            continue;
+          case 5:
+            this.local$accumulator = this.local$operation$result;
+            this.state_0 = 2;
+            continue;
+          case 6:
+            var lastCount = this.local$accumulator;
+            if (!lastCount.isEmpty()) {
+              this.state_0 = 7;
+              this.result_0 = this.local$$receiver.yield_11rb$(lastCount, this);
+              if (this.result_0 === COROUTINE_SUSPENDED)
+                return COROUTINE_SUSPENDED;
+              continue;
+            } else {
+              this.state_0 = 8;
+              continue;
+            }
+
+          case 7:
+            return Unit;
+          case 8:
+            return Unit;
+          default:this.state_0 = 1;
+            throw new Error('State Machine Unreachable execution');
+        }
+      } catch (e) {
+        if (this.state_0 === 1) {
+          this.exceptionState_0 = this.state_0;
+          throw e;
+        } else {
+          this.state_0 = this.exceptionState_0;
+          this.exception_0 = e;
+        }
+      }
+     while (true);
+  };
+  function countConsecutiveRange$lambda(closure$condition_0, this$countConsecutiveRange_0) {
+    return function ($receiver_0, continuation_0, suspended) {
+      var instance = new Coroutine$countConsecutiveRange$lambda(closure$condition_0, this$countConsecutiveRange_0, $receiver_0, this, continuation_0);
+      if (suspended)
+        return instance;
+      else
+        return instance.doResume(null);
+    };
+  }
+  function countConsecutiveRange($receiver, condition) {
+    return toList(sequence(countConsecutiveRange$lambda(condition, $receiver)));
+  }
   Object.defineProperty(MineState, 'UNMARKED', {
     get: MineState$UNMARKED_getInstance
   });
@@ -2919,6 +3323,7 @@
   Solver.prototype.Line = Solver$Line;
   Solver.prototype.Info = Solver$Info;
   Solver.prototype.NextLine = Solver$NextLine;
+  Solver.prototype.Count = Solver$Count;
   Object.defineProperty(_, 'Solver', {
     get: Solver_getInstance
   });
@@ -2931,6 +3336,8 @@
   _.choose_dqglrj$ = choose;
   _.enumerateCombinations_vux9f0$ = enumerateCombinations;
   _.partition_vux9f0$ = partition;
+  _.countConsecutive_6jwkkr$ = countConsecutive;
+  _.countConsecutiveRange_6jwkkr$ = countConsecutiveRange;
   view = new Extra$Property(void 0, view$lambda);
   drag = new Extra$Property(void 0, drag$lambda);
   main(internal.EmptyContinuation, false);

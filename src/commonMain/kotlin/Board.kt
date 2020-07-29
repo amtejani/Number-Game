@@ -26,7 +26,7 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
     data class EmptyCount(
             val numEmpty: Int = 0,
             var numFlagged: Int = 0,
-            val signalDone: Signal<Unit> = Signal()
+            val signalDone: Signal<PointInt> = Signal()
     )
 
     /**
@@ -47,14 +47,12 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
 
         fun check() {
             if (state == MineState.UNMARKED) {
-                state = if (mineMap[pos]) {
-                    MineState.MINE.also {
-                        mistakeSignal(Unit)
-                    }
+                if (mineMap[pos]) {
+                    state = MineState.MINE
+                    mistakeSignal(Unit)
                 } else {
-                    MineState.EMPTY.also {
-                        emptyFlaggedSignal(pos)
-                    }
+                    state = MineState.EMPTY
+                    emptyFlaggedSignal(pos)
                 }
             }
         }
@@ -133,12 +131,12 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
             val colCount = colEmptyCount[it.x][countPosition.colPosition]
             colCount.numFlagged += 1
             if (colCount.numFlagged >= colCount.numEmpty) {
-                colCount.signalDone(Unit)
+                colCount.signalDone(it)
             }
             val rowCount = rowEmptyCount[it.y][countPosition.rowPosition]
             rowCount.numFlagged += 1
             if (rowCount.numFlagged >= rowCount.numEmpty) {
-                rowCount.signalDone(Unit)
+                rowCount.signalDone(it)
             }
 
             // Check if game over
@@ -164,12 +162,12 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
     /**
      * Register [handler] for count done change event
      */
-    fun onColCountDone(col: Int, count: Int, handler: (Unit) -> Unit) = colEmptyCount[col][count].signalDone.once(handler)
+    fun onColCountDone(col: Int, count: Int, handler: (PointInt) -> Unit) = colEmptyCount[col][count].signalDone.once(handler)
 
     /**
      * Register [handler] for count done change event
      */
-    fun onRowCountDone(row: Int, count: Int, handler: (Unit) -> Unit) = rowEmptyCount[row][count].signalDone.once(handler)
+    fun onRowCountDone(row: Int, count: Int, handler: (PointInt) -> Unit) = rowEmptyCount[row][count].signalDone.once(handler)
 
     fun cleanUp() {
         mistakeSignal.clear()

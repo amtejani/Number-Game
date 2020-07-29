@@ -70,3 +70,34 @@ fun partition(n: Int, k: Int): List<List<Int>> {
         out
     }
 }
+
+/**
+ * Count the consecutive fields in this iterable that match [condition].
+ */
+fun <T> Iterable<T>.countConsecutive(condition: (T) -> Boolean) = sequence {
+    val lastCount = fold(0) { acc, i ->
+        if (condition(i)) {
+            acc + 1
+        } else {
+            if (acc != 0) yield(acc)
+            0
+        }
+    }
+    if (lastCount != 0) yield(lastCount)
+}.toList()
+
+/**
+ * Count the consecutive fields in this iterable that match [condition].
+ */
+fun <T> Iterable<T>.countConsecutiveRange(condition: (T) -> Boolean) = sequence {
+    val lastCount = foldIndexed(0 until 0) { i, acc, value ->
+        if (condition(value)) {
+            val first = if (acc.isEmpty()) i else acc.first
+            first until (i + 1)
+        } else {
+            if (!acc.isEmpty()) yield(acc)
+            i until i
+        }
+    }
+    if (!lastCount.isEmpty()) yield(lastCount)
+}.toList()
