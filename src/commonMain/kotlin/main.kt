@@ -121,7 +121,7 @@ fun Container.createBoard(board: Board, blockSize: Double = 40.0) =
             }
             for (i in 0 until board.width) {
                 for (j in board.emptyCountCol[i].indices) {
-                    text(board.emptyCountCol[i][j].toString(), textSize = (size/2).coerceAtMost(16.0)) {
+                    text(board.emptyCountCol[i][j].numEmpty.toString(), textSize = (size/2).coerceAtMost(16.0)) {
                         position(i * (size + padding), (j + board.height) * (size + padding))
                         board.onColCountDone(i, j) {
                             color = Colors.DARKGRAY
@@ -131,7 +131,7 @@ fun Container.createBoard(board: Board, blockSize: Double = 40.0) =
             }
             for (j in 0 until board.height) {
                 for (i in board.emptyCountRow[j].indices) {
-                    text(board.emptyCountRow[j][i].toString(), textSize = (size/2).coerceAtMost(16.0)) {
+                    text(board.emptyCountRow[j][i].numEmpty.toString(), textSize = (size/2).coerceAtMost(16.0)) {
                         position((i + board.width) * (size + padding), j * (size + padding))
                         board.onRowCountDone(j, i) {
                             color = Colors.DARKGRAY

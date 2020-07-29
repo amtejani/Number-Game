@@ -101,3 +101,12 @@ fun <T> Iterable<T>.countConsecutiveRange(condition: (T) -> Boolean) = sequence 
     }
     if (!lastCount.isEmpty()) yield(lastCount)
 }.toList()
+
+
+/**
+ * Get the first range to match [cond] that contains [pos]
+ */
+fun <T> List<T>.getRanges(pos: Int, cond: (T) -> Boolean): IntRange? {
+    return this.countConsecutiveRange(cond)
+            .firstOrNull { pos in it }
+}

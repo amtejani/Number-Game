@@ -84,14 +84,13 @@
   var coroutines = $module$kotlinx_coroutines_core.kotlinx.coroutines;
   var TGenQueue = $module$kds_root_kds.com.soywiz.kds.TGenQueue;
   var mapSignal = $module$korio_root_korio.com.soywiz.korio.async.mapSignal_d1llwn$;
+  var ensureNotNull = Kotlin.ensureNotNull;
   var withContext = $module$kotlinx_coroutines_core.kotlinx.coroutines.withContext_i5cbzn$;
   var zip = Kotlin.kotlin.collections.zip_45mdf7$;
   var coerceAtLeast = Kotlin.kotlin.ranges.coerceAtLeast_dqglrj$;
-  var ensureNotNull = Kotlin.ensureNotNull;
   var sequence = Kotlin.kotlin.sequences.sequence_o0x0bg$;
   var toList = Kotlin.kotlin.sequences.toList_veqyi0$;
   var Kind_OBJECT = Kotlin.Kind.OBJECT;
-  var NoSuchElementException_init = Kotlin.kotlin.NoSuchElementException;
   var UnsupportedOperationException_init = Kotlin.kotlin.UnsupportedOperationException_init_pdl1vj$;
   var defineInlineFunction = Kotlin.defineInlineFunction;
   var wrapFunction = Kotlin.wrapFunction;
@@ -343,15 +342,18 @@
   Board$CountPosition.prototype.equals = function (other) {
     return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && (Kotlin.equals(this.rowPosition, other.rowPosition) && Kotlin.equals(this.colPosition, other.colPosition)))));
   };
-  function Board$EmptyCount(numEmpty, numFlagged, signalDone) {
+  function Board$EmptyCount(numEmpty, numFlagged, lastPoint, signalDone) {
     if (numEmpty === void 0)
       numEmpty = 0;
     if (numFlagged === void 0)
       numFlagged = 0;
+    if (lastPoint === void 0)
+      lastPoint = null;
     if (signalDone === void 0)
       signalDone = new Signal();
     this.numEmpty = numEmpty;
     this.numFlagged = numFlagged;
+    this.lastPoint = lastPoint;
     this.signalDone = signalDone;
   }
   Board$EmptyCount.$metadata$ = {
@@ -366,23 +368,68 @@
     return this.numFlagged;
   };
   Board$EmptyCount.prototype.component3 = function () {
+    return this.lastPoint;
+  };
+  Board$EmptyCount.prototype.component4 = function () {
     return this.signalDone;
   };
-  Board$EmptyCount.prototype.copy_k76n5v$ = function (numEmpty, numFlagged, signalDone) {
-    return new Board$EmptyCount(numEmpty === void 0 ? this.numEmpty : numEmpty, numFlagged === void 0 ? this.numFlagged : numFlagged, signalDone === void 0 ? this.signalDone : signalDone);
+  Board$EmptyCount.prototype.copy_ozu24b$ = function (numEmpty, numFlagged, lastPoint, signalDone) {
+    return new Board$EmptyCount(numEmpty === void 0 ? this.numEmpty : numEmpty, numFlagged === void 0 ? this.numFlagged : numFlagged, lastPoint === void 0 ? this.lastPoint : lastPoint, signalDone === void 0 ? this.signalDone : signalDone);
   };
   Board$EmptyCount.prototype.toString = function () {
-    return 'EmptyCount(numEmpty=' + Kotlin.toString(this.numEmpty) + (', numFlagged=' + Kotlin.toString(this.numFlagged)) + (', signalDone=' + Kotlin.toString(this.signalDone)) + ')';
+    return 'EmptyCount(numEmpty=' + Kotlin.toString(this.numEmpty) + (', numFlagged=' + Kotlin.toString(this.numFlagged)) + (', lastPoint=' + Kotlin.toString(this.lastPoint)) + (', signalDone=' + Kotlin.toString(this.signalDone)) + ')';
   };
   Board$EmptyCount.prototype.hashCode = function () {
     var result = 0;
     result = result * 31 + Kotlin.hashCode(this.numEmpty) | 0;
     result = result * 31 + Kotlin.hashCode(this.numFlagged) | 0;
+    result = result * 31 + Kotlin.hashCode(this.lastPoint) | 0;
     result = result * 31 + Kotlin.hashCode(this.signalDone) | 0;
     return result;
   };
   Board$EmptyCount.prototype.equals = function (other) {
-    return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && (Kotlin.equals(this.numEmpty, other.numEmpty) && Kotlin.equals(this.numFlagged, other.numFlagged) && Kotlin.equals(this.signalDone, other.signalDone)))));
+    return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && (Kotlin.equals(this.numEmpty, other.numEmpty) && Kotlin.equals(this.numFlagged, other.numFlagged) && Kotlin.equals(this.lastPoint, other.lastPoint) && Kotlin.equals(this.signalDone, other.signalDone)))));
+  };
+  function Board$Count(numEmpty, comlete, lastPoint) {
+    if (numEmpty === void 0)
+      numEmpty = 0;
+    if (comlete === void 0)
+      comlete = false;
+    if (lastPoint === void 0)
+      lastPoint = null;
+    this.numEmpty = numEmpty;
+    this.comlete = comlete;
+    this.lastPoint = lastPoint;
+  }
+  Board$Count.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'Count',
+    interfaces: []
+  };
+  Board$Count.prototype.component1 = function () {
+    return this.numEmpty;
+  };
+  Board$Count.prototype.component2 = function () {
+    return this.comlete;
+  };
+  Board$Count.prototype.component3 = function () {
+    return this.lastPoint;
+  };
+  Board$Count.prototype.copy_v87wra$ = function (numEmpty, comlete, lastPoint) {
+    return new Board$Count(numEmpty === void 0 ? this.numEmpty : numEmpty, comlete === void 0 ? this.comlete : comlete, lastPoint === void 0 ? this.lastPoint : lastPoint);
+  };
+  Board$Count.prototype.toString = function () {
+    return 'Count(numEmpty=' + Kotlin.toString(this.numEmpty) + (', comlete=' + Kotlin.toString(this.comlete)) + (', lastPoint=' + Kotlin.toString(this.lastPoint)) + ')';
+  };
+  Board$Count.prototype.hashCode = function () {
+    var result = 0;
+    result = result * 31 + Kotlin.hashCode(this.numEmpty) | 0;
+    result = result * 31 + Kotlin.hashCode(this.comlete) | 0;
+    result = result * 31 + Kotlin.hashCode(this.lastPoint) | 0;
+    return result;
+  };
+  Board$Count.prototype.equals = function (other) {
+    return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && (Kotlin.equals(this.numEmpty, other.numEmpty) && Kotlin.equals(this.comlete, other.comlete) && Kotlin.equals(this.lastPoint, other.lastPoint)))));
   };
   function Board$Cell($outer, x, y) {
     this.$outer = $outer;
@@ -444,7 +491,7 @@
         tmp$_1 = item.iterator();
         while (tmp$_1.hasNext()) {
           var item_0 = tmp$_1.next();
-          destination_0.add_11rb$(item_0.numEmpty);
+          destination_0.add_11rb$(new Board$Count(item_0.numEmpty, item_0.numFlagged === item_0.numEmpty, item_0.lastPoint));
         }
         tmp$_0.call(destination, destination_0);
       }
@@ -465,7 +512,7 @@
         tmp$_1 = item.iterator();
         while (tmp$_1.hasNext()) {
           var item_0 = tmp$_1.next();
-          destination_0.add_11rb$(item_0.numEmpty);
+          destination_0.add_11rb$(new Board$Count(item_0.numEmpty, item_0.numFlagged === item_0.numEmpty, item_0.lastPoint));
         }
         tmp$_0.call(destination, destination_0);
       }
@@ -478,10 +525,10 @@
   Board.prototype.gameOver_b4k9x1$ = function (handler) {
     return this.gameOverSignal_0.once_qlkmfe$(handler);
   };
-  Board.prototype.onColCountDone_9v0qew$ = function (col, count, handler) {
+  Board.prototype.onColCountDone_e1b8mt$ = function (col, count, handler) {
     return this.colEmptyCount_0.get_za3lpa$(col).get_za3lpa$(count).signalDone.once_qlkmfe$(handler);
   };
-  Board.prototype.onRowCountDone_9v0qew$ = function (row, count, handler) {
+  Board.prototype.onRowCountDone_e1b8mt$ = function (row, count, handler) {
     return this.rowEmptyCount_0.get_za3lpa$(row).get_za3lpa$(count).signalDone.once_qlkmfe$(handler);
   };
   Board.prototype.cleanUp = function () {
@@ -526,11 +573,13 @@
       var colCount = this$Board.colEmptyCount_0.get_za3lpa$(it.x).get_za3lpa$(countPosition.colPosition);
       colCount.numFlagged = colCount.numFlagged + 1 | 0;
       if (colCount.numFlagged >= colCount.numEmpty) {
-        colCount.signalDone.invoke_11rb$(it);
+        colCount.lastPoint = it.y;
+        colCount.signalDone.invoke_11rb$(it.y);
       }var rowCount = this$Board.rowEmptyCount_0.get_za3lpa$(it.y).get_za3lpa$(countPosition.rowPosition);
       rowCount.numFlagged = rowCount.numFlagged + 1 | 0;
       if (rowCount.numFlagged >= rowCount.numEmpty) {
-        rowCount.signalDone.invoke_11rb$(it);
+        rowCount.lastPoint = it.x;
+        rowCount.signalDone.invoke_11rb$(it.x);
       }tmp$ = this$Board.emptyFlaggedCount_0;
       this$Board.emptyFlaggedCount_0 = tmp$ + 1 | 0;
       println('Remaining count ' + (this$Board.emptyCount_0 - this$Board.emptyFlaggedCount_0 | 0));
@@ -1843,7 +1892,7 @@
     for (var i_0 = 0; i_0 < tmp$_1; i_0++) {
       tmp$_2 = board.emptyCountCol.get_za3lpa$(i_0);
       for (var j_0 = 0; j_0 !== tmp$_2.size; ++j_0) {
-        var text = board.emptyCountCol.get_za3lpa$(i_0).get_za3lpa$(j_0).toString();
+        var text = board.emptyCountCol.get_za3lpa$(i_0).get_za3lpa$(j_0).numEmpty.toString();
         var textSize = coerceAtMost(size / 2, 16.0);
         var color_0_0;
         var font;
@@ -1851,14 +1900,14 @@
         font = Fonts.Companion.defaultFont;
         var $receiver_0_1 = addTo(Text.Companion.invoke_8ii8iq$(text, textSize, color_0_0, font), $receiver_0);
         position_0($receiver_0_1, i_0 * (size + padding), (j_0 + board.height | 0) * (size + padding));
-        board.onColCountDone_9v0qew$(i_0, j_0, createBoard$lambda$lambda$lambda($receiver_0_1));
+        board.onColCountDone_e1b8mt$(i_0, j_0, createBoard$lambda$lambda$lambda($receiver_0_1));
       }
     }
     tmp$_3 = board.height;
     for (var j_1 = 0; j_1 < tmp$_3; j_1++) {
       tmp$_4 = board.emptyCountRow.get_za3lpa$(j_1);
       for (var i_1 = 0; i_1 !== tmp$_4.size; ++i_1) {
-        var text_0 = board.emptyCountRow.get_za3lpa$(j_1).get_za3lpa$(i_1).toString();
+        var text_0 = board.emptyCountRow.get_za3lpa$(j_1).get_za3lpa$(i_1).numEmpty.toString();
         var textSize_0 = coerceAtMost(size / 2, 16.0);
         var color_0_1;
         var font_0;
@@ -1866,7 +1915,7 @@
         font_0 = Fonts.Companion.defaultFont;
         var $receiver_0_2 = addTo(Text.Companion.invoke_8ii8iq$(text_0, textSize_0, color_0_1, font_0), $receiver_0);
         position_0($receiver_0_2, (i_1 + board.width | 0) * (size + padding), j_1 * (size + padding));
-        board.onRowCountDone_9v0qew$(j_1, i_1, createBoard$lambda$lambda$lambda_0($receiver_0_2));
+        board.onRowCountDone_e1b8mt$(j_1, i_1, createBoard$lambda$lambda$lambda_0($receiver_0_2));
       }
     }
     return $receiver_0;
@@ -2225,13 +2274,16 @@
   Solver$NextLine.prototype.equals = function (other) {
     return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && (Kotlin.equals(this.line, other.line) && Kotlin.equals(this.pos, other.pos)))));
   };
-  function Solver$Count(count, complete, range) {
+  function Solver$Count(count, complete, lastPoint, range) {
     if (complete === void 0)
       complete = false;
+    if (lastPoint === void 0)
+      lastPoint = null;
     if (range === void 0)
       range = null;
     this.count = count;
     this.complete = complete;
+    this.lastPoint = lastPoint;
     this.range = range;
   }
   Solver$Count.$metadata$ = {
@@ -2246,23 +2298,27 @@
     return this.complete;
   };
   Solver$Count.prototype.component3 = function () {
+    return this.lastPoint;
+  };
+  Solver$Count.prototype.component4 = function () {
     return this.range;
   };
-  Solver$Count.prototype.copy_qk70qp$ = function (count, complete, range) {
-    return new Solver$Count(count === void 0 ? this.count : count, complete === void 0 ? this.complete : complete, range === void 0 ? this.range : range);
+  Solver$Count.prototype.copy_jc8kfk$ = function (count, complete, lastPoint, range) {
+    return new Solver$Count(count === void 0 ? this.count : count, complete === void 0 ? this.complete : complete, lastPoint === void 0 ? this.lastPoint : lastPoint, range === void 0 ? this.range : range);
   };
   Solver$Count.prototype.toString = function () {
-    return 'Count(count=' + Kotlin.toString(this.count) + (', complete=' + Kotlin.toString(this.complete)) + (', range=' + Kotlin.toString(this.range)) + ')';
+    return 'Count(count=' + Kotlin.toString(this.count) + (', complete=' + Kotlin.toString(this.complete)) + (', lastPoint=' + Kotlin.toString(this.lastPoint)) + (', range=' + Kotlin.toString(this.range)) + ')';
   };
   Solver$Count.prototype.hashCode = function () {
     var result = 0;
     result = result * 31 + Kotlin.hashCode(this.count) | 0;
     result = result * 31 + Kotlin.hashCode(this.complete) | 0;
+    result = result * 31 + Kotlin.hashCode(this.lastPoint) | 0;
     result = result * 31 + Kotlin.hashCode(this.range) | 0;
     return result;
   };
   Solver$Count.prototype.equals = function (other) {
-    return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && (Kotlin.equals(this.count, other.count) && Kotlin.equals(this.complete, other.complete) && Kotlin.equals(this.range, other.range)))));
+    return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && (Kotlin.equals(this.count, other.count) && Kotlin.equals(this.complete, other.complete) && Kotlin.equals(this.lastPoint, other.lastPoint) && Kotlin.equals(this.range, other.range)))));
   };
   function Solver$solve$lambda$lambda(it) {
     return it.pos;
@@ -2321,41 +2377,33 @@
         return instance.doResume(null);
     };
   }
-  function Solver$solve$lambda$lambda_2(closure$countsRow, closure$i, closure$j, closure$cells, this$Solver) {
+  function Solver$solve$lambda$lambda$lambda(it) {
+    return it.state === MineState$EMPTY_getInstance();
+  }
+  function Solver$solve$lambda$lambda_2(closure$countsRow, closure$i, closure$j, closure$cells) {
     return function (point) {
       closure$countsRow.get_za3lpa$(closure$i).get_za3lpa$(closure$j).complete = true;
-      var tmp$ = closure$countsRow.get_za3lpa$(closure$i).get_za3lpa$(closure$j);
-      var tmp$_0 = this$Solver;
-      var tmp$_1 = point.x;
-      var $receiver = row(closure$cells, closure$i);
-      var destination = ArrayList_init(collectionSizeOrDefault($receiver, 10));
-      var tmp$_2;
-      tmp$_2 = $receiver.iterator();
-      while (tmp$_2.hasNext()) {
-        var item = tmp$_2.next();
-        destination.add_11rb$(item.state);
-      }
-      tmp$.range = tmp$_0.getRanges_0(tmp$_1, destination);
+      closure$countsRow.get_za3lpa$(closure$i).get_za3lpa$(closure$j).lastPoint = point;
+      closure$countsRow.get_za3lpa$(closure$i).get_za3lpa$(closure$j).range = getRanges(row(closure$cells, closure$i), point, Solver$solve$lambda$lambda$lambda);
       return Unit;
     };
   }
-  function Solver$solve$lambda$lambda_3(closure$countsCol, closure$i, closure$j, closure$cells, this$Solver) {
+  function Solver$solve$lambda$lambda_3(it) {
+    return it.state === MineState$EMPTY_getInstance();
+  }
+  function Solver$solve$lambda$lambda$lambda_0(it) {
+    return it.state === MineState$EMPTY_getInstance();
+  }
+  function Solver$solve$lambda$lambda_4(closure$countsCol, closure$i, closure$j, closure$cells) {
     return function (point) {
       closure$countsCol.get_za3lpa$(closure$i).get_za3lpa$(closure$j).complete = true;
-      var tmp$ = closure$countsCol.get_za3lpa$(closure$i).get_za3lpa$(closure$j);
-      var tmp$_0 = this$Solver;
-      var tmp$_1 = point.y;
-      var $receiver = col(closure$cells, closure$i);
-      var destination = ArrayList_init(collectionSizeOrDefault($receiver, 10));
-      var tmp$_2;
-      tmp$_2 = $receiver.iterator();
-      while (tmp$_2.hasNext()) {
-        var item = tmp$_2.next();
-        destination.add_11rb$(item.state);
-      }
-      tmp$.range = tmp$_0.getRanges_0(tmp$_1, destination);
+      closure$countsCol.get_za3lpa$(closure$i).get_za3lpa$(closure$j).lastPoint = point;
+      closure$countsCol.get_za3lpa$(closure$i).get_za3lpa$(closure$j).range = getRanges(col(closure$cells, closure$i), point, Solver$solve$lambda$lambda$lambda_0);
       return Unit;
     };
+  }
+  function Solver$solve$lambda$lambda_5(it) {
+    return it.state === MineState$EMPTY_getInstance();
   }
   function Coroutine$Solver$solve$lambda(closure$updateCell_0, closure$board_0, this$Solver_0, $receiver_0, controller, continuation_0) {
     CoroutineImpl.call(this, continuation_0);
@@ -2403,7 +2451,7 @@
               tmp$_1 = item.iterator();
               while (tmp$_1.hasNext()) {
                 var item_0 = tmp$_1.next();
-                destination_0.add_11rb$(new Solver$Count(item_0));
+                destination_0.add_11rb$(new Solver$Count(item_0.numEmpty, item_0.comlete, item_0.lastPoint));
               }
               tmp$_0.call(destination, destination_0);
             }
@@ -2421,7 +2469,7 @@
               tmp$_4 = item_1.iterator();
               while (tmp$_4.hasNext()) {
                 var item_2 = tmp$_4.next();
-                destination_2.add_11rb$(new Solver$Count(item_2));
+                destination_2.add_11rb$(new Solver$Count(item_2.numEmpty, item_2.comlete, item_2.lastPoint));
               }
               tmp$_3.call(destination_1, destination_2);
             }
@@ -2431,7 +2479,11 @@
               var tmp$_5;
               tmp$_5 = this.local$countsRow.get_za3lpa$(i);
               for (var j = 0; j !== tmp$_5.size; ++j) {
-                this.local$closure$board.onRowCountDone_9v0qew$(i, j, Solver$solve$lambda$lambda_2(this.local$countsRow, i, j, this.local$cells, this.local$this$Solver));
+                if (!this.local$countsRow.get_za3lpa$(i).get_za3lpa$(j).complete) {
+                  this.local$closure$board.onRowCountDone_e1b8mt$(i, j, Solver$solve$lambda$lambda_2(this.local$countsRow, i, j, this.local$cells));
+                } else {
+                  this.local$countsRow.get_za3lpa$(i).get_za3lpa$(j).range = getRanges(row(this.local$cells, i), ensureNotNull(this.local$countsRow.get_za3lpa$(i).get_za3lpa$(j).lastPoint), Solver$solve$lambda$lambda_3);
+                }
               }
             }
 
@@ -2439,7 +2491,11 @@
               var tmp$_6;
               tmp$_6 = this.local$countsCol.get_za3lpa$(i_0);
               for (var j_0 = 0; j_0 !== tmp$_6.size; ++j_0) {
-                this.local$closure$board.onColCountDone_9v0qew$(i_0, j_0, Solver$solve$lambda$lambda_3(this.local$countsCol, i_0, j_0, this.local$cells, this.local$this$Solver));
+                if (!this.local$countsCol.get_za3lpa$(i_0).get_za3lpa$(j_0).complete) {
+                  this.local$closure$board.onColCountDone_e1b8mt$(i_0, j_0, Solver$solve$lambda$lambda_4(this.local$countsCol, i_0, j_0, this.local$cells));
+                } else {
+                  this.local$countsCol.get_za3lpa$(i_0).get_za3lpa$(j_0).range = getRanges(col(this.local$cells, i_0), ensureNotNull(this.local$countsCol.get_za3lpa$(i_0).get_za3lpa$(j_0).lastPoint), Solver$solve$lambda$lambda_5);
+                }
               }
             }
 
@@ -2542,26 +2598,6 @@
   }
   Solver.prototype.solve_f6xcb4$ = function (board, updateCell, continuation) {
     return withContext(coroutines.Dispatchers.Default, Solver$solve$lambda(updateCell, board, this), continuation);
-  };
-  function Solver$getRanges$lambda(it) {
-    return it === MineState$EMPTY_getInstance();
-  }
-  Solver.prototype.getRanges_0 = function (pos, line) {
-    var $receiver = countConsecutiveRange(line, Solver$getRanges$lambda);
-    var first$result;
-    first$break: do {
-      var tmp$;
-      tmp$ = $receiver.iterator();
-      while (tmp$.hasNext()) {
-        var element = tmp$.next();
-        if (element.contains_mef7kx$(pos)) {
-          first$result = element;
-          break first$break;
-        }}
-      throw new NoSuchElementException_init('Collection contains no element matching the predicate.');
-    }
-     while (false);
-    return first$result;
   };
   function Coroutine$updateLine_0($this, line_0, counts_0, dir_0, signal_0, continuation_0) {
     CoroutineImpl.call(this, continuation_0);
@@ -2672,16 +2708,54 @@
   function Solver$solveLine$lambda$lambda(it) {
     return it === Solver$CellState$EMPTY_getInstance();
   }
+  function Solver$solveLine$lambda$lambda_0(it) {
+    return it === Solver$CellState$EMPTY_getInstance();
+  }
+  function Solver$solveLine$lambda$lambda$lambda(state) {
+    return state === MineState$EMPTY_getInstance();
+  }
   Solver.prototype.solveLine_xnwshc$ = function (line, counts) {
-    var tmp$ = line.size;
-    var tmp$_0;
-    var sum = 0;
-    tmp$_0 = counts.iterator();
-    while (tmp$_0.hasNext()) {
-      var element = tmp$_0.next();
-      sum = sum + element.count | 0;
+    var all$result;
+    all$break: do {
+      var tmp$;
+      if (Kotlin.isType(line, Collection) && line.isEmpty()) {
+        all$result = true;
+        break all$break;
+      }tmp$ = line.iterator();
+      while (tmp$.hasNext()) {
+        var element = tmp$.next();
+        if (!(element !== MineState$UNMARKED_getInstance())) {
+          all$result = false;
+          break all$break;
+        }}
+      all$result = true;
     }
-    var mines = tmp$ - sum | 0;
+     while (false);
+    if (all$result) {
+      var destination = ArrayList_init(collectionSizeOrDefault(line, 10));
+      var tmp$_0;
+      tmp$_0 = line.iterator();
+      while (tmp$_0.hasNext()) {
+        var item = tmp$_0.next();
+        var tmp$_1 = destination.add_11rb$;
+        var transform$result;
+        if (item === MineState$EMPTY_getInstance()) {
+          transform$result = Solver$CellState$EMPTY_getInstance();
+        } else {
+          transform$result = Solver$CellState$MINE_getInstance();
+        }
+        tmp$_1.call(destination, transform$result);
+      }
+      return destination;
+    }var tmp$_2 = line.size;
+    var tmp$_3;
+    var sum = 0;
+    tmp$_3 = counts.iterator();
+    while (tmp$_3.hasNext()) {
+      var element_0 = tmp$_3.next();
+      sum = sum + element_0.count | 0;
+    }
+    var mines = tmp$_2 - sum | 0;
     var availableMines = mines - coerceAtLeast(counts.size - 1 | 0, 0) | 0;
     var availablePositions = counts.size + 1 | 0;
     if (availableMines === 0) {
@@ -2697,60 +2771,32 @@
       }
       return this.makeLine_0(list_0, counts);
     }var possibleMinePositions = partition(availableMines, availablePositions);
-    var destination = ArrayList_init(collectionSizeOrDefault(possibleMinePositions, 10));
-    var tmp$_1;
-    tmp$_1 = possibleMinePositions.iterator();
-    while (tmp$_1.hasNext()) {
-      var item = tmp$_1.next();
-      var tmp$_2 = destination.add_11rb$;
-      var $receiver = this.makeLine_0(item, counts);
+    var destination_0 = ArrayList_init(collectionSizeOrDefault(possibleMinePositions, 10));
+    var tmp$_4;
+    tmp$_4 = possibleMinePositions.iterator();
+    while (tmp$_4.hasNext()) {
+      var item_0 = tmp$_4.next();
+      var tmp$_5 = destination_0.add_11rb$;
+      var $receiver = this.makeLine_0(item_0, counts);
       assert($receiver.size === line.size, "Possible line doesn't match line length");
-      tmp$_2.call(destination, $receiver);
-    }
-    var destination_0 = ArrayList_init_0();
-    var tmp$_3;
-    tmp$_3 = destination.iterator();
-    loop_label: while (tmp$_3.hasNext()) {
-      var element_0 = tmp$_3.next();
-      var ranges = countConsecutiveRange(element_0, Solver$solveLine$lambda$lambda);
-      assert(counts.size === ranges.size, "Possible line counts do not match line's complete count");
-      var $receiver_0 = zip(counts, ranges);
-      var all$result;
-      all$break: do {
-        var tmp$_4;
-        if (Kotlin.isType($receiver_0, Collection) && $receiver_0.isEmpty()) {
-          all$result = true;
-          break all$break;
-        }tmp$_4 = $receiver_0.iterator();
-        while (tmp$_4.hasNext()) {
-          var element_1 = tmp$_4.next();
-          var tmp$_5;
-          if (!(element_1.first.complete && ((tmp$_5 = ensureNotNull(element_1.first.range)) != null ? tmp$_5.equals(element_1.second) : null) || !element_1.first.complete)) {
-            all$result = false;
-            break all$break;
-          }}
-        all$result = true;
-      }
-       while (false);
-      if (all$result)
-        destination_0.add_11rb$(element_0);
+      tmp$_5.call(destination_0, $receiver);
     }
     var destination_1 = ArrayList_init_0();
     var tmp$_6;
     tmp$_6 = destination_0.iterator();
     loop_label: while (tmp$_6.hasNext()) {
-      var element_2 = tmp$_6.next();
-      var $receiver_1 = zip(element_2, line);
+      var element_1 = tmp$_6.next();
+      var $receiver_0 = zip(element_1, line);
       var all$result_0;
       all$break: do {
         var tmp$_7;
-        if (Kotlin.isType($receiver_1, Collection) && $receiver_1.isEmpty()) {
+        if (Kotlin.isType($receiver_0, Collection) && $receiver_0.isEmpty()) {
           all$result_0 = true;
           break all$break;
-        }tmp$_7 = $receiver_1.iterator();
+        }tmp$_7 = $receiver_0.iterator();
         while (tmp$_7.hasNext()) {
-          var element_3 = tmp$_7.next();
-          if (!(element_3.second === MineState$UNMARKED_getInstance() || (element_3.first === Solver$CellState$EMPTY_getInstance() && element_3.second !== MineState$MINE_getInstance() && element_3.second !== MineState$MARKED_getInstance()) || (element_3.first === Solver$CellState$MINE_getInstance() && (element_3.second === MineState$MINE_getInstance() || element_3.second === MineState$MARKED_getInstance())))) {
+          var element_2 = tmp$_7.next();
+          if (!(element_2.second === MineState$UNMARKED_getInstance() || (element_2.first === Solver$CellState$EMPTY_getInstance() && element_2.second !== MineState$MINE_getInstance() && element_2.second !== MineState$MARKED_getInstance()) || (element_2.first === Solver$CellState$MINE_getInstance() && (element_2.second === MineState$MINE_getInstance() || element_2.second === MineState$MARKED_getInstance())))) {
             all$result_0 = false;
             break all$break;
           }}
@@ -2758,29 +2804,99 @@
       }
        while (false);
       if (all$result_0)
-        destination_1.add_11rb$(element_2);
+        destination_1.add_11rb$(element_1);
     }
-    var iterator = destination_1.iterator();
+    var destination_2 = ArrayList_init_0();
+    var tmp$_8;
+    tmp$_8 = destination_1.iterator();
+    loop_label: while (tmp$_8.hasNext()) {
+      var element_3 = tmp$_8.next();
+      var ranges = countConsecutiveRange(element_3, Solver$solveLine$lambda$lambda);
+      assert(counts.size === ranges.size, "Possible line counts do not match line's complete count");
+      var $receiver_1 = zip(counts, ranges);
+      var destination_3 = ArrayList_init_0();
+      var tmp$_9;
+      tmp$_9 = $receiver_1.iterator();
+      while (tmp$_9.hasNext()) {
+        var element_4 = tmp$_9.next();
+        if (element_4.first.complete)
+          destination_3.add_11rb$(element_4);
+      }
+      var all$result_1;
+      all$break: do {
+        var tmp$_10;
+        if (Kotlin.isType(destination_3, Collection) && destination_3.isEmpty()) {
+          all$result_1 = true;
+          break all$break;
+        }tmp$_10 = destination_3.iterator();
+        while (tmp$_10.hasNext()) {
+          var element_5 = tmp$_10.next();
+          var tmp$_11;
+          if (!((tmp$_11 = ensureNotNull(element_5.first.range)) != null ? tmp$_11.equals(element_5.second) : null)) {
+            all$result_1 = false;
+            break all$break;
+          }}
+        all$result_1 = true;
+      }
+       while (false);
+      if (all$result_1)
+        destination_2.add_11rb$(element_3);
+    }
+    var destination_4 = ArrayList_init_0();
+    var tmp$_12;
+    tmp$_12 = destination_2.iterator();
+    loop_label: while (tmp$_12.hasNext()) {
+      var element_6 = tmp$_12.next();
+      var ranges_0 = countConsecutiveRange(element_6, Solver$solveLine$lambda$lambda_0);
+      var $receiver_2 = zip(counts, ranges_0);
+      var destination_5 = ArrayList_init_0();
+      var tmp$_13;
+      tmp$_13 = $receiver_2.iterator();
+      while (tmp$_13.hasNext()) {
+        var element_7 = tmp$_13.next();
+        if (!element_7.first.complete)
+          destination_5.add_11rb$(element_7);
+      }
+      var all$result_2;
+      all$break: do {
+        var tmp$_14;
+        if (Kotlin.isType(destination_5, Collection) && destination_5.isEmpty()) {
+          all$result_2 = true;
+          break all$break;
+        }tmp$_14 = destination_5.iterator();
+        while (tmp$_14.hasNext()) {
+          var element_8 = tmp$_14.next();
+          if (!!equals(element_8.second, getRanges(line, element_8.second.first, Solver$solveLine$lambda$lambda$lambda))) {
+            all$result_2 = false;
+            break all$break;
+          }}
+        all$result_2 = true;
+      }
+       while (false);
+      if (all$result_2)
+        destination_4.add_11rb$(element_6);
+    }
+    var iterator = destination_4.iterator();
     if (!iterator.hasNext())
       throw UnsupportedOperationException_init("Empty collection can't be reduced.");
     var accumulator = iterator.next();
     while (iterator.hasNext()) {
-      var $receiver_2 = zip(accumulator, iterator.next());
-      var destination_2 = ArrayList_init(collectionSizeOrDefault($receiver_2, 10));
-      var tmp$_8;
-      tmp$_8 = $receiver_2.iterator();
-      while (tmp$_8.hasNext()) {
-        var item_0 = tmp$_8.next();
-        var tmp$_9 = destination_2.add_11rb$;
-        var transform$result;
-        if (item_0.first === item_0.second) {
-          transform$result = item_0.first;
+      var $receiver_3 = zip(accumulator, iterator.next());
+      var destination_6 = ArrayList_init(collectionSizeOrDefault($receiver_3, 10));
+      var tmp$_15;
+      tmp$_15 = $receiver_3.iterator();
+      while (tmp$_15.hasNext()) {
+        var item_1 = tmp$_15.next();
+        var tmp$_16 = destination_6.add_11rb$;
+        var transform$result_0;
+        if (item_1.first === item_1.second) {
+          transform$result_0 = item_1.first;
         } else {
-          transform$result = Solver$CellState$NONE_getInstance();
+          transform$result_0 = Solver$CellState$NONE_getInstance();
         }
-        tmp$_9.call(destination_2, transform$result);
+        tmp$_16.call(destination_6, transform$result_0);
       }
-      accumulator = destination_2;
+      accumulator = destination_6;
     }
     return accumulator;
   };
@@ -3248,6 +3364,23 @@
   function countConsecutiveRange($receiver, condition) {
     return toList(sequence(countConsecutiveRange$lambda(condition, $receiver)));
   }
+  function getRanges($receiver, pos, cond) {
+    var $receiver_0 = countConsecutiveRange($receiver, cond);
+    var firstOrNull$result;
+    firstOrNull$break: do {
+      var tmp$;
+      tmp$ = $receiver_0.iterator();
+      while (tmp$.hasNext()) {
+        var element = tmp$.next();
+        if (element.contains_mef7kx$(pos)) {
+          firstOrNull$result = element;
+          break firstOrNull$break;
+        }}
+      firstOrNull$result = null;
+    }
+     while (false);
+    return firstOrNull$result;
+  }
   Object.defineProperty(MineState, 'UNMARKED', {
     get: MineState$UNMARKED_getInstance
   });
@@ -3263,6 +3396,7 @@
   _.MineState = MineState;
   Board.CountPosition = Board$CountPosition;
   Board.EmptyCount = Board$EmptyCount;
+  Board.Count = Board$Count;
   $$importsForInline$$['korma-root-korma'] = $module$korma_root_korma;
   Board.Cell = Board$Cell;
   $$importsForInline$$['kds-root-kds'] = $module$kds_root_kds;
@@ -3338,6 +3472,7 @@
   _.partition_vux9f0$ = partition;
   _.countConsecutive_6jwkkr$ = countConsecutive;
   _.countConsecutiveRange_6jwkkr$ = countConsecutiveRange;
+  _.getRanges_rrrmaz$ = getRanges;
   view = new Extra$Property(void 0, view$lambda);
   drag = new Extra$Property(void 0, drag$lambda);
   main(internal.EmptyContinuation, false);

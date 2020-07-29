@@ -22,6 +22,7 @@ object Solver {
     data class Count(
             val count: Int,
             var complete: Boolean = false,
+            var lastPoint: Int? = null,
             // Range of completed count
             var range: IntRange? = null
     )
@@ -45,21 +46,31 @@ object Solver {
             }
         }
         val cells = board.cells
-        val countsRow = board.emptyCountRow.map { list -> list.map { Count(it) } }
-        val countsCol = board.emptyCountCol.map { list -> list.map { Count(it) } }
+        val countsRow = board.emptyCountRow.map { list -> list.map { Count(it.numEmpty, it.comlete, it.lastPoint) } }
+        val countsCol = board.emptyCountCol.map { list -> list.map { Count(it.numEmpty, it.comlete, it.lastPoint) } }
         for (i in countsRow.indices) {
             for (j in countsRow[i].indices) {
-                board.onRowCountDone(i, j) { point ->
-                    countsRow[i][j].complete = true
-                    countsRow[i][j].range = getRanges(point.x, cells.row(i).map { it.state })
+                if (!countsRow[i][j].complete) {
+                    board.onRowCountDone(i, j) { point ->
+                        countsRow[i][j].complete = true
+                        countsRow[i][j].lastPoint = point
+                        countsRow[i][j].range = cells.row(i).getRanges(point) { it.state == MineState.EMPTY }
+                    }
+                } else {
+                    countsRow[i][j].range = cells.row(i).getRanges(countsRow[i][j].lastPoint!!) { it.state == MineState.EMPTY }
                 }
             }
         }
         for (i in countsCol.indices) {
             for (j in countsCol[i].indices) {
-                board.onColCountDone(i, j) { point ->
-                    countsCol[i][j].complete = true
-                    countsCol[i][j].range = getRanges(point.y, cells.col(i).map { it.state })
+                if (!countsCol[i][j].complete) {
+                    board.onColCountDone(i, j) { point ->
+                        countsCol[i][j].complete = true
+                        countsCol[i][j].lastPoint = point
+                        countsCol[i][j].range = cells.col(i).getRanges(point) { it.state == MineState.EMPTY }
+                    }
+                } else {
+                    countsCol[i][j].range = cells.col(i).getRanges(countsCol[i][j].lastPoint!!) { it.state == MineState.EMPTY }
                 }
             }
         }
@@ -80,11 +91,6 @@ object Solver {
         }
         println("Done solve pass")
         signal.clear()
-    }
-
-    private fun getRanges(pos: Int, line: List<MineState>): IntRange {
-        return line.countConsecutiveRange { it == MineState.EMPTY }
-                .first { pos in it }
     }
 
     /**
@@ -110,6 +116,15 @@ object Solver {
      * Solve a single line given the [line] state and the counts
      */
     fun solveLine(line: List<MineState>, counts: List<Count>): List<CellState> {
+        // Ignore complete lines
+        if (line.all { it == MineState.UNMARKED }) return line.map {
+            if (it == MineState.EMPTY) {
+                CellState.EMPTY
+            } else {
+                CellState.MINE
+            }
+        }
+
         // get num of mines
         val mines = line.size - counts.sumBy { it.count }
         // Ignore number of mines that are required to be placed between consecutive empty positions
@@ -131,18 +146,25 @@ object Solver {
                 assert(newLine.size == line.size, "Possible line doesn't match line length")
             }
         }.filter { possibleLine ->
-            // Make sure every complete count is included in the possible line
-            val ranges = possibleLine.countConsecutiveRange { it == CellState.EMPTY }
-            assert(counts.size == ranges.size, "Possible line counts do not match line's complete count")
-            counts.zip(ranges).all {
-                it.first.complete && it.first.range!! == it.second || !it.first.complete
-            }
-        }.filter { possibleLine ->
             // Only consider possible lines if they match the current board state
             possibleLine.zip(line).all {
                 it.second == MineState.UNMARKED
                         || it.first == CellState.EMPTY && it.second != MineState.MINE && it.second != MineState.MARKED
                         || it.first == CellState.MINE && (it.second == MineState.MINE || it.second == MineState.MARKED)
+            }
+        }.filter { possibleLine ->
+            // Make sure every complete count is included in the possible line
+            val ranges = possibleLine.countConsecutiveRange { it == CellState.EMPTY }
+            assert(counts.size == ranges.size, "Possible line counts do not match line's complete count")
+            counts.zip(ranges).filter { it.first.complete }.all {
+                it.first.range!! == it.second
+            }
+        }.filter { possibleLine ->
+            val ranges = possibleLine.countConsecutiveRange { it == CellState.EMPTY }
+            // If any count in the possible line matches the board count, but the count is not complete,
+            // then this solution is not valid
+            counts.zip(ranges).filter { !it.first.complete }.all {
+                it.second != line.getRanges(it.second.first) { state -> state == MineState.EMPTY }
             }
         }.reduce { acc, list ->
             acc.zip(list).map {

@@ -26,7 +26,14 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
     data class EmptyCount(
             val numEmpty: Int = 0,
             var numFlagged: Int = 0,
-            val signalDone: Signal<PointInt> = Signal()
+            var lastPoint: Int? = null,
+            val signalDone: Signal<Int> = Signal()
+    )
+
+    data class Count(
+            val numEmpty: Int = 0,
+            val comlete: Boolean = false,
+            val lastPoint: Int? = null
     )
 
     /**
@@ -76,17 +83,17 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
     /**
      * List of size [width], holds the counts for each column
      */
-    val emptyCountCol: List<List<Int>>
+    val emptyCountCol: List<List<Count>>
         get() = colEmptyCount.map { list ->
-            list.map { it.numEmpty }
+            list.map { Count(it.numEmpty, it.numFlagged == it.numEmpty, it.lastPoint) }
         }
 
     /**
      * List of size [height], holds the counts for each row
      */
-    val emptyCountRow: List<List<Int>>
+    val emptyCountRow: List<List<Count>>
         get() = rowEmptyCount.map { list ->
-            list.map { it.numEmpty }
+            list.map { Count(it.numEmpty, it.numFlagged == it.numEmpty, it.lastPoint) }
         }
 
     init {
@@ -131,12 +138,14 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
             val colCount = colEmptyCount[it.x][countPosition.colPosition]
             colCount.numFlagged += 1
             if (colCount.numFlagged >= colCount.numEmpty) {
-                colCount.signalDone(it)
+                colCount.lastPoint = it.y
+                colCount.signalDone(it.y)
             }
             val rowCount = rowEmptyCount[it.y][countPosition.rowPosition]
             rowCount.numFlagged += 1
             if (rowCount.numFlagged >= rowCount.numEmpty) {
-                rowCount.signalDone(it)
+                rowCount.lastPoint = it.x
+                rowCount.signalDone(it.x)
             }
 
             // Check if game over
@@ -162,12 +171,12 @@ class Board(val width: Int = 5, val height: Int = 5, private val mineCount: Doub
     /**
      * Register [handler] for count done change event
      */
-    fun onColCountDone(col: Int, count: Int, handler: (PointInt) -> Unit) = colEmptyCount[col][count].signalDone.once(handler)
+    fun onColCountDone(col: Int, count: Int, handler: (Int) -> Unit) = colEmptyCount[col][count].signalDone.once(handler)
 
     /**
      * Register [handler] for count done change event
      */
-    fun onRowCountDone(row: Int, count: Int, handler: (PointInt) -> Unit) = rowEmptyCount[row][count].signalDone.once(handler)
+    fun onRowCountDone(row: Int, count: Int, handler: (Int) -> Unit) = rowEmptyCount[row][count].signalDone.once(handler)
 
     fun cleanUp() {
         mistakeSignal.clear()
