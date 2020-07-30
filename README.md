@@ -1,5 +1,5 @@
 # Number-Game
-My implementation of puzzle game PictoQuest.
+My implementation of a nonogram puzzle.
 
 # Rules
 You are given a 5x5 grid, with mines randomly hidden throughout. 
